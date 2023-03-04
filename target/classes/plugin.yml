@@ -1,0 +1,6 @@
+name: MC_Minigames_Plugin
+version: '1.0-SNAPSHOT'
+main: mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin
+api-version: 1.19
+authors: [ Miles, Kirt ]
+description: A plugin built for the MC minigames server
