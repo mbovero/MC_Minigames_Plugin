@@ -16,7 +16,7 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
     @Override
     public void onEnable() {
         // Plugin startup logic
-        Bukkit.getLogger().info("Hello World");
+        Bukkit.getLogger().info("Starting MC Minigames Plugin...");
 
         // Saves config file into plugins folder if it doesn't exist already
         saveDefaultConfig();

@@ -36,7 +36,7 @@ public class TorchHandler implements Listener {
             // Check if player has permission
             if (event.getPlayer().hasPermission("MC_Minigames_Plugin.torch.diamond")) {
                 // Place diamond block instead of a torch
-                event.getBlock().setType(Material.DIAMOND_BLOCK);
+//                event.getBlock().setType(Material.DIAMOND_BLOCK);
             }
         }
     }

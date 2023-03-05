@@ -1,5 +1,6 @@
 package mc_minigames_plugin.mc_minigames_plugin.commands;
 
+import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
@@ -17,10 +18,8 @@ public class Hub implements CommandExecutor {
         }
         Player player = (Player)sender;
 
-        // Make hub location        world name, x, y, z, y, p
-        Location hub = new Location(Bukkit.getWorld("world"), -15.5, -43, -17.5, -45, 15);
         // Teleport player to hub
-        player.teleport(hub);
+        player.teleport(Locations.hub);
 
         return true;
     }
