@@ -9,3 +9,4 @@ mc_minigames_plugin\mc_minigames_plugin\commands\Menu.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Hub.class
 mc_minigames_plugin\mc_minigames_plugin\util\ConfigUtil.class
 mc_minigames_plugin\mc_minigames_plugin\commands\SetSpawn.class
+mc_minigames_plugin\mc_minigames_plugin\util\Tools.class

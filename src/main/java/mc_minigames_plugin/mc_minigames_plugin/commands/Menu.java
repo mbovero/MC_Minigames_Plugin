@@ -28,7 +28,7 @@ public class Menu implements Listener, CommandExecutor {
     }
 
     @EventHandler
-    public void onInventortClick(InventoryClickEvent event) {
+    public void onInventoryClick(InventoryClickEvent event) {
         // Only handle inv clicks if player is in /menu inventory
         if (!event.getView().getTitle().equals(invName)) {
             return;
@@ -61,18 +61,18 @@ public class Menu implements Listener, CommandExecutor {
 
         Inventory inv = Bukkit.createInventory(player, 9 *3, invName);
 
-        inv.setItem(11, getItem(new ItemStack(Material.DIAMOND_SWORD), "&9PVP", "&aClick to Join", "&aBattle it out in our PVP arena!"));
-        inv.setItem(13, getItem(new ItemStack(Material.BEACON), "&9Creative Plots", "&aClick to Join", "&aWeekly build competitions!"));
-        inv.setItem(15, getItem(new ItemStack(Material.GRASS_BLOCK), "&9Sky Block", "&aClick to Join", "&aHow long can you survive?"));
+        inv.setItem(11, createItem(new ItemStack(Material.DIAMOND_SWORD), "&9PVP", "&aClick to Join", "&aBattle it out in our PVP arena!"));
+        inv.setItem(13, createItem(new ItemStack(Material.BEACON), "&9Creative Plots", "&aClick to Join", "&aWeekly build competitions!"));
+        inv.setItem(15, createItem(new ItemStack(Material.GRASS_BLOCK), "&9Sky Block", "&aClick to Join", "&aHow long can you survive?"));
 
         player.openInventory(inv);
 
         return true;
     }
 
-    private ItemStack getItem(ItemStack item, String name, String ... lore) {
+    private ItemStack createItem(ItemStack item, String itemName, String ... lore) {
         ItemMeta meta = item.getItemMeta();
-        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', name));
+        meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', itemName));
 
         List<String> lores = new ArrayList<>();
         for (String s : lore) {
