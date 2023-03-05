@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -52,6 +53,7 @@ public class PlayerHandler implements Listener {
         for (String tag : tagsToRemove)
             if (!tag.equals("GameDev"))
                 player.removeScoreboardTag(tag);
+
 
         // Remove from teams
 
@@ -119,10 +121,19 @@ public class PlayerHandler implements Listener {
 
 
 
-
+    @EventHandler
+    public void preventHunger(FoodLevelChangeEvent event) {
+        event.setCancelled(true);
+    }
 
     @EventHandler
     public void onEntityDamage(EntityDamageEvent event) {
+        if (event.getCause() == EntityDamageEvent.DamageCause.FALL)
+            event.setCancelled(true);
+
+
+
+
         // Ensure that a player was hurt by fall damage
         if (!(event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL)) {
             return;
