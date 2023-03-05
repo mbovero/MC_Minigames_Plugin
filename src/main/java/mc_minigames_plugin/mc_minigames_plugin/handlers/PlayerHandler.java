@@ -3,7 +3,6 @@ package mc_minigames_plugin.mc_minigames_plugin.handlers;
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
-import net.md_5.bungee.api.chat.hover.content.Item;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,12 +11,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
 import java.util.Collection;
+import java.util.Set;
 
 public class PlayerHandler implements Listener {
     public PlayerHandler (MC_Minigames_Plugin plugin) {
@@ -25,6 +26,11 @@ public class PlayerHandler implements Listener {
     }
 
     @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+
+    }
+
+        @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         // Setup & retrieve data
         Player player = event.getPlayer();
@@ -38,6 +44,19 @@ public class PlayerHandler implements Listener {
         Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
         for (PotionEffect pE : effectsToClear)
             player.removePotionEffect(pE.getType());
+        // Clear player tags  -  change to handle actions based on current tags
+        Set<String> tagsToRemove = player.getScoreboardTags();
+        for (String tag : tagsToRemove) {
+            if (!tag.equals("GameDev"))
+                player.removeScoreboardTag(tag);
+        }
+
+        // Remove from teams
+
+
+
+
+
 
         ItemStack item = new ItemStack(Material.COMPASS, 1);
 
