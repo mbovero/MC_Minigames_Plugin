@@ -17,3 +17,11 @@ commands:
   menu:
     description: Opens a custom menu
     usage: /menu
+  setSpawn:
+    description: Sets the server spawn
+    usage: /setSpawn
+    permission: spawn.set
+  spawn:
+    description: Teleports you to the server spawn
+    usage: /spawn
+    permission: spawn.teleport

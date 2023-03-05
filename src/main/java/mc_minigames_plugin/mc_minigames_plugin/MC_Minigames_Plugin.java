@@ -1,12 +1,11 @@
 package mc_minigames_plugin.mc_minigames_plugin;
 
-import mc_minigames_plugin.mc_minigames_plugin.commands.Fly;
-import mc_minigames_plugin.mc_minigames_plugin.commands.Hub;
-import mc_minigames_plugin.mc_minigames_plugin.commands.Menu;
+import mc_minigames_plugin.mc_minigames_plugin.commands.*;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.PlayerHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.TorchHandler;
 import mc_minigames_plugin.mc_minigames_plugin.util.ConfigUtil;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
+import mc_minigames_plugin.mc_minigames_plugin.util.SpawnUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,10 +31,15 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
         config.getConfig().set("hello", "world");
         config.save();
 
+        SpawnUtil spawnUtil = new SpawnUtil(this);
+
         // Register commands
         getCommand("fly").setExecutor(new Fly());
         getCommand("hub").setExecutor(new Hub());
         getCommand("menu").setExecutor(new Menu(this));
+        getCommand("spawn").setExecutor(new Spawn(spawnUtil));
+        getCommand("SetSpawn").setExecutor(new SetSpawn(spawnUtil));
+
 
 
         // Register new handler
