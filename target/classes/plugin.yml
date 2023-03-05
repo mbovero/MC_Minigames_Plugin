@@ -4,3 +4,16 @@ main: mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin
 api-version: 1.19
 authors: [ Miles, Kirt ]
 description: A plugin built for the MC minigames server
+commands:
+  fly:
+    description: Toggles flying for the command sender.
+    usage: /fly
+    aliases: f
+    permission: fly
+    permission-message: You do not have permission.
+  hub:
+    description: Teleports the command sender to the main hub.
+    usage: /hub
+  menu:
+    description: Opens a custom menu
+    usage: /menu

@@ -26,10 +26,18 @@ public class TorchHandler implements Listener {
 
     @EventHandler(priority = EventPriority.LOW)
     public void onTorchPlace_Low(BlockPlaceEvent event) {
+        // If a torch is placed...
         if (event.getBlock().getType() == Material.TORCH) {
-//            event.getBlock().setType(Material.DIAMOND_BLOCK);
-            event.setCancelled(true);   // Other events will still run!!!
+//            event.setCancelled(true);   // Other events will still run!!!
 
+            // Permission node
+            // MC_Minigames_Plugin.torch.diamond
+
+            // Check if player has permission
+            if (event.getPlayer().hasPermission("MC_Minigames_Plugin.torch.diamond")) {
+                // Place diamond block instead of a torch
+                event.getBlock().setType(Material.DIAMOND_BLOCK);
+            }
         }
     }
 

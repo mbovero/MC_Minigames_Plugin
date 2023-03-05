@@ -1,1 +1,6 @@
+mc_minigames_plugin\mc_minigames_plugin\handlers\PlayerHandler.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\TorchHandler.class
+mc_minigames_plugin\mc_minigames_plugin\commands\Menu.class
+mc_minigames_plugin\mc_minigames_plugin\commands\Fly.class
+mc_minigames_plugin\mc_minigames_plugin\commands\Hub.class
+mc_minigames_plugin\mc_minigames_plugin\util\ConfigUtil.class
