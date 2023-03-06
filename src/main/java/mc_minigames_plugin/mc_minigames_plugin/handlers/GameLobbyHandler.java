@@ -2,6 +2,7 @@ package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.Game;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
@@ -31,7 +32,7 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
  */
 public class GameLobbyHandler implements Listener {
 
-    ArrayList<Game> gameList;
+    ArrayList<PlayerArea> gameList;
     static ItemStack KOTHQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the KOTH queue!");
     static ItemStack KOTHDequeue = createItem(new ItemStack(Material.LIME_DYE), "&aReady", "&fClick with this item to leave the KOTH queue");
 
