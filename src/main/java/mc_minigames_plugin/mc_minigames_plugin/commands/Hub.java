@@ -1,8 +1,6 @@
 package mc_minigames_plugin.mc_minigames_plugin.commands;
 
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +17,7 @@ public class Hub implements CommandExecutor {
         Player player = (Player)sender;
 
         // Teleport player to hub
-        player.teleport(Locations.hub);
+        player.teleport(Locations.mainHub);
 
         return true;
     }

@@ -1,11 +1,9 @@
 package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
-import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Material;
+import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,13 +11,11 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 
 import java.util.Collection;
@@ -36,6 +32,12 @@ public class PlayerHandler implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
+        // Reset player scores
+        Bukkit.getScoreboardManager().getMainScoreboard().resetScores(player);      // Resets all objective scores for player - get individual objectives and player score object to change individual scores
+        // Remove player from team
+        Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
+        if (team != null)
+            Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player).removePlayer(player);
     }
 
     /**
@@ -49,9 +51,9 @@ public class PlayerHandler implements Listener {
 
         // Reset player data on join -----------------------------------------------------------------------------------
         // Unless troubleshooting...
-        if (!player.getScoreboardTags().contains("Testing")) {
+        if (!player.getScoreboardTags().contains("testing")) {
             // Tp player to hub
-            player.teleport(Locations.hub);
+            player.teleport(Locations.mainHub);
             // Set to adventure mode
             player.setGameMode(GameMode.ADVENTURE);
             // Prevent/reset flying
@@ -68,21 +70,21 @@ public class PlayerHandler implements Listener {
             player.setHealth(player.getMaxHealth());
             // Reset hunger
             player.setFoodLevel(20);
+
+            // Currently on leave and join, probably only need one
             // Reset player scores
             Bukkit.getScoreboardManager().getMainScoreboard().resetScores(player);      // Resets all objective scores for player - get individual objectives and player score object to change individual scores
             // Remove player from team
             Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
             if (team != null)
                 Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player).removePlayer(player);
+
             // Clear player tags  -  change to handle actions based on current tags
-            Set<String> tagsToRemove = new HashSet<>(player.getScoreboardTags());       // Get copy of player's current tags
-            for (String tag : tagsToRemove)
-                if (!tag.equals("GameDev")) {      // TEMP... only used for data pack capabilities
-                    player.removeScoreboardTag(tag);
-                    Bukkit.getLogger().info("removed " + tag);
-                }
-            // Give mainHub tag
+            Tools.resetTags(player);
+            // Give necessary tags
             player.addScoreboardTag("mainHub");
+            player.addScoreboardTag("notInGame");
+
 
 
             // Reset display name
@@ -95,29 +97,47 @@ public class PlayerHandler implements Listener {
     }
 
     /**
-     * Opens/formats the player's Lobby Selector menu when the item is right-clicked
+     *  - Opens/formats the player's Lobby Selector menu when the item is right-clicked
+     *  - Gives functionality of button press to KOTH lobby
      */
     @EventHandler
-    public void onPlayerUseMenu(PlayerInteractEvent event) {
+    public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
-        // Detect when player right clicks
-        if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
-            // Detect right click with Lobby Selector compass
-            if (player.getItemInHand().getItemMeta() != null && player.getItemInHand().getItemMeta().getDisplayName().equals("§aLobby Selector")) {
+        Set<String> tags = player.getScoreboardTags();
+        if (tags.contains("notInGame")) {
 
-                // Create "UI"
-                Inventory inv = Bukkit.createInventory(player, 9 * 3, "Lobby Selector");
-                // UI options:
-                // Main Hub
-                inv.setItem(11, createItem(new ItemStack(Material.RED_BED), "&2Main Hub","&7Home sweet home"));
-                // KOTH lobby
-                inv.setItem(13, createItem(new ItemStack(Material.GRASS_BLOCK), "&aKOTH","&7Conquer the Hill"));
-                // MM lobby
-                inv.setItem(15, createItem(new ItemStack(Material.DIAMOND_SWORD), "&cMurder Mystery","&7Stab your friends! :D"));
+            // Detect when player right clicks
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+                // Detect right click with Lobby Selector compass
+                if (player.getItemInHand().getItemMeta() != null && player.getItemInHand().getItemMeta().getDisplayName().equals("§aLobby Selector")) {
 
-                // Open the created "UI"
-                player.openInventory(inv);
+                    // Create "UI"
+                    Inventory inv = Bukkit.createInventory(player, 9 * 3, "Lobby Selector");
+                    // UI options:
+                    // Main Hub
+                    inv.setItem(11, createItem(new ItemStack(Material.RED_BED), "&2Main Hub", "&7Home sweet home"));
+                    // KOTH lobby
+                    inv.setItem(13, createItem(new ItemStack(Material.GRASS_BLOCK), "&aKOTH", "&7Conquer the Hill"));
+                    // MM lobby
+                    inv.setItem(15, createItem(new ItemStack(Material.DIAMOND_SWORD), "&cMurder Mystery", "&7Stab your friends! :D"));
+
+                    // Open the created "UI"
+                    player.openInventory(inv);
+                }
+
+            // BUTTON CLICK DETECTIONS:
+
+            // KOTH lobby button
+            // Detect when player right clicks on block
+            if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                // Define button location
+                Location KOTHButtonLoc = new Location(Bukkit.getWorld("world"), 17, -46, -26);
+                // Detect click on button
+                if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc))
+                    // Transport player
+                    GameLobbyHandler.sendKOTHLobby(player);
             }
+        }
     }
 
     /**
@@ -125,30 +145,41 @@ public class PlayerHandler implements Listener {
      */
     @EventHandler
     public void onMenuClick(InventoryClickEvent event) {
-        // Only handle inv clicks if player is in Lobby Selector inventory
-        if (event.getView().getTitle().equals("Lobby Selector")) {
+        Player player = (Player) event.getWhoClicked();
+        Set<String> tags = player.getScoreboardTags();
+        // For players not in a game...
+        if (tags.contains("notInGame")) {
+            // Only handle inv clicks if player is in Lobby Selector inventory
+            if (event.getView().getTitle().equals("Lobby Selector")) {
 
-            // Retrieve the slot number that the player clicked on
-            Player player = (Player) event.getWhoClicked();
-            int slot = event.getSlot();
+                // Retrieve the slot number that the player clicked on
+                int slot = event.getSlot();
 
-            // Make sure an inventory item was clicked
-            if (event.getCurrentItem() != null) {
-                // Send player to...
-                // Main Hub
-                if (slot == 11 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub"))
-                    player.teleport(Locations.hub);
-                // KOTH lobby
-                else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aKOTH"))
-                    player.teleport(Locations.KOTHhub);
-                // MM lobby
-                else if (slot == 15 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§cMurder Mystery"))
-                    player.teleport(Locations.MMhub);
+                // Make sure an inventory item was clicked
+                if (event.getCurrentItem() != null) {
+                    // Send player to...
+                    // Main Hub
+                    if (slot == 11 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub")) {
+                        GameLobbyHandler.sendMainHub(player);
+                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+                    }
+                    // KOTH lobby
+                    else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aKOTH")) {
+                        GameLobbyHandler.sendKOTHLobby(player);
+                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+                    }
+                    // MM lobby
+                    else if (slot == 15 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§cMurder Mystery")) {
+                        GameLobbyHandler.sendMMLobby(player);
+                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+                    }
 
-                // Cannot move items around, only click on them
-                event.setCancelled(true);
-                event.getWhoClicked().closeInventory();
+                    // Cannot move items around, only click on them
+                    event.setCancelled(true);
+                    event.getWhoClicked().closeInventory();
+                }
             }
+            event.setCancelled(true);
         }
     }
 
@@ -159,7 +190,7 @@ public class PlayerHandler implements Listener {
     public void preventItemDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
-        if (tags.contains("mainHub"))
+        if (tags.contains("notInGame"))
             event.setCancelled(true);
     }
 
@@ -171,7 +202,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("mainHub"))
+            if (tags.contains("notInGame"))
                 event.setCancelled(true);
         }
     }
@@ -184,7 +215,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("mainHub"))
+            if (tags.contains("notInGame"))
                 event.setCancelled(true);
         }
 
@@ -201,5 +232,56 @@ public class PlayerHandler implements Listener {
 //        DelayedTask task = new DelayedTask(() -> {player.getInventory().addItem(new ItemStack(Material.DIAMOND));}, 20 * 5);
 //        // Cancel the task
 //        Bukkit.getScheduler().cancelTask(task.getId());
+    }
+
+    /**
+     * Gives players levitation when they fall below a certain Y-level in lobbies.
+     */
+    @EventHandler
+    public void voidLevitation(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        Set<String> tags = player.getScoreboardTags();
+        // For all players not in a game...
+        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame")) {
+            // Apply main hub levitation
+            if (tags.contains("mainHub"))
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
+            // Apply KOTH lobby levitation
+            else if (tags.contains("KOTHLobby"))
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 10, false));
+            // Apply MM lobby levitation
+            else if (tags.contains("MMLobby"))
+                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 18, false));
+        }
+        // Return players to main hub when they go out of bounds
+        else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
+            GameLobbyHandler.sendMainHub(player);
+    }
+
+    /**
+     * Provides functionality for portal returning players to main hub from KOTH lobby
+     *
+     * MOVE TO KOTH LOBBY HANDLER
+     */
+    @EventHandler
+    public void returnPortal(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        Set<String> tags = player.getScoreboardTags();
+        // Detect players in portal range and in KOTH lobby
+        if (event.getTo().getY() < -56 && event.getTo().getY() > -63 &&
+                event.getTo().getZ() < -594 && event.getTo().getZ() > -595 &&
+                event.getTo().getX() < 11 && event.getTo().getX() > 5 &&
+                tags.contains("KOTHLobby")) {
+            // Play portal sound at KOTH lobby to surrounding players
+            for (Player p : Bukkit.getOnlinePlayers())
+                if (p.getScoreboardTags().contains("notInGame"))
+                    p.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+            // Transport player to main hub
+            GameLobbyHandler.sendMainHub(player);
+            // Play portal sound at main hub to surrounding players
+            for (Player p : Bukkit.getOnlinePlayers())
+                if (p.getScoreboardTags().contains("notInGame"))
+                    p.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+        }
     }
 }

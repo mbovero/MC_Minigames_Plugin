@@ -1,11 +1,15 @@
 package mc_minigames_plugin.mc_minigames_plugin.util;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A class full of useful tools/methods to simplify workflow.
@@ -34,6 +38,15 @@ public class Tools {
         meta.setLore(lores);
         item.setItemMeta(meta);
         return item;
+    }
+
+    public static void resetTags(Player player) {
+        // Get copy of player's current tags
+        Set<String> tagsToRemove = new HashSet<>(player.getScoreboardTags());
+        // Remove all tags
+        for (String tag : tagsToRemove)
+            if (!tag.equals("GameDev") && !tag.equals("testing"))      // TEMP... only used for data pack capabilities
+                player.removeScoreboardTag(tag);
     }
 
 }
