@@ -190,7 +190,7 @@ public class PlayerHandler implements Listener {
                     event.setCancelled(true);
                 }
             }
-            // Lock inventory
+            // Lock inventory when not in a game
             event.setCancelled(true);
         }
     }
