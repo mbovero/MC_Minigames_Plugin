@@ -1,13 +1,13 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 
-public class KOTHPlayer {
+import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
+import org.bukkit.entity.Player;
+import java.util.Set;
+
+public class KOTHPlayer extends GamePlayer {
     //FIELDS
-    String playerName; //Hold Player name
-
     String playerClass; //Hold player class
-
     //Hold player team??
-
     int killCount;//Hold player kill count
 
     public KOTHPlayer(String playerName, String playerClass) {
@@ -16,9 +16,10 @@ public class KOTHPlayer {
     }
 
     //METHODS
-    //Basic item give methods
 
-    //Accessors
+        //Basic item give methods
+
+        //Accessors
 
 
 }
