@@ -1,12 +1,17 @@
 mc_minigames_plugin\mc_minigames_plugin\handlers\TorchHandler.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Fly.class
+mc_minigames_plugin\mc_minigames_plugin\minigames\Player.class
 mc_minigames_plugin\mc_minigames_plugin\util\Locations.class
 mc_minigames_plugin\mc_minigames_plugin\util\DelayedTask.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Spawn.class
+mc_minigames_plugin\mc_minigames_plugin\minigames\Game.class
 mc_minigames_plugin\mc_minigames_plugin\util\SpawnUtil.class
+mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHPlayer.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\PlayerHandler.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Menu.class
+mc_minigames_plugin\mc_minigames_plugin\handlers\GameLobbyHandler.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Hub.class
 mc_minigames_plugin\mc_minigames_plugin\util\ConfigUtil.class
 mc_minigames_plugin\mc_minigames_plugin\commands\SetSpawn.class
 mc_minigames_plugin\mc_minigames_plugin\util\Tools.class
+mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHGame.class
