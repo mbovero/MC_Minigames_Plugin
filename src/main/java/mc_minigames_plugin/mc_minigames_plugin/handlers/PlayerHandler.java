@@ -52,15 +52,13 @@ public class PlayerHandler implements Listener {
         // Reset player data on join -----------------------------------------------------------------------------------
         // Unless troubleshooting...
         if (!player.getScoreboardTags().contains("testing")) {
-            // Tp player to hub
-            player.teleport(Locations.mainHub);
+            // Send player to hub (reset inv and tp)
+            GameLobbyHandler.sendMainHub(player);
             // Set to adventure mode
             player.setGameMode(GameMode.ADVENTURE);
             // Prevent/reset flying
             player.setAllowFlight(false);
             player.setFlying(false);
-            // Clear inventory
-            inv.clear();
             // Clear potion effects
             Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
             for (PotionEffect pE : effectsToClear)
@@ -87,12 +85,6 @@ public class PlayerHandler implements Listener {
 
 
 
-            // Reset display name
-
-
-            // Lobby selection tool ----------------------------------------------------------------------------------------
-            ItemStack item = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
-            inv.setItem(4, item);
         }
     }
 
@@ -114,10 +106,10 @@ public class PlayerHandler implements Listener {
                     // Create "UI"
                     Inventory inv = Bukkit.createInventory(player, 9 * 3, "Lobby Selector");
                     // UI options:
-                    // Main Hub
-                    inv.setItem(11, createItem(new ItemStack(Material.RED_BED), "&2Main Hub", "&7Home sweet home"));
                     // KOTH lobby
-                    inv.setItem(13, createItem(new ItemStack(Material.GRASS_BLOCK), "&aKOTH", "&7Conquer the Hill"));
+                    inv.setItem(11, createItem(new ItemStack(Material.GRASS_BLOCK), "&aKOTH", "&7Conquer the Hill"));
+                    // Main Hub
+                    inv.setItem(13, createItem(new ItemStack(Material.RED_BED), "&2Main Hub", "&7Home sweet home"));
                     // MM lobby
                     inv.setItem(15, createItem(new ItemStack(Material.DIAMOND_SWORD), "&cMurder Mystery", "&7Stab your friends! :D"));
 
@@ -125,17 +117,34 @@ public class PlayerHandler implements Listener {
                     player.openInventory(inv);
                 }
 
-            // BUTTON CLICK DETECTIONS:
+
+            // LOBBY BUTTON CLICK DETECTIONS:
 
             // KOTH lobby button
-            // Detect when player right clicks on block
+            // Detect when player right-clicks on a block
             if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
                 // Define button location
                 Location KOTHButtonLoc = new Location(Bukkit.getWorld("world"), 17, -46, -26);
                 // Detect click on button
-                if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc))
+                if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc)) {
                     // Transport player
                     GameLobbyHandler.sendKOTHLobby(player);
+                    player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1.2f);
+                }
+            }
+
+            // MM lobby button
+            // Detect when player right-clicks on a block
+            if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                // Define button location
+                Location MMButtonLoc = new Location(Bukkit.getWorld("world"), 9, -44, 24);
+                Location MMButtonLoc2 = new Location(Bukkit.getWorld("world"), 7, -44, 24);
+                // Detect click on button
+                if (event.getClickedBlock().getLocation().equals(MMButtonLoc) || event.getClickedBlock().getLocation().equals(MMButtonLoc2)) {
+                    // Transport player
+                    GameLobbyHandler.sendMMLobby(player);
+                    player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1.2f);
+                }
             }
         }
     }
@@ -158,27 +167,30 @@ public class PlayerHandler implements Listener {
                 // Make sure an inventory item was clicked
                 if (event.getCurrentItem() != null) {
                     // Send player to...
-                    // Main Hub
-                    if (slot == 11 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub")) {
-                        GameLobbyHandler.sendMainHub(player);
-                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
-                    }
                     // KOTH lobby
-                    else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aKOTH")) {
+                    if (slot == 11 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aKOTH")) {
                         GameLobbyHandler.sendKOTHLobby(player);
-                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+                        event.getWhoClicked().closeInventory();
+                    }
+                    // Main Hub
+                    else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub")) {
+                        GameLobbyHandler.sendMainHub(player);
+                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+                        event.getWhoClicked().closeInventory();
                     }
                     // MM lobby
                     else if (slot == 15 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§cMurder Mystery")) {
                         GameLobbyHandler.sendMMLobby(player);
-                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+                        event.getWhoClicked().closeInventory();
                     }
 
                     // Cannot move items around, only click on them
                     event.setCancelled(true);
-                    event.getWhoClicked().closeInventory();
                 }
             }
+            // Lock inventory
             event.setCancelled(true);
         }
     }
@@ -257,6 +269,10 @@ public class PlayerHandler implements Listener {
         else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
             GameLobbyHandler.sendMainHub(player);
     }
+
+
+
+
 
     /**
      * Provides functionality for portal returning players to main hub from KOTH lobby

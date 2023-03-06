@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin;
 
 import mc_minigames_plugin.mc_minigames_plugin.commands.*;
+import mc_minigames_plugin.mc_minigames_plugin.handlers.GameLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.PlayerHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.TorchHandler;
 import mc_minigames_plugin.mc_minigames_plugin.util.ConfigUtil;
@@ -46,7 +47,7 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
         new TorchHandler(this);
         new PlayerHandler(this);
         new DelayedTask(this);
-
+        new GameLobbyHandler(this);
     }
 
     @Override
