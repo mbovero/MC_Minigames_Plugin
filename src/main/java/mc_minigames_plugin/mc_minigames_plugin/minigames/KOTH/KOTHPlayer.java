@@ -19,7 +19,20 @@ public class KOTHPlayer extends GamePlayer {
 
         //Basic item give methods
 
-        //Accessors
+    //Mutators
+
+    /**
+     * Mutator method to change the playerKit field into the preferred kit value
+     * @param kit to change into
+     */
+    public void changePlayerKit(String kit) {playerKit = kit;}
+
+    //Accessors
+    /**
+     * Accessor method that returns the current held playerKit value
+     * @return playerKit value
+     */
+    public String getPlayerKit () {return playerKit;}
 
 
 }
