@@ -39,89 +39,89 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         //Check for valid click and for an armor stand interaction
         if (clicked.getType() == EntityType.ARMOR_STAND && tags.contains("KOTHLobby")) {
             //Hold the location of armor stand "kit" to be selected
-            Location kothKit = clicked.getLocation();
+            String kitName = clicked.getName();
             //Check if the player has selected a valid kit entity and selects the specified class
                 //Damage kits
-            if (kothKit.getX() == 1 && kothKit.getZ() == -603)  {       //Striker
+            if (kitName.equals("§4Striker"))  {       //Striker
                 player.addScoreboardTag("KOTH_kit_Striker");
-                player.sendTitle("Striker", "Deal damage and take it too");
+                player.sendTitle("Striker", "Deal damage, and take it too");
             }
-            if (kothKit.getX() == -5 && kothKit.getZ() == -603) {        //Orc
+            if (kitName.equals("§4Orc")) {        //Orc
                 player.addScoreboardTag("KOTH_kit_Striker");
                 player.sendTitle("Orc", "Mean and green with a devastating axe");
             }
-            if (kothKit.getX() == -12 && kothKit.getZ() == -603) {        //Pyro
+            if (kitName.equals("§4Pyro")) {        //Pyro
                 player.addScoreboardTag("KOTH_kit_Pyro");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
-            if (kothKit.getX() == -19 && kothKit.getZ() == -603) {        //Saiyan
+            if (kitName.equals("§4Sayain")) {        //Saiyan
                 player.addScoreboardTag("KOTH_kit_Saiyan");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
                 //Tank kits
-            if (kothKit.getX() == 1 && kothKit.getZ() == -607) {        //Kight
+            if (kitName.equals("§1Knight")) {        //Kight
                 player.addScoreboardTag("KOTH_kit_Tank");
                 player.sendTitle("Knight", "Try pushing me off now");
             }
-            if (kothKit.getX() == -5 && kothKit.getZ() == -607) {        //TMNT
+            if (kitName.equals("§1TMNT")) {        //TMNT
                 player.addScoreboardTag("KOTH_kit_TMNT");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
-            if (kothKit.getX() == -12 && kothKit.getZ() == -607) {        //Trapper
+            if (kitName.equals("§1Trapper")) {        //Trapper
                 player.addScoreboardTag("KOTH_kit_Trapper ");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
-            if (kothKit.getX() == -19 && kothKit.getZ() == -607) {        //Number 4
+            if (kitName.equals("§4CockNBalls")) {        //Number 4
                 player.sendTitle("Sorry", "This class is not available yet");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
                 //Ranged kits
-            if (kothKit.getX() == 1 && kothKit.getZ() == -611) {        //Archer
+            if (kitName.equals("§2Archer")) {        //Archer
                 player.addScoreboardTag("KOTH_kit_Archer");
                 player.sendTitle("Archer", "Yeah, I shoot stuff");
             }
-            if (kothKit.getX() == -5 && kothKit.getZ() == -611) {        //Sniper
+            if (kitName.equals("§2Sniper")) {        //Sniper
                 player.addScoreboardTag("KOTH_kit_Sniper");
                 player.sendTitle("Sniper", "Lol, get OPed");
             }
-            if (kothKit.getX() == -12 && kothKit.getZ() == -611) {        //Ice Spirit
+            if (kitName.equals("§aIce Spirit")) {        //Ice Spirit
                 player.addScoreboardTag("KOTH_kit_IceSpirit");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
-            if (kothKit.getX() == -19 && kothKit.getZ() == -611) {//Number 4
+            if (kitName.equals("§4CockNBalls")) {//Number 4
                 player.sendTitle("Sorry", "This class is not available yet");
             }
                 //Magic kits
-            if (kothKit.getX() == 1 && kothKit.getZ() == -615) {        //Warper
+            if (kitName.equals("§dWarper")) {        //Warper
                 player.addScoreboardTag("KOTH_kit_Warper");
-                player.sendTitle("Warper", "You're neither here or there");
+                player.sendTitle("Warper", "You're neither here nor there");
             }
-            if (kothKit.getX() == -5 && kothKit.getZ() == -615) {        //Clock Master
+            if (kitName.equals("§dClockmaster")) {        //Clock Master
                 player.addScoreboardTag("KOTH_kit_ClockMaster");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
-            if (kothKit.getX() == -12 && kothKit.getZ() == -615) {        //Wizard
+            if (kitName.equals("§dwizard")) {        //Wizard
                 player.addScoreboardTag("KOTH_kit_Wizard");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
-            if (kothKit.getX() == -19 && kothKit.getZ() == -615) {        //Druid
+            if (kitName.equals("§dDruid")) {        //Druid
                 player.addScoreboardTag("KOTH_kit_Druid");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
                 //Misc. kits
-            if (kothKit.getX() == 1 && kothKit.getZ() == -619) {        //Fisherman
+            if (kitName.equals("§3Fisherman")) {        //Fisherman
                 player.addScoreboardTag("KOTH_kit_Fisherman");
                 player.sendTitle("Sorry", "Yank and smack, but don't tell your mom");
             }
-            if (kothKit.getX() == -5 && kothKit.getZ() == -619) {        //Ocean man
+            if (kitName.equals("§bOcean Man")) {        //Ocean man
                 player.addScoreboardTag("KOTH_kit_OceanMan");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
-            if (kothKit.getX() == -12 && kothKit.getZ() == -619) {        //Bird Person
+            if (kitName.equals("§bBird Person")) {        //Bird Person
                 player.addScoreboardTag("KOTH_kit_BirdPerson");
                 player.sendTitle("Sorry", "This class is not available yet");
             }
-            if (kothKit.getX() == -19 && kothKit.getZ() == -619) {        //Spider Man
+            if (kitName.equals("§bSpider")) {        //Spider Man
                 player.addScoreboardTag("KOTH_kit_SpiderMan");
                 player.sendTitle("Sorry", "This class is not available yet");
             }

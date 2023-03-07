@@ -6,6 +6,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
@@ -17,7 +18,7 @@ public class TroubleshootingHandler implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
         //Setup
         Player player = event.getPlayer();
@@ -27,6 +28,7 @@ public class TroubleshootingHandler implements Listener {
         if (player.getScoreboardTags().contains("testing")) {
             // Print name of entities that the player right-clicks
             player.sendMessage("You right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
+            Bukkit.getLogger().info(player.getName() + " right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
         }
     }
 }
