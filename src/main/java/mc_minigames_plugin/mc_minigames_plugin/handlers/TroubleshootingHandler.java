@@ -12,6 +12,14 @@ import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 import java.util.Set;
 
+/**
+ * Class that allows for troubleshooting of server functions.
+ *  - Prints name and location of entities that are right-clicked
+ *
+ * @author Miles Bovero
+ * @version March 6, 2023
+ */
+
 public class TroubleshootingHandler implements Listener {
 
     public TroubleshootingHandler(MC_Minigames_Plugin plugin) {
@@ -26,7 +34,7 @@ public class TroubleshootingHandler implements Listener {
         Location entityLoc = event.getRightClicked().getLocation();
 
         if (player.getScoreboardTags().contains("troubleshooting")) {
-            // Print name of entities that the player right-clicks
+            // Print name/location of entities that the player right-clicks
             player.sendMessage("You right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
             Bukkit.getLogger().info(player.getName() + " right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
         }

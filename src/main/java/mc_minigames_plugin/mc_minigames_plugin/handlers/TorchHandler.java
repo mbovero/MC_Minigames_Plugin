@@ -9,6 +9,13 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
+/**
+ * Tutorial handler for practice.
+ *
+ * @author Miles Bovero
+ * @version March 6, 2023
+ */
+
 public class TorchHandler implements Listener {
     public TorchHandler (MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);

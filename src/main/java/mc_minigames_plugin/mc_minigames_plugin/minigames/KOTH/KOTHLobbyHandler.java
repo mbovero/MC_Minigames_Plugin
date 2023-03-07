@@ -1,23 +1,29 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.checkerframework.checker.units.qual.K;
 
 import java.util.ArrayList;
 import java.util.Set;
+
+import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 
 /**
  *Class Description: Holds players in lobby and handles run time events for those players
@@ -27,6 +33,20 @@ import java.util.Set;
  */
 public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
+// ITEMS ---------------------------------------------------------------------------------------------------------------
+    // Lobby selector tool
+    static ItemStack lobbySelector = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
+
+    // KOTH lobby hot bar menu items
+    static ItemStack KOTHQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the KOTH queue!");
+    static ItemStack KOTHDequeue = createItem(new ItemStack(Material.LIME_DYE), "&aReady", "&fClick with this item to leave the KOTH queue");
+
+    static ItemStack KOTHTeamNone = createItem(new ItemStack(Material.LIGHT_GRAY_WOOL), "&7No Team", "&fClick with this item to change KOTH teams!");
+    static ItemStack KOTHTeamRed = createItem(new ItemStack(Material.RED_WOOL), "&4Red Team", "&fClick with this item to change KOTH teams!");
+    static ItemStack KOTHTeamBlue = createItem(new ItemStack(Material.BLUE_WOOL), "&1Blue Team", "&fClick with this item to change KOTH teams!");
+    static ItemStack KOTHTeamGreen = createItem(new ItemStack(Material.LIME_WOOL), "&2Green Team", "&fClick with this item to change KOTH teams!");
+    static ItemStack KOTHTeamYellow = createItem(new ItemStack(Material.YELLOW_WOOL), "&eYellow Team", "&fClick with this item to change KOTH teams!");
+// ---------------------------------------------------------------------------------------------------------------------
 
 
     public KOTHLobbyHandler (MC_Minigames_Plugin plugin, Player player) {
@@ -55,7 +75,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
      * @param event
      */
     @EventHandler
-    public void onKitSelection (PlayerInteractAtEntityEvent event) {
+    public void onKitSelect (PlayerInteractAtEntityEvent event) {
         Entity clicked = event.getRightClicked();
         //Hold the player entity
         Player player = event.getPlayer();
@@ -165,5 +185,114 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
     //Enter Que/Ready up
 
+    /**
+     * Handles lobby hot bar menu items
+     */
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent event) {
+        // Setup
+        Player player = event.getPlayer();
+        Inventory inv = player.getInventory();
+        Set<String> tags = player.getScoreboardTags();
 
+        // For all players in the KOTH Lobby...
+        if (tags.contains("KOTHLobby")) {
+            // Detect when player clicks
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
+                // Detect click with an item
+                if (player.getItemInHand().getItemMeta() != null) {
+                    // QUEUE ITEM
+                    // Detect click with KOTH queue item
+                    if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHQueue.getItemMeta().getDisplayName())) {
+                        // Queue player
+                        player.addScoreboardTag("KOTHQueued");
+                        // Switch to dequeue item
+                        inv.setItem(0, KOTHDequeue);
+                        // Play sound
+                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 5, 1.5f);
+                    }
+                    // Detect click with KOTH dequeue item
+                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHDequeue.getItemMeta().getDisplayName())) {
+                        // Dequeue player
+                        player.removeScoreboardTag("KOTHQueued");
+                        // Switch to queue item
+                        inv.setItem(0, KOTHQueue);
+                        // Play sound
+                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_COW_BELL, 5, .8f);
+                    }
+
+                    // TEAM SELECTOR
+                    // Detect click with KOTH team selector (none)
+                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamNone.getItemMeta().getDisplayName())) {
+                        // Put player on red team
+                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHRed").addPlayer(player);
+                        // Switch to next item
+                        inv.setItem(2, KOTHTeamRed);
+                        // Play sound
+                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                    }
+                    // Detect click with KOTH team selector (red)
+                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamRed.getItemMeta().getDisplayName())) {
+                        // Put player on red team
+                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHBlue").addPlayer(player);
+                        // Switch to next item
+                        inv.setItem(2, KOTHTeamBlue);
+                        // Play sound
+                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                    }
+                    // Detect click with KOTH team selector (blue)
+                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamBlue.getItemMeta().getDisplayName())) {
+                        // Put player on red team
+                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHGreen").addPlayer(player);
+                        // Switch to next item
+                        inv.setItem(2, KOTHTeamGreen);
+                        // Play sound
+                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                    }
+                    // Detect click with KOTH team selector (green)
+                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamGreen.getItemMeta().getDisplayName())) {
+                        // Put player on red team
+                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHYellow").addPlayer(player);
+                        // Switch to next item
+                        inv.setItem(2, KOTHTeamYellow);
+                        // Play sound
+                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                    }
+                    // Detect click with KOTH team selector (yellow)
+                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamYellow.getItemMeta().getDisplayName())) {
+                        // Put player on red team
+                        Tools.resetTeam(player);
+                        // Switch to next item
+                        inv.setItem(2, KOTHTeamNone);
+                        // Play sound
+                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                    }
+                }
+        }
+    }
+
+    /**
+     * Provides functionality for portal returning players to main hub from KOTH lobby
+     */
+    @EventHandler
+    public void returnPortal(PlayerMoveEvent event) {
+        Player player = event.getPlayer();
+        Set<String> tags = player.getScoreboardTags();
+        // Detect players in portal range and in KOTH lobby
+        if (event.getTo().getY() < -56 && event.getTo().getY() > -63 &&
+                event.getTo().getZ() < -594 && event.getTo().getZ() > -595 &&
+                event.getTo().getX() < 11 && event.getTo().getX() > 5 &&
+                tags.contains("KOTHLobby")) {
+            // Play portal sound at KOTH lobby to surrounding players
+            for (Player p : Bukkit.getOnlinePlayers())
+                if (p.getScoreboardTags().contains("notInGame"))
+                    p.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+            // Transport player to main hub
+            GeneralLobbyHandler.sendMainHub(player);
+            // Play portal sound at main hub to surrounding players
+            for (Player p : Bukkit.getOnlinePlayers())
+                if (p.getScoreboardTags().contains("notInGame"))
+                    p.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+        }
+    }
 }
