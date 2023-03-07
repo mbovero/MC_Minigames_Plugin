@@ -4,6 +4,7 @@ import mc_minigames_plugin.mc_minigames_plugin.commands.*;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GameLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.PlayerHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.TorchHandler;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.util.ConfigUtil;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.SpawnUtil;
@@ -48,6 +49,7 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
         new PlayerHandler(this);
         new DelayedTask(this);
         new GameLobbyHandler(this);
+        new KOTHLobbyHandler(this);
     }
 
     @Override
