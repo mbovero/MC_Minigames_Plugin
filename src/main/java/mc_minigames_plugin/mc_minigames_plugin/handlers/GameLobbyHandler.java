@@ -156,6 +156,7 @@ public class GameLobbyHandler implements Listener {
         if (!player.getScoreboardTags().contains("testing"))    // Only clear inventory if not troubleshooting
             inv.clear();
         inv.setItem(0, MMQueue);
+        inv.setItem(2, MMTeamNone);
         inv.setItem(4, createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!"));
     }
 

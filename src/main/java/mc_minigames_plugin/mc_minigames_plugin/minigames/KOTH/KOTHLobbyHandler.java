@@ -7,8 +7,11 @@ import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+
+import java.util.Set;
 
 /**
  *Class Description: Holds players in lobby and handles run time events for those players
@@ -27,13 +30,15 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
      * stand in the KOTH lobby and assigns the player the respective kit
      * @param event
      */
+    @EventHandler
     public void onKitSelection (PlayerInteractAtEntityEvent event) {
         Entity clicked = event.getRightClicked();
+        //Hold the player entity
+        Player player = event.getPlayer();
+        Set<String> tags = event.getPlayer().getScoreboardTags();
         //Check for valid click and for an armor stand interaction
-        if (clicked.getType() == EntityType.ARMOR_STAND) {
-            //Hold the player entity
-            Player player = event.getPlayer();
-            //Hold the armor stand "class kit" to be selected
+        if (clicked.getType() == EntityType.ARMOR_STAND && tags.contains("KOTHLobby")) {
+            //Hold the location of armor stand "kit" to be selected
             Location kothKit = clicked.getLocation();
             //Check if the player has selected a valid kit entity and selects the specified class
                 //Damage kits
