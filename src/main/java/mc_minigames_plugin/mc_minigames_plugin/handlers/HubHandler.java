@@ -1,6 +1,8 @@
 package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.HubPlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHPlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
@@ -21,6 +23,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
@@ -37,6 +40,7 @@ import java.util.Set;
 public class HubHandler extends PlayerArea implements Listener {
     public HubHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        areaPlayers = new ArrayList<>();
         areaName = "mainHub";
     }
 
@@ -65,6 +69,7 @@ public class HubHandler extends PlayerArea implements Listener {
         // Unless troubleshooting...
         if (!player.getScoreboardTags().contains("troubleshooting")) {
             // Send player to hub (reset inv and tp)
+            areaPlayers.add(new HubPlayer(player));
             GeneralLobbyHandler.sendMainHub(player, this);
             // Set to adventure mode
             player.setGameMode(GameMode.ADVENTURE);
@@ -294,6 +299,6 @@ public class HubHandler extends PlayerArea implements Listener {
 
     @Override
     public void addPlayer(Player mcPlayer) {
-
+        areaPlayers.add(new HubPlayer(mcPlayer));
     }
 }

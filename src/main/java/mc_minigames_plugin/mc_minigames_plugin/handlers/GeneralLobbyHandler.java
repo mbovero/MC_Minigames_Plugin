@@ -3,6 +3,7 @@ package mc_minigames_plugin.mc_minigames_plugin.handlers;
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHLobbyHandler;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.MM.MMLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
@@ -42,9 +43,10 @@ public class GeneralLobbyHandler implements Listener {
     protected static MC_Minigames_Plugin plugin;            // Overarching plugin
 
     static boolean KOTHExist;      // Boolean to check if a KOTHLobbyHandler object exists
+    static boolean MMExist;      // Boolean to check if a KOTHLobbyHandler object exists
 
 
-// ITEMS ---------------------------------------------------------------------------------------------------------------
+    // ITEMS ---------------------------------------------------------------------------------------------------------------
     // Lobby selector tool
     static ItemStack lobbySelector = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
 
@@ -68,13 +70,14 @@ public class GeneralLobbyHandler implements Listener {
         // Initialize fields
         GeneralLobbyHandler.plugin = plugin;
         playerAreas = new ArrayList<>();
+        playerAreas.add(new HubHandler(plugin));
         KOTHExist = false;  // KOTHLobbyHandler has not been created
 
         // Create MM teams   --- MOVE TO MM HANDLER
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMGreen", " ⧫ ", "Green", null, ChatColor.GREEN,false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMYellow", " ⧫ ", "Yellow", null, ChatColor.YELLOW,false, true, NameTagVisibility.ALWAYS);
+        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMRed", " ⧫ ", "Red", null, ChatColor.RED, false, true, NameTagVisibility.ALWAYS);
+        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMBlue", " ⧫ ", "Blue", null, ChatColor.BLUE, false, true, NameTagVisibility.ALWAYS);
+        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMGreen", " ⧫ ", "Green", null, ChatColor.GREEN, false, true, NameTagVisibility.ALWAYS);
+        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMYellow", " ⧫ ", "Yellow", null, ChatColor.YELLOW, false, true, NameTagVisibility.ALWAYS);
     }
 
 
@@ -94,31 +97,42 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static DelayedTask sendMainHub(Player player, PlayerArea area) {
+    public static DelayedTask sendMainHub(Player player, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
-        if (!(area.getAreaName().equals("mainHub")))
-            area.removePlayer(player);
-        // Tp player
-        player.teleport(Locations.mainHub);
-        // Clear potion effects
-        Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
-        for (PotionEffect pE : effectsToClear)
-            player.removePotionEffect(pE.getType());
-        // Reset tags
-        Set<String> tags = player.getScoreboardTags();
-        Tools.resetTags(player);
-        // Set tags
-        player.addScoreboardTag("mainHub");         // Player is now in main hub
-        player.addScoreboardTag("notInGame");       // Player is still not in a game
-        // Reset team
-        Tools.resetTeam(player);
-        // Reset inventory
-        Inventory inv = player.getInventory();
-        if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
-            inv.clear();
-        // Give lobby selector after some time
-        inv.setItem(4, lobbySelector);
+            if (!(prevArea.getAreaName().equals("mainHub"))) {
+                prevArea.removePlayer(player);
+
+                player.sendMessage("Removed " + player.getName() + " from " + prevArea.getAreaName());
+
+                // Add the player when an instance of HubHandler is found
+                for (PlayerArea lobby : playerAreas)
+                    if (lobby instanceof HubHandler) {
+                        lobby.addPlayer(player);
+                        player.sendMessage("Added " + player.getName() + " to " + lobby.getAreaName());
+                    }
+            }
+
+            // Tp player
+            player.teleport(Locations.mainHub);
+            // Clear potion effects
+            Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+            for (PotionEffect pE : effectsToClear)
+                player.removePotionEffect(pE.getType());
+            // Reset tags
+            Set<String> tags = player.getScoreboardTags();
+            Tools.resetTags(player);
+            // Set tags
+            player.addScoreboardTag("mainHub");         // Player is now in main hub
+            player.addScoreboardTag("notInGame");       // Player is still not in a game
+            // Reset team
+            Tools.resetTeam(player);
+            // Reset inventory
+            Inventory inv = player.getInventory();
+            if (!tags.contains("troubleshooting"))    // Only clear inventory if not troubleshooting
+                inv.clear();
+            // Give lobby selector after some time
+            inv.setItem(4, lobbySelector);
         }, 5);
     }
 
@@ -128,11 +142,24 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static DelayedTask sendKOTHLobby(Player player, PlayerArea area) {
+    public static DelayedTask sendKOTHLobby(Player player, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
-            if (!(area.getAreaName().equals("KOTHLobby")))
-                area.removePlayer(player);
+            if (!(prevArea.getAreaName().equals("KOTHLobby"))) {
+                prevArea.removePlayer(player);
+
+                // Change boolean and add the player when an instance of KOTHLobbyHandler is found
+                for (PlayerArea lobby : playerAreas)
+                    if (lobby instanceof KOTHLobbyHandler) {
+                        lobby.addPlayer(player);
+                        KOTHExist = true;
+                    }
+                // Create new KOTHLobbyHandler if one doesn't already exist
+                if (!KOTHExist) {
+                    playerAreas.add(new KOTHLobbyHandler(plugin, player));
+                    KOTHExist = true;
+                }
+            }
             // Tp player
             player.teleport(Locations.KOTHLobby);
             // Play tp sound
@@ -159,17 +186,6 @@ public class GeneralLobbyHandler implements Listener {
             inv.setItem(4, lobbySelector);    // Lobby selector item
 
 
-            // Change boolean and add the player when an instance of KOTHLobbyHandler is found
-            for (PlayerArea lobby : playerAreas)
-                if (lobby instanceof KOTHLobbyHandler) {
-                    lobby.addPlayer(player);
-                    KOTHExist = true;
-                }
-            // Create new KOTHLobbyHandler if one doesn't already exist
-            if (!KOTHExist) {
-                playerAreas.add(new KOTHLobbyHandler(plugin, player));
-                KOTHExist = true;
-            }
         }, 5);
     }
 
@@ -178,35 +194,48 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static DelayedTask sendMMLobby(Player player, PlayerArea area) {
+    public static DelayedTask sendMMLobby(Player player, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
-        if (!(area.getAreaName().equals("MMLobby")))
-            area.removePlayer(player);
+            if (!(prevArea.getAreaName().equals("MMLobby"))) {
+                prevArea.removePlayer(player);
+                // Change boolean and add the player when an instance of MMLobbyHandler is found
+                for (PlayerArea lobby : playerAreas)
+                    if (lobby instanceof MMLobbyHandler) {
+                        lobby.addPlayer(player);
+                        MMExist = true;
+                    }
+                // Create new KOTHLobbyHandler if one doesn't already exist
+                if (!MMExist) {
+                    playerAreas.add(new MMLobbyHandler(plugin, player));
+                    MMExist = true;
+                }
+            }
+
             // Tp player
-        player.teleport(Locations.MMLobby);
-        // Play tp sound
-        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
-        // Clear potion effects
-        Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
-        for (PotionEffect pE : effectsToClear)
-            player.removePotionEffect(pE.getType());
-        // Reset tags
-        Set<String> tags = player.getScoreboardTags();
-        Tools.resetTags(player);
-        // Set tags
-        player.addScoreboardTag("MMLobby");         // Player is now in MM lobby
-        player.addScoreboardTag("notInGame");       // Player is still not in a game
-        // Reset team
-        Tools.resetTeam(player);
-        // Reset inventory
-        Inventory inv = player.getInventory();
-        if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
-            inv.clear();
-        // Give items for lobby hot bar menu
-        inv.setItem(0, MMQueue);        // Queue/Dequeue item
-        inv.setItem(2, MMTeamNone);     // Team selector item (no team by default)
-        inv.setItem(4, lobbySelector);  // Lobby selector item
+            player.teleport(Locations.MMLobby);
+            // Play tp sound
+            player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+            // Clear potion effects
+            Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+            for (PotionEffect pE : effectsToClear)
+                player.removePotionEffect(pE.getType());
+            // Reset tags
+            Set<String> tags = player.getScoreboardTags();
+            Tools.resetTags(player);
+            // Set tags
+            player.addScoreboardTag("MMLobby");         // Player is now in MM lobby
+            player.addScoreboardTag("notInGame");       // Player is still not in a game
+            // Reset team
+            Tools.resetTeam(player);
+            // Reset inventory
+            Inventory inv = player.getInventory();
+            if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
+                inv.clear();
+            // Give items for lobby hot bar menu
+            inv.setItem(0, MMQueue);        // Queue/Dequeue item
+            inv.setItem(2, MMTeamNone);     // Team selector item (no team by default)
+            inv.setItem(4, lobbySelector);  // Lobby selector item
         }, 5);
     }
 
@@ -250,7 +279,7 @@ public class GeneralLobbyHandler implements Listener {
     public void onMenuClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Set<String> tags = player.getScoreboardTags();
-        //Holds the area the minecraft player reference is in based on the GamePlayer reference
+        // Holds the area the minecraft player reference is in based on the GamePlayer reference
         PlayerArea playerArea = findPlayer(player);
         // For players not in a game...
         if (tags.contains("notInGame")) {
@@ -298,15 +327,23 @@ public class GeneralLobbyHandler implements Listener {
 
     /**
      * Method returns the PlayerArea object that the associated player reference is currently held inside.
+     *
      * @param mcPlayer
      * @return
      */
-    public PlayerArea findPlayer (Player mcPlayer) {
+    public PlayerArea findPlayer(Player mcPlayer) {
         for (PlayerArea area : playerAreas) {
-            for (GamePlayer gamePlayer : area.getPlayers()) {
-                if (gamePlayer.isPlayer(mcPlayer)) {return area;}
-            }
+
+            mcPlayer.sendMessage(area.getAreaName());
+
+                for (GamePlayer gamePlayer : area.getPlayers()) {
+                    mcPlayer.sendMessage("Players: " + gamePlayer.getPlayer().getName());
+                    if (gamePlayer.isPlayer(mcPlayer)) {
+                        return area;
+                    }
+                }
         }
+        mcPlayer.sendMessage("\nBAD BAD\n");
         return null;
     }
 

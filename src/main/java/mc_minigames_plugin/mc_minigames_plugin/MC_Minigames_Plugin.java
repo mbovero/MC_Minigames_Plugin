@@ -55,7 +55,6 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
 
         // Register new handler
         new TroubleshootingHandler(this);
-        new HubHandler(this);
         new DelayedTask(this);
         new GeneralLobbyHandler(this);
     }
