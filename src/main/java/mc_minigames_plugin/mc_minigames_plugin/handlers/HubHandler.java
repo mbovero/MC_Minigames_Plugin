@@ -1,6 +1,8 @@
 package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHPlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -15,7 +17,6 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.player.*;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
@@ -33,9 +34,10 @@ import java.util.Set;
  * @author Kirt Robinson, Miles Bovero
  * @version March 6, 2023
  */
-public class HubHandler implements Listener {
+public class HubHandler extends PlayerArea implements Listener {
     public HubHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        areaName = "mainHub";
     }
 
     /**
@@ -63,7 +65,7 @@ public class HubHandler implements Listener {
         // Unless troubleshooting...
         if (!player.getScoreboardTags().contains("troubleshooting")) {
             // Send player to hub (reset inv and tp)
-            GeneralLobbyHandler.sendMainHub(player);
+            GeneralLobbyHandler.sendMainHub(player, this);
             // Set to adventure mode
             player.setGameMode(GameMode.ADVENTURE);
             // Prevent/reset flying
@@ -117,7 +119,7 @@ public class HubHandler implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc)) {
                     // Transport player
-                    GeneralLobbyHandler.sendKOTHLobby(player);
+                    GeneralLobbyHandler.sendKOTHLobby(player, this);
                 }
             }
 
@@ -130,7 +132,7 @@ public class HubHandler implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(MMButtonLoc) || event.getClickedBlock().getLocation().equals(MMButtonLoc2)) {
                     // Transport player
-                    GeneralLobbyHandler.sendMMLobby(player);
+                    GeneralLobbyHandler.sendMMLobby(player, this);
                 }
             }
         }
@@ -287,6 +289,11 @@ public class HubHandler implements Listener {
         }
         // Return players to main hub when they go out of bounds
         else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
-            GeneralLobbyHandler.sendMainHub(player);
+            GeneralLobbyHandler.sendMainHub(player, this);
+    }
+
+    @Override
+    public void addPlayer(Player mcPlayer) {
+
     }
 }

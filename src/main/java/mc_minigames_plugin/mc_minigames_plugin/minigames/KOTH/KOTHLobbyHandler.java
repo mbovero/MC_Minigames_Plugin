@@ -60,6 +60,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         //Add player to start of player list
         areaPlayers = new ArrayList<>();
         areaPlayers.add(new KOTHPlayer(player));
+        areaName = "KOTHLobby";
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
@@ -229,7 +230,6 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                     // QUEUE ITEM
                     // Detect click with KOTH queue item
                     if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHQueue.getItemMeta().getDisplayName())) {
-                        new DelayedTask(() -> {
                         // Queue player
                         player.addScoreboardTag("KOTHQueued");
                         // Give glowing effect
@@ -238,7 +238,6 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                         inv.setItem(0, KOTHDequeue);
                         // Play sound
                         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 5, 1.5f);
-                        }, 3);
                     }
                     // Detect click with KOTH dequeue item
                     else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHDequeue.getItemMeta().getDisplayName())) {
@@ -333,7 +332,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             if (lastPortalTask != null)
                 Bukkit.getScheduler().cancelTask(lastPortalTask.getId());
             // Transport player to main hub
-            lastPortalTask = GeneralLobbyHandler.sendMainHub(player);
+            lastPortalTask = GeneralLobbyHandler.sendMainHub(player, this);
             event.setCancelled(true);
         }
     }

@@ -13,9 +13,10 @@ import java.util.ArrayList;
 abstract public class PlayerArea {
     //FIELDS
     protected ArrayList<GamePlayer> areaPlayers; //List of current players in the specified game or lobby area
+    protected String areaName;
 
 
-    //GENERAL MINI-GAME FEATURES
+    //GENERAL PlayerArea FEATURES --------------------------------------------------------------------------------------
 
     /**
      * Returns the players in the current PlayerArea that are ready for game start
@@ -28,6 +29,41 @@ abstract public class PlayerArea {
         return players;
     }
 
+    /**
+     * Method adds the specified minecraft player reference to the PlayerArea object using that area's specific player object
+     * @param mcPlayer
+     */
     abstract public void addPlayer (Player mcPlayer);
+
+    /**
+     * Method removes the specified minecraft player reference from the current PlayerArea object by
+     * comparing individual players to the reference
+     * @param player
+     */
+    public void removePlayer (Player player) {
+        for (GamePlayer listPlayer : areaPlayers)
+        {
+            if (listPlayer.isPlayer(player)) {
+                areaPlayers.remove(listPlayer);
+                break;
+            }
+        }
+    }
+
+    //Accessors --------------------------------------------------------------------------------------------------------
+
+    /**
+     * Accessor method that returns the name of the current PlayerArea
+     * @return
+     */
+    public String getAreaName () {return areaName;}
+
+    /**
+     * Accessor method that returns the list of GamePlayer objects from the current PlayerArea
+     * @return
+     */
+    public ArrayList<GamePlayer> getPlayers () {return areaPlayers;}
+
+
 
 }
