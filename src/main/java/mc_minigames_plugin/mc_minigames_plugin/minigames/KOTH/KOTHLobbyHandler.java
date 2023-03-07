@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -10,7 +11,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.checkerframework.checker.units.qual.K;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 /**
@@ -20,11 +23,20 @@ import java.util.Set;
  * @version March 5, 2023
  */
 public class KOTHLobbyHandler extends PlayerArea implements Listener {
-    public KOTHLobbyHandler (MC_Minigames_Plugin plugin) {
+
+    public KOTHLobbyHandler (MC_Minigames_Plugin plugin, Player player) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
-    }
+        areaPlayers.add(new KOTHPlayer(player));
+        }
 
     //KOTH LOBBY FEATURES-----------------------------------------------------------------------------------------------
+
+    /**
+     * Method adds a new KOTPlayer to the list of current KOTHPlayers
+     * @param mcPlayer a reference to a minecraft players
+     */
+    public void addPlayer (Player mcPlayer) {areaPlayers.add(new KOTHPlayer(mcPlayer));}
+
     /**
      * This observer method activates when a player interacts with a "Class Kit" armor
      * stand in the KOTH lobby and assigns the player the respective kit
@@ -126,6 +138,10 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 player.sendTitle("Sorry", "This class is not available yet");
             }
         }
+    }
+    public void changeKit (Player player, String kit) {
+
+        player.addScoreboardTag(kit);
     }
 
     //Map Selection

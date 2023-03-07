@@ -1,5 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames;
 
+import org.bukkit.entity.Player;
+
 import java.util.ArrayList;
 
 /**
@@ -25,5 +27,7 @@ abstract public class PlayerArea {
         players.removeIf(guy -> !guy.isGameReady());
         return players;
     }
+
+    abstract public void addPlayer (Player mcPlayer);
 
 }
