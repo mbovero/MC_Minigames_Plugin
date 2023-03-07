@@ -1,6 +1,8 @@
 package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
+import com.sun.tools.javac.jvm.Items;
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
@@ -29,6 +31,8 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
  * @version March 5, 2023
  */
 public class GameLobbyHandler implements Listener {
+
+    static ItemStack lobbySelector = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
 
     // KOTH lobby hot bar menu items
     static ItemStack KOTHQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the KOTH queue!");
@@ -104,7 +108,7 @@ public class GameLobbyHandler implements Listener {
         Inventory inv = player.getInventory();
         if (!player.getScoreboardTags().contains("testing"))    // Only clear inventory if not troubleshooting
             inv.clear();
-        inv.setItem(4, createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!"));
+        new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);
     }
 
     /**
@@ -127,9 +131,9 @@ public class GameLobbyHandler implements Listener {
         Inventory inv = player.getInventory();
         if (!player.getScoreboardTags().contains("testing"))    // Only clear inventory if not troubleshooting
             inv.clear();
-        inv.setItem(0, KOTHQueue);
-        inv.setItem(2, KOTHTeamNone);
-        inv.setItem(4, createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!"));
+        new DelayedTask(() -> {inv.setItem(0, KOTHQueue);}, 10);
+        new DelayedTask(() -> {inv.setItem(2, KOTHTeamNone);}, 10);
+        new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);
     }
 
     /**
@@ -152,9 +156,9 @@ public class GameLobbyHandler implements Listener {
         Inventory inv = player.getInventory();
         if (!player.getScoreboardTags().contains("testing"))    // Only clear inventory if not troubleshooting
             inv.clear();
-        inv.setItem(0, MMQueue);
-        inv.setItem(2, MMTeamNone);
-        inv.setItem(4, createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!"));
+        new DelayedTask(() -> {inv.setItem(0, MMQueue);}, 10);
+        new DelayedTask(() -> {inv.setItem(2, MMTeamNone);}, 10);
+        new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);
     }
 
     /**
