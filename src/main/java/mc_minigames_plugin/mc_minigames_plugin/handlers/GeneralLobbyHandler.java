@@ -190,9 +190,6 @@ public class GeneralLobbyHandler implements Listener {
         new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);  // Lobby selector item
     }
 
-
-
-
     /**
      * Provides functionality to the Lobby Selector item (and MM lobby hot bar menu -- MOVE TO MMHANDLER)
      */
@@ -214,11 +211,11 @@ public class GeneralLobbyHandler implements Listener {
                     Inventory menu = Bukkit.createInventory(player, 9 * 3, "Lobby Selector");
                     // UI options:
                     // KOTH lobby
-                    inv.setItem(11, createItem(new ItemStack(Material.GRASS_BLOCK), "&aKOTH", "&7Conquer the Hill"));
+                    menu.setItem(11, createItem(new ItemStack(Material.GRASS_BLOCK), "&aKOTH", "&7Conquer the Hill"));
                     // Main Hub
-                    inv.setItem(13, createItem(new ItemStack(Material.RED_BED), "&2Main Hub", "&7Home sweet home"));
+                    menu.setItem(13, createItem(new ItemStack(Material.RED_BED), "&2Main Hub", "&7Home sweet home"));
                     // MM lobby
-                    inv.setItem(15, createItem(new ItemStack(Material.DIAMOND_SWORD), "&cMurder Mystery", "&7Stab your friends! :D"));
+                    menu.setItem(15, createItem(new ItemStack(Material.DIAMOND_SWORD), "&cMurder Mystery", "&7Stab your friends! :D"));
 
                     // Open the created "UI"
                     player.openInventory(menu);

@@ -17,10 +17,13 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.checkerframework.checker.units.qual.K;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Set;
 
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
@@ -226,6 +229,8 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                     if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHQueue.getItemMeta().getDisplayName())) {
                         // Queue player
                         player.addScoreboardTag("KOTHQueued");
+                        // Give glowing effect
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,2147483647, 1, true, false, false));
                         // Switch to dequeue item
                         inv.setItem(0, KOTHDequeue);
                         // Play sound
@@ -235,6 +240,10 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                     else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHDequeue.getItemMeta().getDisplayName())) {
                         // Dequeue player
                         player.removeScoreboardTag("KOTHQueued");
+                        // Clear glowing potion effects
+                        Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+                        for (PotionEffect pE : effectsToClear)
+                            player.removePotionEffect(pE.getType());
                         // Switch to queue item
                         inv.setItem(0, KOTHQueue);
                         // Play sound

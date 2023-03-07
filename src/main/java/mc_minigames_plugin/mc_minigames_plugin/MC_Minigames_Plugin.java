@@ -4,7 +4,6 @@ import mc_minigames_plugin.mc_minigames_plugin.commands.*;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.TroubleshootingHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.HubHandler;
-import mc_minigames_plugin.mc_minigames_plugin.handlers.TorchHandler;
 import mc_minigames_plugin.mc_minigames_plugin.util.ConfigUtil;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.SpawnUtil;
@@ -13,6 +12,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
 
+/**
+ * The main class running the MC Minigames Plugin.
+ *
+ * @author Kirt Robinson, Miles Bovero
+ * @version March 6, 2023
+ */
 public final class MC_Minigames_Plugin extends JavaPlugin {
 
     @Override

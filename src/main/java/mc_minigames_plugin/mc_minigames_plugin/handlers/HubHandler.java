@@ -35,6 +35,9 @@ public class HubHandler implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
+    /**
+     * Resets player team and scoreboard data when they leave.
+     */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
@@ -53,9 +56,7 @@ public class HubHandler implements Listener {
     public void resetOnPlayerJoin(PlayerJoinEvent event) {
         // Setup & retrieve data
         Player player = event.getPlayer();
-        Inventory inv = player.getInventory();
 
-        // Reset player data on join -----------------------------------------------------------------------------------
         // Unless troubleshooting...
         if (!player.getScoreboardTags().contains("troubleshooting")) {
             // Send player to hub (reset inv and tp)
