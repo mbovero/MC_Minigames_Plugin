@@ -25,7 +25,7 @@ public class TroubleshootingHandler implements Listener {
         Set<String> tags = event.getPlayer().getScoreboardTags();
         Location entityLoc = event.getRightClicked().getLocation();
 
-        if (player.getScoreboardTags().contains("testing")) {
+        if (player.getScoreboardTags().contains("troubleshooting")) {
             // Print name of entities that the player right-clicks
             player.sendMessage("You right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
             Bukkit.getLogger().info(player.getName() + " right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));

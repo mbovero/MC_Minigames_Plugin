@@ -98,7 +98,7 @@ public class Tools {
         Set<String> tagsToRemove = new HashSet<>(player.getScoreboardTags());
         // Remove all tags
         for (String tag : tagsToRemove)
-            if (!tag.equals("GameDev") && !tag.equals("testing"))      // game dev is TEMP... only used for data pack capabilities
+            if (!tag.equals("GameDev") && !tag.equals("troubleshooting"))      // game dev is TEMP... only used for data pack capabilities
                 player.removeScoreboardTag(tag);
     }
 

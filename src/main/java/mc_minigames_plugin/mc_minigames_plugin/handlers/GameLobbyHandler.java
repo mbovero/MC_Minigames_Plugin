@@ -37,6 +37,7 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
  */
 public class GameLobbyHandler implements Listener {
 
+    // Lobby selector tool
     static ItemStack lobbySelector = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
 
     protected static ArrayList<PlayerArea> playerAreas;
@@ -84,7 +85,7 @@ public class GameLobbyHandler implements Listener {
     /*
      * Lobby/hub tags for keeping track of player location/status:
      *
-     *  - "testing"  - does not perform usual resets to player
+     *  - "troubleshooting"  - does not perform usual resets to player
      *  - "mainHub"
      *  - "KOTHLobby"
      *  - "KOTHQueued"
@@ -110,7 +111,7 @@ public class GameLobbyHandler implements Listener {
         Tools.resetTeam(player);
         // Reset/set inventory
         Inventory inv = player.getInventory();
-        if (!player.getScoreboardTags().contains("testing"))    // Only clear inventory if not troubleshooting
+        if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
             inv.clear();
         new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);
     }
@@ -147,7 +148,7 @@ public class GameLobbyHandler implements Listener {
         Tools.resetTeam(player);
         // Reset/set inventory
         Inventory inv = player.getInventory();
-        if (!player.getScoreboardTags().contains("testing"))    // Only clear inventory if not troubleshooting
+        if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
             inv.clear();
         new DelayedTask(() -> {inv.setItem(0, KOTHQueue);}, 10);
         new DelayedTask(() -> {inv.setItem(2, KOTHTeamNone);}, 10);
@@ -172,7 +173,7 @@ public class GameLobbyHandler implements Listener {
         Tools.resetTeam(player);
         // Reset/set inventory
         Inventory inv = player.getInventory();
-        if (!player.getScoreboardTags().contains("testing"))    // Only clear inventory if not troubleshooting
+        if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
             inv.clear();
         new DelayedTask(() -> {inv.setItem(0, MMQueue);}, 10);
         new DelayedTask(() -> {inv.setItem(2, MMTeamNone);}, 10);

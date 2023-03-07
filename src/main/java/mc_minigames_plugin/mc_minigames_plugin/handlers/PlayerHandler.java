@@ -56,7 +56,7 @@ public class PlayerHandler implements Listener {
 
         // Reset player data on join -----------------------------------------------------------------------------------
         // Unless troubleshooting...
-        if (!player.getScoreboardTags().contains("testing")) {
+        if (!player.getScoreboardTags().contains("troubleshooting")) {
             // Send player to hub (reset inv and tp)
             GameLobbyHandler.sendMainHub(player);
             // Set to adventure mode
@@ -101,7 +101,7 @@ public class PlayerHandler implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
-        if (tags.contains("notInGame") || tags.contains("testing")) {
+        if (tags.contains("notInGame") || tags.contains("troubleshooting")) {
 
             // Detect when player right clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
@@ -195,7 +195,7 @@ public class PlayerHandler implements Listener {
                     event.setCancelled(true);
                 }
             }
-            if (!tags.contains("testing"))  // Unless troubleshooting...
+            if (!tags.contains("troubleshooting"))  // Unless troubleshooting...
             // Lock inventory when not in a game
                 event.setCancelled(true);
         }
@@ -204,7 +204,7 @@ public class PlayerHandler implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventHarvestBlock(PlayerHarvestBlockEvent event) {
         Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("testing")) {
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             event.setCancelled(true);
         }
     }
@@ -212,7 +212,7 @@ public class PlayerHandler implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
         Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("testing")) {
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             event.setCancelled(true);
         }
     }
@@ -220,7 +220,7 @@ public class PlayerHandler implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventItemConsume(PlayerItemConsumeEvent event) {
         Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("testing")) {
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             event.setCancelled(true);
         }
     }
@@ -228,7 +228,7 @@ public class PlayerHandler implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventBlockPlace(BlockPlaceEvent event) {
         Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("testing")) {
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             event.setCancelled(true);
         }
     }
@@ -236,7 +236,7 @@ public class PlayerHandler implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventBlockBreak(BlockBreakEvent event) {
         Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("testing")) {
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             event.setCancelled(true);
         }
     }
@@ -244,7 +244,7 @@ public class PlayerHandler implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventEntityDamage(EntityDamageByEntityEvent event) {
         Set<String> tags = event.getDamager().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("testing")) {
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             event.setCancelled(true);
         }
     }
@@ -254,7 +254,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity().getKiller() == null)
             return;
         Set<String> tags = event.getEntity().getKiller().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("testing")) {
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             event.setCancelled(true);
         }
     }
@@ -268,7 +268,7 @@ public class PlayerHandler implements Listener {
     public void preventItemDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("testing"))
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
             event.setCancelled(true);
     }
 
@@ -280,7 +280,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("notInGame") && !tags.contains("testing"))
+            if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
                 event.setCancelled(true);
         }
     }
@@ -293,7 +293,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("notInGame") && !tags.contains("testing"))
+            if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
                 event.setCancelled(true);
         }
 
@@ -320,7 +320,7 @@ public class PlayerHandler implements Listener {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
         // For all players not in a game...
-        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !tags.contains("testing")) {
+        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             // Apply main hub levitation
             if (tags.contains("mainHub"))
                 player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
