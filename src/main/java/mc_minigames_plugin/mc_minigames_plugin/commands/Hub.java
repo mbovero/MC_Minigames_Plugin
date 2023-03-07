@@ -13,6 +13,7 @@ public class Hub implements CommandExecutor {
         // Only executable by players
         if (!(sender instanceof Player)) {
             sender.sendMessage("Only players can use this command!");
+            return true;
         }
         Player player = (Player)sender;
 

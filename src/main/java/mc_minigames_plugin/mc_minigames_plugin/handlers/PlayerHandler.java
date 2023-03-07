@@ -96,7 +96,7 @@ public class PlayerHandler implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
-        if (tags.contains("notInGame")) {
+        if (tags.contains("notInGame") || tags.contains("testing")) {
 
             // Detect when player right clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
@@ -190,8 +190,9 @@ public class PlayerHandler implements Listener {
                     event.setCancelled(true);
                 }
             }
+            if (!tags.contains("testing"))  // Unless troubleshooting...
             // Lock inventory when not in a game
-            event.setCancelled(true);
+                event.setCancelled(true);
         }
     }
 
@@ -202,7 +203,7 @@ public class PlayerHandler implements Listener {
     public void preventItemDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
-        if (tags.contains("notInGame"))
+        if (tags.contains("notInGame") && !tags.contains("testing"))
             event.setCancelled(true);
     }
 
@@ -214,7 +215,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("notInGame"))
+            if (tags.contains("notInGame") && !tags.contains("testing"))
                 event.setCancelled(true);
         }
     }
@@ -227,7 +228,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("notInGame"))
+            if (tags.contains("notInGame") && !tags.contains("testing"))
                 event.setCancelled(true);
         }
 
@@ -254,7 +255,7 @@ public class PlayerHandler implements Listener {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
         // For all players not in a game...
-        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame")) {
+        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !tags.contains("testing")) {
             // Apply main hub levitation
             if (tags.contains("mainHub"))
                 player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
