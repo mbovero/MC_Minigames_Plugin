@@ -171,9 +171,29 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             }
         }
     }
-    public void changeKit (Player player, String kit) {
 
-        player.addScoreboardTag(kit);
+    /**
+     * Method to change the player's current kit into the selected kit
+     * @param player
+     * @param kit
+     */
+    public void changeKit (Player player, String kit) {
+        //Iterate through game players
+        for (GamePlayer reference : areaPlayers) {
+            //Check if the current player matches the list reference player
+            if (reference.getPlayer().getDisplayName().equals(player.getDisplayName())) {
+                //Type cast the list reference player into a KOTHPlayer
+                KOTHPlayer referenceKOTH = (KOTHPlayer) reference;
+                //Remove the currently held kit from the mcPlayer
+                player.removeScoreboardTag(referenceKOTH.getPlayerKit());
+                //Change the currently held kit from the KOTHPlayer to the new kit
+                referenceKOTH.changePlayerKit(kit);
+                //Add the new kit tag to the mcPlayer
+                player.addScoreboardTag(kit);
+                //Stop iterating
+                break;
+            }
+        }
     }
 
     //Map Selection
