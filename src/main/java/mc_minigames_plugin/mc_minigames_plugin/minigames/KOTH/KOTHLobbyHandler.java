@@ -3,7 +3,9 @@ package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
+import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -11,6 +13,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
+import org.bukkit.scoreboard.NameTagVisibility;
 import org.checkerframework.checker.units.qual.K;
 
 import java.util.ArrayList;
@@ -26,7 +29,13 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
     public KOTHLobbyHandler (MC_Minigames_Plugin plugin, Player player) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        //Add player to start of player list
         areaPlayers.add(new KOTHPlayer(player));
+        // Create KOTH teams
+        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
+        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
+        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHGreen", " ⧫ ", "Green", null, ChatColor.GREEN,false, true, NameTagVisibility.ALWAYS);
+        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHYellow", " ⧫ ", "Yellow", null, ChatColor.YELLOW,false, true, NameTagVisibility.ALWAYS);
         }
 
     //KOTH LOBBY FEATURES-----------------------------------------------------------------------------------------------

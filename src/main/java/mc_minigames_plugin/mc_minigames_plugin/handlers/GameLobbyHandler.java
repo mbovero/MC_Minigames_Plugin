@@ -67,11 +67,6 @@ public class GameLobbyHandler implements Listener {
     public GameLobbyHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
-        // Create KOTH teams
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHGreen", " ⧫ ", "Green", null, ChatColor.GREEN,false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHYellow", " ⧫ ", "Yellow", null, ChatColor.YELLOW,false, true, NameTagVisibility.ALWAYS);
         // Create MM teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
@@ -128,23 +123,20 @@ public class GameLobbyHandler implements Listener {
     public static void sendKOTHLobby(Player player) {
         // Tp player
         player.teleport(Locations.KOTHLobby);
-        //counter to check if a KOTHLobbyHandler object exists
-        int kothCounter = 0;
-        //Create a KOTHLobbyHandler if one does not already exist
-        for (PlayerArea area : playerAreas) {
-            if ((area instanceof KOTHLobbyHandler)) {
-                kothCounter++;
+        //Check if the playerAreas array is null
+        if (!(playerAreas == null)) {
+            //counter to check if a KOTHLobbyHandler object exists
+            boolean kothExist = false;
+            //add to counter and add the player when coming to an instance of the KOTHLobbyHandler
+            for (PlayerArea area : playerAreas) {
+                if ((area instanceof KOTHLobbyHandler)) {
+                    area.addPlayer(player);;
+                    kothExist = true;
+                }
+            //Create new KOTHLobbyHandler if none already exist
+                if (!kothExist) {playerAreas.add(new KOTHLobbyHandler(plugin, player));}
             }
-        //Create new KOTHLobbyHandler if none already exist
-            if (!(kothCounter > 0)) {
-            playerAreas.add(new KOTHLobbyHandler(plugin, player));
         }
-        //Add the player to KOTH's lobby object when the object is identified in the playerAreas list
-        else {
-            for (PlayerArea lobby : playerAreas) {if (lobby instanceof KOTHLobbyHandler) {lobby.addPlayer(player);}}
-        }
-        }
-
         // Reset tags
         Set<String> tags = player.getScoreboardTags();
         Tools.resetTags(player);
