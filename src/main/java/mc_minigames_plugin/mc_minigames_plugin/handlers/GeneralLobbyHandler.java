@@ -93,9 +93,13 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static void sendMainHub(Player player) {
+    public static DelayedTask sendMainHub(Player player) {
+        // Delay operation by some time
+        return new DelayedTask(() -> {
         // Tp player
         player.teleport(Locations.mainHub);
+        // Play tp sound
+        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
         // Clear potion effects
         Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
         for (PotionEffect pE : effectsToClear)
@@ -113,7 +117,8 @@ public class GeneralLobbyHandler implements Listener {
         if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
             inv.clear();
         // Give lobby selector after some time
-        new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);
+        inv.setItem(4, lobbySelector);
+        }, 5);
     }
 
     /**
@@ -122,42 +127,47 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static void sendKOTHLobby(Player player) {
-        // Tp player
-        player.teleport(Locations.KOTHLobby);
-        // Clear potion effects
-        Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
-        for (PotionEffect pE : effectsToClear)
-            player.removePotionEffect(pE.getType());
-        // Reset tags
-        Set<String> tags = player.getScoreboardTags();
-        Tools.resetTags(player);
-        // Set tags
-        player.addScoreboardTag("KOTHLobby");       // Player is now in KOTH lobby
-        player.addScoreboardTag("notInGame");       // Player is still not in a game
-        // Reset team
-        Tools.resetTeam(player);
-        // Reset inventory
-        Inventory inv = player.getInventory();
-        if (!tags.contains("troubleshooting"))    // Only clear inventory if not troubleshooting
-            inv.clear();
-        // Give items for lobby hot bar menu after some time
-        new DelayedTask(() -> {inv.setItem(0, KOTHQueue);}, 10);        // Queue/Dequeue item
-        new DelayedTask(() -> {inv.setItem(2, KOTHTeamNone);}, 10);     // Team selector item (no team by default)
-        new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);    // Lobby selector item
+    public static DelayedTask sendKOTHLobby(Player player) {
+        // Delay operation by some time
+        return new DelayedTask(() -> {
+            // Tp player
+            player.teleport(Locations.KOTHLobby);
+            // Play tp sound
+            player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+            // Clear potion effects
+            Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+            for (PotionEffect pE : effectsToClear)
+                player.removePotionEffect(pE.getType());
+            // Reset tags
+            Set<String> tags = player.getScoreboardTags();
+            Tools.resetTags(player);
+            // Set tags
+            player.addScoreboardTag("KOTHLobby");       // Player is now in KOTH lobby
+            player.addScoreboardTag("notInGame");       // Player is still not in a game
+            // Reset team
+            Tools.resetTeam(player);
+            // Reset inventory
+            Inventory inv = player.getInventory();
+            if (!tags.contains("troubleshooting"))    // Only clear inventory if not troubleshooting
+                inv.clear();
+            // Give items for lobby hot bar menu after some time
+            inv.setItem(0, KOTHQueue);        // Queue/Dequeue item
+            inv.setItem(2, KOTHTeamNone);     // Team selector item (no team by default)
+            inv.setItem(4, lobbySelector);    // Lobby selector item
 
 
-        // Change boolean and add the player when an instance of KOTHLobbyHandler is found
-        for (PlayerArea area : playerAreas)
-            if (area instanceof KOTHLobbyHandler) {
-                area.addPlayer(player);
+            // Change boolean and add the player when an instance of KOTHLobbyHandler is found
+            for (PlayerArea area : playerAreas)
+                if (area instanceof KOTHLobbyHandler) {
+                    area.addPlayer(player);
+                    KOTHExist = true;
+                }
+            // Create new KOTHLobbyHandler if one doesn't already exist
+            if (!KOTHExist) {
+                playerAreas.add(new KOTHLobbyHandler(plugin, player));
                 KOTHExist = true;
             }
-        // Create new KOTHLobbyHandler if one doesn't already exist
-        if (!KOTHExist) {
-            playerAreas.add(new KOTHLobbyHandler(plugin, player));
-            KOTHExist = true;
-        }
+        }, 5);
     }
 
     /**
@@ -165,9 +175,13 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static void sendMMLobby(Player player) {
+    public static DelayedTask sendMMLobby(Player player) {
+        // Delay operation by some time
+        return new DelayedTask(() -> {
         // Tp player
         player.teleport(Locations.MMLobby);
+        // Play tp sound
+        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
         // Clear potion effects
         Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
         for (PotionEffect pE : effectsToClear)
@@ -184,14 +198,15 @@ public class GeneralLobbyHandler implements Listener {
         Inventory inv = player.getInventory();
         if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
             inv.clear();
-        // Give items for lobby hot bar menu after some time
-        new DelayedTask(() -> {inv.setItem(0, MMQueue);}, 10);        // Queue/Dequeue item
-        new DelayedTask(() -> {inv.setItem(2, MMTeamNone);}, 10);     // Team selector item (no team by default)
-        new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);  // Lobby selector item
+        // Give items for lobby hot bar menu
+        inv.setItem(0, MMQueue);        // Queue/Dequeue item
+        inv.setItem(2, MMTeamNone);     // Team selector item (no team by default)
+        inv.setItem(4, lobbySelector);  // Lobby selector item
+        }, 5);
     }
 
     /**
-     * Provides functionality to the Lobby Selector item (and MM lobby hot bar menu -- MOVE TO MMHANDLER)
+     * Provides functionality to the Lobby Selector item
      */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
@@ -221,84 +236,6 @@ public class GeneralLobbyHandler implements Listener {
                     player.openInventory(menu);
                 }
         }
-
-// MOVE TO MM LOBBY HANDLER ---------------------------------------------------------------------------------------------
-            // For all players in the MM Lobby...
-        if (tags.contains("MMLobby")) {
-            // Detect when player clicks
-            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
-                // Detect click with an item
-                if (player.getItemInHand().getItemMeta() != null) {
-                // QUEUE ITEM
-                    // Detect click with KOTH queue item
-                    if (player.getItemInHand().getItemMeta().getDisplayName().equals(MMQueue.getItemMeta().getDisplayName())) {
-                        // Queue player
-                        player.addScoreboardTag("MMQueued");
-                        // Switch to dequeue item
-                        inv.setItem(0, MMDequeue);
-                        // Play sound
-                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 5, 1.5f);
-                    }
-                    // Detect click with KOTH dequeue item
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(MMDequeue.getItemMeta().getDisplayName())) {
-                        // Dequeue player
-                        player.removeScoreboardTag("MMQueued");
-                        // Switch to queue item
-                        inv.setItem(0, MMQueue);
-                        // Play sound
-                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_COW_BELL, 5, .8f);
-                    }
-
-                    // TEAM SELECTOR
-                    // Detect click with MM team selector (none)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(MMTeamNone.getItemMeta().getDisplayName())) {
-                        // Put player on red team
-                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("MMRed").addPlayer(player);
-                        // Switch to next item
-                        inv.setItem(2, MMTeamRed);
-                        // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
-                    }
-                    // Detect click with MM team selector (red)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(MMTeamRed.getItemMeta().getDisplayName())) {
-                        // Put player on red team
-                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("MMBlue").addPlayer(player);
-                        // Switch to next item
-                        inv.setItem(2, MMTeamBlue);
-                        // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
-                    }
-                    // Detect click with MM team selector (blue)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(MMTeamBlue.getItemMeta().getDisplayName())) {
-                        // Put player on red team
-                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("MMGreen").addPlayer(player);
-                        // Switch to next item
-                        inv.setItem(2, MMTeamGreen);
-                        // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
-                    }
-                    // Detect click with MM team selector (green)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(MMTeamGreen.getItemMeta().getDisplayName())) {
-                        // Put player on red team
-                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("MMYellow").addPlayer(player);
-                        // Switch to next item
-                        inv.setItem(2, MMTeamYellow);
-                        // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
-                    }
-                    // Detect click with MM team selector (yellow)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(MMTeamYellow.getItemMeta().getDisplayName())) {
-                        // Put player on red team
-                        Tools.resetTeam(player);
-                        // Switch to next item
-                        inv.setItem(2, MMTeamNone);
-                        // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
-                    }
-                }
-        }
-//----------------------------------------------------------------------------------------------------------------------
-
     }
 
     /**
@@ -324,8 +261,6 @@ public class GeneralLobbyHandler implements Listener {
                     if (slot == 11 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aKOTH")) {
                         // Tp player to KOTH lobby
                         GeneralLobbyHandler.sendKOTHLobby(player);
-                        // Play tp sound
-                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
@@ -333,8 +268,6 @@ public class GeneralLobbyHandler implements Listener {
                     else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub")) {
                         // Tp player to main hub
                         GeneralLobbyHandler.sendMainHub(player);
-                        // Play tp sound
-                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
@@ -342,12 +275,9 @@ public class GeneralLobbyHandler implements Listener {
                     else if (slot == 15 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§cMurder Mystery")) {
                         // Tp player to MM lobby
                         GeneralLobbyHandler.sendMMLobby(player);
-                        // Play tp sound
-                        player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
-
                     // Prevent moving menu items, only allow clicking
                     event.setCancelled(true);
                 }

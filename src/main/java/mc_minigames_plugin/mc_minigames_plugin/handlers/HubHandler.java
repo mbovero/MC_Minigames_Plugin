@@ -118,8 +118,6 @@ public class HubHandler implements Listener {
                 if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc)) {
                     // Transport player
                     GeneralLobbyHandler.sendKOTHLobby(player);
-                    // Play sound
-                    player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1.2f);
                 }
             }
 
@@ -133,8 +131,6 @@ public class HubHandler implements Listener {
                 if (event.getClickedBlock().getLocation().equals(MMButtonLoc) || event.getClickedBlock().getLocation().equals(MMButtonLoc2)) {
                     // Transport player
                     GeneralLobbyHandler.sendMMLobby(player);
-                    // Play sound
-                    player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1.2f);
                 }
             }
         }

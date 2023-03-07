@@ -4,6 +4,7 @@ import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
+import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -35,6 +36,8 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
  * @version March 5, 2023
  */
 public class KOTHLobbyHandler extends PlayerArea implements Listener {
+
+    private DelayedTask lastPortalTask;             // Reference to the last called portal use to prevent duplicate operations
 
 // ITEMS ---------------------------------------------------------------------------------------------------------------
     // Lobby selector tool
@@ -226,6 +229,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                     // QUEUE ITEM
                     // Detect click with KOTH queue item
                     if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHQueue.getItemMeta().getDisplayName())) {
+                        new DelayedTask(() -> {
                         // Queue player
                         player.addScoreboardTag("KOTHQueued");
                         // Give glowing effect
@@ -234,10 +238,12 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                         inv.setItem(0, KOTHDequeue);
                         // Play sound
                         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 5, 1.5f);
+                        }, 3);
                     }
                     // Detect click with KOTH dequeue item
                     else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHDequeue.getItemMeta().getDisplayName())) {
-                        // Dequeue player
+                        new DelayedTask(() -> {
+                            // Dequeue player
                         player.removeScoreboardTag("KOTHQueued");
                         // Clear glowing potion effects
                         Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
@@ -247,53 +253,65 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                         inv.setItem(0, KOTHQueue);
                         // Play sound
                         player.playSound(player, Sound.BLOCK_NOTE_BLOCK_COW_BELL, 5, .8f);
+                        }, 3);
                     }
 
                     // TEAM SELECTOR
                     // Detect click with KOTH team selector (none)
                     else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamNone.getItemMeta().getDisplayName())) {
+                        new DelayedTask(() -> {
                         // Put player on red team
                         Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHRed").addPlayer(player);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamRed);
                         // Play sound
                         player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        }, 3);
                     }
                     // Detect click with KOTH team selector (red)
                     else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamRed.getItemMeta().getDisplayName())) {
+                        new DelayedTask(() -> {
                         // Put player on red team
                         Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHBlue").addPlayer(player);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamBlue);
                         // Play sound
                         player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        }, 3);
                     }
                     // Detect click with KOTH team selector (blue)
                     else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamBlue.getItemMeta().getDisplayName())) {
+                        new DelayedTask(() -> {
                         // Put player on red team
                         Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHGreen").addPlayer(player);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamGreen);
                         // Play sound
                         player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        }, 3);
                     }
                     // Detect click with KOTH team selector (green)
                     else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamGreen.getItemMeta().getDisplayName())) {
+                        new DelayedTask(() -> {
                         // Put player on red team
                         Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHYellow").addPlayer(player);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamYellow);
                         // Play sound
                         player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        }, 3);
                     }
+
                     // Detect click with KOTH team selector (yellow)
                     else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamYellow.getItemMeta().getDisplayName())) {
+                        new DelayedTask(() -> {
                         // Put player on red team
                         Tools.resetTeam(player);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamNone);
                         // Play sound
                         player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        }, 3);
                     }
                 }
         }
@@ -311,16 +329,12 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 event.getTo().getZ() < -594 && event.getTo().getZ() > -595 &&
                 event.getTo().getX() < 11 && event.getTo().getX() > 5 &&
                 tags.contains("KOTHLobby")) {
-            // Play portal sound at KOTH lobby to surrounding players
-            for (Player p : Bukkit.getOnlinePlayers())
-                if (p.getScoreboardTags().contains("notInGame"))
-                    p.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+            // Cancel duplicate tasks
+            if (lastPortalTask != null)
+                Bukkit.getScheduler().cancelTask(lastPortalTask.getId());
             // Transport player to main hub
-            GeneralLobbyHandler.sendMainHub(player);
-            // Play portal sound at main hub to surrounding players
-            for (Player p : Bukkit.getOnlinePlayers())
-                if (p.getScoreboardTags().contains("notInGame"))
-                    p.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
+            lastPortalTask = GeneralLobbyHandler.sendMainHub(player);
+            event.setCancelled(true);
         }
     }
 }
