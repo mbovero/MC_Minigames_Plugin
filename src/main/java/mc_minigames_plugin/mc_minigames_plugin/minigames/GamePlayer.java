@@ -43,6 +43,14 @@ abstract public class GamePlayer {
      */
     public void removeTag (String tag) {player.removeScoreboardTag(tag);}
 
+    /**
+     * Method compares a given minecraft player reference to a GamePlayer object and
+     * returns the boolean value of that comparison.
+     * @param compareTo
+     * @return
+     */
+    public boolean isPlayer (Player compareTo) {return player.getDisplayName().equals(compareTo.getDisplayName());}
+
     //Accessors --------------------------------------------------------------------------------------------------------
 
     /**

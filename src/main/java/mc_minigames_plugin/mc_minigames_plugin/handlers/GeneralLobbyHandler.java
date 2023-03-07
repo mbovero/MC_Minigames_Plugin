@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
@@ -93,7 +94,9 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static void sendMainHub(Player player) {
+    public static void sendMainHub(Player player, PlayerArea area) {
+        if (!(area.getAreaName().equals("mainHub")))
+            area.removePlayer(player);
         // Tp player
         player.teleport(Locations.mainHub);
         // Clear potion effects
@@ -122,7 +125,9 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static void sendKOTHLobby(Player player) {
+    public static void sendKOTHLobby(Player player, PlayerArea area) {
+        if (!(area.getAreaName().equals("KOTHLobby")))
+            area.removePlayer(player);
         // Tp player
         player.teleport(Locations.KOTHLobby);
         // Clear potion effects
@@ -148,9 +153,9 @@ public class GeneralLobbyHandler implements Listener {
 
 
         // Change boolean and add the player when an instance of KOTHLobbyHandler is found
-        for (PlayerArea area : playerAreas)
-            if (area instanceof KOTHLobbyHandler) {
-                area.addPlayer(player);
+        for (PlayerArea lobby : playerAreas)
+            if (lobby instanceof KOTHLobbyHandler) {
+                lobby.addPlayer(player);
                 KOTHExist = true;
             }
         // Create new KOTHLobbyHandler if one doesn't already exist
@@ -165,7 +170,9 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param player player to be sent
      */
-    public static void sendMMLobby(Player player) {
+    public static void sendMMLobby(Player player, PlayerArea area) {
+        if (!(area.getAreaName().equals("MMLobby")))
+            area.removePlayer(player);
         // Tp player
         player.teleport(Locations.MMLobby);
         // Clear potion effects
@@ -308,6 +315,8 @@ public class GeneralLobbyHandler implements Listener {
     public void onMenuClick(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Set<String> tags = player.getScoreboardTags();
+        //Holds the area the minecraft player reference is in based on the GamePlayer reference
+        PlayerArea playerArea = findPlayer(player);
         // For players not in a game...
         if (tags.contains("notInGame")) {
             // Only handle inv clicks if player is in Lobby Selector inventory
@@ -323,7 +332,7 @@ public class GeneralLobbyHandler implements Listener {
                     // KOTH lobby
                     if (slot == 11 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aKOTH")) {
                         // Tp player to KOTH lobby
-                        GeneralLobbyHandler.sendKOTHLobby(player);
+                        GeneralLobbyHandler.sendKOTHLobby(player, playerArea);
                         // Play tp sound
                         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
                         // Close player inventory
@@ -332,7 +341,7 @@ public class GeneralLobbyHandler implements Listener {
                     // Main Hub
                     else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub")) {
                         // Tp player to main hub
-                        GeneralLobbyHandler.sendMainHub(player);
+                        GeneralLobbyHandler.sendMainHub(player, playerArea);
                         // Play tp sound
                         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
                         // Close player inventory
@@ -341,7 +350,7 @@ public class GeneralLobbyHandler implements Listener {
                     // MM lobby
                     else if (slot == 15 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§cMurder Mystery")) {
                         // Tp player to MM lobby
-                        GeneralLobbyHandler.sendMMLobby(player);
+                        GeneralLobbyHandler.sendMMLobby(player, playerArea);
                         // Play tp sound
                         player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
                         // Close player inventory
@@ -356,6 +365,20 @@ public class GeneralLobbyHandler implements Listener {
                 // Lock inventory when not in a game
                 event.setCancelled(true);
         }
+    }
+
+    /**
+     * Method returns the PlayerArea object that the associated player reference is currently held inside.
+     * @param mcPlayer
+     * @return
+     */
+    public PlayerArea findPlayer (Player mcPlayer) {
+        for (PlayerArea area : playerAreas) {
+            for (GamePlayer gamePlayer : area.getPlayers()) {
+                if (gamePlayer.isPlayer(mcPlayer)) {return area;}
+            }
+        }
+        return null;
     }
 
 }

@@ -1,6 +1,8 @@
 package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHPlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
@@ -33,9 +35,10 @@ import java.util.Set;
  * @author Kirt Robinson, Miles Bovero
  * @version March 6, 2023
  */
-public class HubHandler implements Listener {
+public class HubHandler extends PlayerArea implements Listener {
     public HubHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        areaName = "mainHub";
     }
 
     /**
@@ -63,7 +66,7 @@ public class HubHandler implements Listener {
         // Unless troubleshooting...
         if (!player.getScoreboardTags().contains("troubleshooting")) {
             // Send player to hub (reset inv and tp)
-            GeneralLobbyHandler.sendMainHub(player);
+            GeneralLobbyHandler.sendMainHub(player, this);
             // Set to adventure mode
             player.setGameMode(GameMode.ADVENTURE);
             // Prevent/reset flying
@@ -117,7 +120,7 @@ public class HubHandler implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc)) {
                     // Transport player
-                    GeneralLobbyHandler.sendKOTHLobby(player);
+                    GeneralLobbyHandler.sendKOTHLobby(player, this);
                     // Play sound
                     player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1.2f);
                 }
@@ -132,7 +135,7 @@ public class HubHandler implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(MMButtonLoc) || event.getClickedBlock().getLocation().equals(MMButtonLoc2)) {
                     // Transport player
-                    GeneralLobbyHandler.sendMMLobby(player);
+                    GeneralLobbyHandler.sendMMLobby(player, this);
                     // Play sound
                     player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1.2f);
                 }
@@ -291,6 +294,11 @@ public class HubHandler implements Listener {
         }
         // Return players to main hub when they go out of bounds
         else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
-            GeneralLobbyHandler.sendMainHub(player);
+            GeneralLobbyHandler.sendMainHub(player, this);
+    }
+
+    @Override
+    public void addPlayer(Player mcPlayer) {
+
     }
 }

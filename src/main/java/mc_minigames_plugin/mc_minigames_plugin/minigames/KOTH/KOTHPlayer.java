@@ -17,7 +17,7 @@ public class KOTHPlayer extends GamePlayer {
 
     //METHODS
 
-        //Basic item give methods
+    //Basic item give methods
 
     //Mutators
 

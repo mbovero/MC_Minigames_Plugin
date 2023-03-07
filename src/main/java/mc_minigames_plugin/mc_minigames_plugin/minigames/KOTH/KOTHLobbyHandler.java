@@ -57,6 +57,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         //Add player to start of player list
         areaPlayers = new ArrayList<>();
         areaPlayers.add(new KOTHPlayer(player));
+        areaName = "KOTHLobby";
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
@@ -316,7 +317,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 if (p.getScoreboardTags().contains("notInGame"))
                     p.playSound(player.getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, 10, .8f);
             // Transport player to main hub
-            GeneralLobbyHandler.sendMainHub(player);
+            GeneralLobbyHandler.sendMainHub(player, this);
             // Play portal sound at main hub to surrounding players
             for (Player p : Bukkit.getOnlinePlayers())
                 if (p.getScoreboardTags().contains("notInGame"))
