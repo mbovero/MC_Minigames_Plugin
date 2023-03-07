@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class KOTHGameHandler extends PlayerArea implements Listener {
 
-    String gameMode;
-    String map;
-
+    // KOTH game settings
+    String gameMode;        // The currently selected KOTH gamemode
+    String map;             // The currently selected KOTH map
 
     public KOTHGameHandler (MC_Minigames_Plugin plugin, ArrayList<GamePlayer> players, String gameMode, String map) {
         Bukkit.getPluginManager().registerEvents(this, plugin);

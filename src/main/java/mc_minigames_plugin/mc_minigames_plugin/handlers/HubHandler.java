@@ -26,6 +26,9 @@ import java.util.Set;
 /**
  *  - Handles players when leaving/joining
  *  - Provides functionality for main hub buttons
+ *  - Prevents players from changing the environment
+ *  - Prevents players from getting hungry, taking damage, and dying
+ *  - Levitates players when they fall into the void
  *
  * @author Kirt Robinson, Miles Bovero
  * @version March 6, 2023
@@ -115,6 +118,7 @@ public class HubHandler implements Listener {
                 if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc)) {
                     // Transport player
                     GeneralLobbyHandler.sendKOTHLobby(player);
+                    // Play sound
                     player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1.2f);
                 }
             }
@@ -122,13 +126,14 @@ public class HubHandler implements Listener {
             // MM lobby button
             // Detect when player right-clicks on a block
             if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
-                // Define button location
+                // Define button locations
                 Location MMButtonLoc = new Location(Bukkit.getWorld("world"), 9, -44, 24);
                 Location MMButtonLoc2 = new Location(Bukkit.getWorld("world"), 7, -44, 24);
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(MMButtonLoc) || event.getClickedBlock().getLocation().equals(MMButtonLoc2)) {
                     // Transport player
                     GeneralLobbyHandler.sendMMLobby(player);
+                    // Play sound
                     player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1.2f);
                 }
             }
@@ -272,7 +277,7 @@ public class HubHandler implements Listener {
     public void voidLevitation(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
-        // For all players not in a game...
+        // For all players not in a game and not troubleshooting...
         if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !tags.contains("troubleshooting")) {
             // Apply main hub levitation
             if (tags.contains("mainHub"))
