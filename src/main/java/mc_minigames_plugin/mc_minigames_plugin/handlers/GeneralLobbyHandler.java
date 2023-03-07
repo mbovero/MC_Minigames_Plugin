@@ -115,6 +115,8 @@ public class GeneralLobbyHandler implements Listener {
 
             // Tp player
             player.teleport(Locations.mainHub);
+            // Play tp sound
+            player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
             // Clear potion effects
             Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
             for (PotionEffect pE : effectsToClear)

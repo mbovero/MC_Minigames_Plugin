@@ -330,10 +330,10 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 tags.contains("KOTHLobby")) {
             // Cancel duplicate tasks
             if (lastPortalTask != null)
-                Bukkit.getScheduler().cancelTask(lastPortalTask.getId());
+                new DelayedTask(() -> Bukkit.getScheduler().cancelTask(lastPortalTask.getId()), 2);
             // Transport player to main hub
             lastPortalTask = GeneralLobbyHandler.sendMainHub(player, this);
-            event.setCancelled(true);
+            new DelayedTask(() -> {event.setCancelled(true);}, 3);
         }
     }
 }
