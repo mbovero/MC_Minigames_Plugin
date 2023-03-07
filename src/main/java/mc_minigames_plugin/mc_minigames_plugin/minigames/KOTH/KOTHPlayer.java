@@ -6,11 +6,11 @@ import java.util.Set;
 
 public class KOTHPlayer extends GamePlayer {
     //FIELDS
-    String playerKit; //Hold player class
+    String playerKit = "KOTH_kit_Striker"; //Hold player class
     //Hold player team??
     int killCount;//Hold player kill count
 
-    public KOTHPlayer(Player player, String playerKit) {
+    public KOTHPlayer(Player player) {
         super(player);
         this.playerKit = playerKit;
     }

@@ -51,4 +51,10 @@ abstract public class GamePlayer {
      */
     public boolean isGameReady () {return gameReady;}
 
+    /**
+     * Accessor method for returning the current reference of a minecraft player
+     * @return
+     */
+    public Player getPlayer () {return player;}
+
 }

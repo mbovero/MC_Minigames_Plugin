@@ -53,7 +53,6 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
         new PlayerHandler(this);
         new DelayedTask(this);
         new GameLobbyHandler(this);
-        new KOTHLobbyHandler(this);
     }
 
     @Override

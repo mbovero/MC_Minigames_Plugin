@@ -11,7 +11,11 @@ import java.util.ArrayList;
 
 public class KOTHGameHandler extends PlayerArea implements Listener {
 
-    public KOTHGameHandler (MC_Minigames_Plugin plugin, ArrayList<GamePlayer> players, String gameMode) {
+    String gameMode;
+    String map;
+
+
+    public KOTHGameHandler (MC_Minigames_Plugin plugin, ArrayList<GamePlayer> players, String gameMode, String map) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.areaPlayers = players;
         gameStart();
@@ -23,6 +27,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         //Move everyone to the KOTH map
         for (GamePlayer player : areaPlayers)
         {
+            teleportToMap(player, map);
             player.removeTag("notInGame");
 
             giveKit(player);
@@ -45,5 +50,14 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
 
     }
 
+    public void teleportToMap (GamePlayer player, String map) {
 
+        if (map.equals("CastleOfDreams")) {
+
+        }
+    }
+
+
+    @Override
+    public void addPlayer(Player mcPlayer) {areaPlayers.add(new KOTHPlayer(mcPlayer));}
 }

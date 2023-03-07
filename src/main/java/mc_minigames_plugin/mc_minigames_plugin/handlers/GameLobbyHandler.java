@@ -2,6 +2,9 @@ package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import com.sun.tools.javac.jvm.Items;
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHLobbyHandler;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHPlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
@@ -18,7 +21,9 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.NameTagVisibility;
+import org.checkerframework.checker.units.qual.K;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
@@ -33,6 +38,9 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 public class GameLobbyHandler implements Listener {
 
     static ItemStack lobbySelector = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
+
+    protected static ArrayList<PlayerArea> playerAreas;
+    protected static MC_Minigames_Plugin plugin;
 
     // KOTH lobby hot bar menu items
     static ItemStack KOTHQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the KOTH queue!");
@@ -58,6 +66,7 @@ public class GameLobbyHandler implements Listener {
 
     public GameLobbyHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
+        this.plugin = plugin;
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
@@ -119,6 +128,23 @@ public class GameLobbyHandler implements Listener {
     public static void sendKOTHLobby(Player player) {
         // Tp player
         player.teleport(Locations.KOTHLobby);
+        //counter to check if a KOTHLobbyHandler object exists
+        int kothCounter = 0;
+        //Create a KOTHLobbyHandler if one does not already exist
+        for (PlayerArea area : playerAreas) {
+            if ((area instanceof KOTHLobbyHandler)) {
+                kothCounter++;
+            }
+        //Create new KOTHLobbyHandler if none already exist
+            if (!(kothCounter > 0)) {
+            playerAreas.add(new KOTHLobbyHandler(plugin, player));
+        }
+        //Add the player to KOTH's lobby object when the object is identified in the playerAreas list
+        else {
+            for (PlayerArea lobby : playerAreas) {if (lobby instanceof KOTHLobbyHandler) {lobby.addPlayer(player);}}
+        }
+        }
+
         // Reset tags
         Set<String> tags = player.getScoreboardTags();
         Tools.resetTags(player);
