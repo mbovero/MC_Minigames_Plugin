@@ -27,9 +27,12 @@ import java.util.Set;
  */
 public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
+
+
     public KOTHLobbyHandler (MC_Minigames_Plugin plugin, Player player) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         //Add player to start of player list
+        areaPlayers = new ArrayList<>();
         areaPlayers.add(new KOTHPlayer(player));
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);

@@ -37,11 +37,16 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
  */
 public class GameLobbyHandler implements Listener {
 
-    // Lobby selector tool
-    static ItemStack lobbySelector = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
 
     protected static ArrayList<PlayerArea> playerAreas;
     protected static MC_Minigames_Plugin plugin;
+
+    static boolean KOTHExist;      // Boolean to check if a KOTHLobbyHandler object exists
+
+
+    // ITEMS
+    // Lobby selector tool
+    static ItemStack lobbySelector = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
 
     // KOTH lobby hot bar menu items
     static ItemStack KOTHQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the KOTH queue!");
@@ -68,6 +73,9 @@ public class GameLobbyHandler implements Listener {
     public GameLobbyHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
+        playerAreas = new ArrayList<PlayerArea>();
+        KOTHExist = false;  // KOTHLobbyHandler has not been created
+
         // Create MM teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
@@ -124,20 +132,6 @@ public class GameLobbyHandler implements Listener {
     public static void sendKOTHLobby(Player player) {
         // Tp player
         player.teleport(Locations.KOTHLobby);
-        //Check if the playerAreas array is null
-        if (!(playerAreas == null)) {
-            //counter to check if a KOTHLobbyHandler object exists
-            boolean kothExist = false;
-            //add to counter and add the player when coming to an instance of the KOTHLobbyHandler
-            for (PlayerArea area : playerAreas) {
-                if ((area instanceof KOTHLobbyHandler)) {
-                    area.addPlayer(player);;
-                    kothExist = true;
-                }
-            //Create new KOTHLobbyHandler if none already exist
-                if (!kothExist) {playerAreas.add(new KOTHLobbyHandler(plugin, player));}
-            }
-        }
         // Reset tags
         Set<String> tags = player.getScoreboardTags();
         Tools.resetTags(player);
@@ -150,9 +144,23 @@ public class GameLobbyHandler implements Listener {
         Inventory inv = player.getInventory();
         if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
             inv.clear();
+        // Give items for lobby hot bar menu
         new DelayedTask(() -> {inv.setItem(0, KOTHQueue);}, 10);
         new DelayedTask(() -> {inv.setItem(2, KOTHTeamNone);}, 10);
         new DelayedTask(() -> {inv.setItem(4, lobbySelector);}, 10);
+
+
+        // Change boolean and add the player when an instance of KOTHLobbyHandler is found
+        for (PlayerArea area : playerAreas)
+            if (area instanceof KOTHLobbyHandler) {
+                area.addPlayer(player);
+                KOTHExist = true;
+            }
+        //Create new KOTHLobbyHandler if none already exist
+        if (!KOTHExist) {
+            playerAreas.add(new KOTHLobbyHandler(plugin, player));
+            KOTHExist = true;
+        }
     }
 
     /**
