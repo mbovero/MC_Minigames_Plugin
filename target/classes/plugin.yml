@@ -25,3 +25,7 @@ commands:
     description: Teleports you to the server spawn
     usage: /spawn
     permission: spawn.teleport
+  troubleshoot:
+    description: Gives game dev troubleshooting abilities/tools
+    usage: /troubleshoot
+    permission: gameDev.troubleshoot

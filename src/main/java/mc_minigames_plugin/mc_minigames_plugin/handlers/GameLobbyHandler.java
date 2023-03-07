@@ -106,8 +106,7 @@ public class GameLobbyHandler implements Listener {
         Tools.resetTags(player);
         // Set tags
         player.addScoreboardTag("mainHub");         // Player is now in main hub
-        if (!tags.contains("testing"))              // Only apply tag if not troubleshooting
-            player.addScoreboardTag("notInGame");
+        player.addScoreboardTag("notInGame");
         // Reset team
         Tools.resetTeam(player);
         // Reset/set inventory
@@ -147,8 +146,7 @@ public class GameLobbyHandler implements Listener {
         Tools.resetTags(player);
         // Set tags
         player.addScoreboardTag("KOTHLobby");         // Player is now in KOTH lobby
-        if (!tags.contains("testing"))                // Only apply tag if not troubleshooting
-            player.addScoreboardTag("notInGame");
+        player.addScoreboardTag("notInGame");
         // Reset team
         Tools.resetTeam(player);
         // Reset/set inventory
@@ -173,8 +171,7 @@ public class GameLobbyHandler implements Listener {
         Tools.resetTags(player);
         // Set tags
         player.addScoreboardTag("MMLobby");         // Player is now in MM lobby
-        if (!tags.contains("testing"))              // Only apply tag if not troubleshooting
-            player.addScoreboardTag("notInGame");
+        player.addScoreboardTag("notInGame");
         // Reset team
         Tools.resetTeam(player);
         // Reset/set inventory

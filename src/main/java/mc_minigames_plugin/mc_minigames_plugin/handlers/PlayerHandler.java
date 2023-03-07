@@ -6,9 +6,14 @@ import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
@@ -96,7 +101,7 @@ public class PlayerHandler implements Listener {
     public void onInteract(PlayerInteractEvent event) {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
-        if (tags.contains("notInGame")) {
+        if (tags.contains("notInGame") || tags.contains("testing")) {
 
             // Detect when player right clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
@@ -190,10 +195,71 @@ public class PlayerHandler implements Listener {
                     event.setCancelled(true);
                 }
             }
+            if (!tags.contains("testing"))  // Unless troubleshooting...
             // Lock inventory when not in a game
+                event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventHarvestBlock(PlayerHarvestBlockEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("testing")) {
             event.setCancelled(true);
         }
     }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("testing")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventItemConsume(PlayerItemConsumeEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("testing")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventBlockPlace(BlockPlaceEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("testing")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventBlockBreak(BlockBreakEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("testing")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventEntityDamage(EntityDamageByEntityEvent event) {
+        Set<String> tags = event.getDamager().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("testing")) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventEntityDeath(EntityDeathEvent event) {
+        if (event.getEntity().getKiller() == null)
+            return;
+        Set<String> tags = event.getEntity().getKiller().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("testing")) {
+            event.setCancelled(true);
+        }
+    }
+
+
 
     /**
      * Prevents players from dropping items in lobbies
@@ -202,7 +268,7 @@ public class PlayerHandler implements Listener {
     public void preventItemDrop(PlayerDropItemEvent event) {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
-        if (tags.contains("notInGame"))
+        if (tags.contains("notInGame") && !tags.contains("testing"))
             event.setCancelled(true);
     }
 
@@ -214,7 +280,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("notInGame"))
+            if (tags.contains("notInGame") && !tags.contains("testing"))
                 event.setCancelled(true);
         }
     }
@@ -227,7 +293,7 @@ public class PlayerHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player player = (Player) event.getEntity();
             Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("notInGame"))
+            if (tags.contains("notInGame") && !tags.contains("testing"))
                 event.setCancelled(true);
         }
 
@@ -254,7 +320,7 @@ public class PlayerHandler implements Listener {
         Player player = event.getPlayer();
         Set<String> tags = player.getScoreboardTags();
         // For all players not in a game...
-        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame")) {
+        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !tags.contains("testing")) {
             // Apply main hub levitation
             if (tags.contains("mainHub"))
                 player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
