@@ -96,9 +96,6 @@ public class HubHandler extends PlayerArea implements Listener {
 
             // Clear player tags  -  change to handle actions based on current tags
             Tools.resetTags(MCPlayer);
-            // Give necessary tags
-            MCPlayer.addScoreboardTag("mainHub");
-            MCPlayer.addScoreboardTag("notInGame");
         }
     }
 

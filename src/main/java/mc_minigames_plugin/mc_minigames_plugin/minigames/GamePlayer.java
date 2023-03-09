@@ -98,4 +98,10 @@ abstract public class GamePlayer {
     public void setTroubleShooting(boolean isTroubleshooting) {
         this.isTroubleShooting = isTroubleshooting;
     }
+
+    /**
+     * Mutator method that changes the currentArea value of this GamePlayer
+     * @param newArea
+     */
+    public void setCurrentArea (PlayerArea newArea) {this.currentArea = newArea;}
 }

@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.MM;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.HubPlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
@@ -20,6 +21,6 @@ public class MMLobbyHandler extends PlayerArea {
 
     @Override
     public void addPlayer(Player MCPlayer) {
-
+        areaPlayers.add(new MMPlayer(MCPlayer, this));
     }
 }

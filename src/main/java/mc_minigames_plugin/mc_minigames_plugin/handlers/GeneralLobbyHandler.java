@@ -129,12 +129,11 @@ public class GeneralLobbyHandler implements Listener {
             Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
             for (PotionEffect pE : effectsToClear)
                 MCPlayer.removePotionEffect(pE.getType());
-            // Reset tags
             Set<String> tags = MCPlayer.getScoreboardTags();
             Tools.resetTags(MCPlayer);
-            // Set tags
-            MCPlayer.addScoreboardTag("mainHub");         // Player is now in main hub
-            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
+            // Set game status
+            gamePlayer.setIsInGame(false);
+
             // Reset team
             Tools.resetTeam(MCPlayer);
             // Reset inventory
@@ -189,9 +188,8 @@ public class GeneralLobbyHandler implements Listener {
             // Reset tags
             Set<String> tags = MCPlayer.getScoreboardTags();
             Tools.resetTags(MCPlayer);
-            // Set tags
-            MCPlayer.addScoreboardTag("KOTHLobby");       // Player is now in KOTH lobby
-            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
+            // Set game status
+            gamePlayer.setIsInGame(false);
             // Reset team
             Tools.resetTeam(MCPlayer);
             // Reset inventory
@@ -230,7 +228,6 @@ public class GeneralLobbyHandler implements Listener {
                     MMExist = true;
                 }
             }
-
             // Tp player
             MCPlayer.teleport(Locations.MMLobby);
             // Play tp sound
@@ -242,9 +239,8 @@ public class GeneralLobbyHandler implements Listener {
             // Reset tags
             Set<String> tags = MCPlayer.getScoreboardTags();
             Tools.resetTags(MCPlayer);
-            // Set tags
-            MCPlayer.addScoreboardTag("MMLobby");         // Player is now in MM lobby
-            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
+            // Set game status
+            gamePlayer.setIsInGame(false);
             // Reset team
             Tools.resetTeam(MCPlayer);
             // Reset inventory
@@ -532,23 +528,39 @@ public class GeneralLobbyHandler implements Listener {
     @EventHandler
     public void voidLevitation(PlayerMoveEvent event) {
         Player MCPlayer = event.getPlayer();
-        Set<String> tags = MCPlayer.getScoreboardTags();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
         // For all players not in a game and not troubleshooting...
         if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+            String areaName = gamePlayer.getCurrentArea().getAreaName();
             // Apply main hub levitation
-            if (tags.contains("mainHub"))
+            if (areaName.equals("mainHub"))
                 MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
                 // Apply KOTH lobby levitation
-            else if (tags.contains("KOTHLobby"))
+            else if (areaName.equals("KOTHLobby"))
                 MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 10, false));
                 // Apply MM lobby levitation
-            else if (tags.contains("MMLobby"))
+            else if (areaName.equals("MMLobby"))
                 MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 18, false));
         }
         // Return players to main hub when they go out of bounds
-        else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
+        else if (event.getTo().getY() < -90 && !gamePlayer.isInGame())
             GeneralLobbyHandler.sendMainHub(MCPlayer, findPlayer(MCPlayer).getCurrentArea());
     }
+
+// ACCESSORS -----------------------------------------------------------------------------------------------------------
+
+    public PlayerArea getThatLobby (String lobby) {
+        for (PlayerArea listArea : playerAreas) {
+            if (listArea.getAreaName().equals(lobby))
+                return listArea;
+        }
+        return null;
+    }
+
+// MUTATORS ------------------------------------------------------------------------------------------------------------
+
+// END OF CLASS --------------------------------------------------------------------------------------------------------
 }
+
+
