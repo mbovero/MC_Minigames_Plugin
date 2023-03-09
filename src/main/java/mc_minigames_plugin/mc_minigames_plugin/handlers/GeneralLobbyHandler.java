@@ -387,7 +387,7 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = (Player) event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -400,7 +400,7 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = (Player) event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -413,7 +413,7 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = (Player) event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -426,7 +426,7 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = (Player) event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -439,7 +439,7 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = (Player) event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -452,7 +452,7 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = (Player) event.getDamager();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -467,7 +467,7 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = (Player) event.getEntity().getKiller();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -480,7 +480,7 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting())
+        if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting())
             event.setCancelled(true);
     }
 
@@ -493,7 +493,7 @@ public class GeneralLobbyHandler implements Listener {
             Player MCPlayer = (Player) event.getEntity();
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
-            if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting())
+            if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting())
                 event.setCancelled(true);
         }
     }
@@ -507,7 +507,7 @@ public class GeneralLobbyHandler implements Listener {
             Player MCPlayer = (Player) event.getEntity();
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
-            if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting())
+            if (!gamePlayer.isInGame() && !gamePlayer.isTroubleShooting())
                 event.setCancelled(true);
         }
 
@@ -536,7 +536,7 @@ public class GeneralLobbyHandler implements Listener {
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
         // For all players not in a game and not troubleshooting...
-        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
+        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && !gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             // Apply main hub levitation
             if (tags.contains("mainHub"))
                 MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));

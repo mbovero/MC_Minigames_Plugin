@@ -8,6 +8,7 @@ import mc_minigames_plugin.mc_minigames_plugin.util.ConfigUtil;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.SpawnUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.List;
@@ -27,6 +28,9 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
 
         // Saves config file into plugins folder if it doesn't exist already
         saveDefaultConfig();
+
+        FileConfiguration defaultConfig = getConfig();
+
         // Loops through config file and stores kit items
         List<String> kitItems = (List<String>)getConfig().getList("kit");
         for (String itemName : kitItems) {
