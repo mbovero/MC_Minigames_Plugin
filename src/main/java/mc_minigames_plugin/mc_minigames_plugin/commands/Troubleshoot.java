@@ -26,20 +26,20 @@ public class Troubleshoot implements CommandExecutor {
         }
 
         // Setup
-        Player player = (Player)sender;
-        Set<String> tags = player.getScoreboardTags();
+        Player MCPlayer = (Player)sender;
+        Set<String> tags = MCPlayer.getScoreboardTags();
 
         // If not troubleshooting...
         if (!tags.contains("troubleshooting")) {
             // Enter troubleshooting
-            player.addScoreboardTag("troubleshooting");
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a[Entered troubleshooting mode]"));
+            MCPlayer.addScoreboardTag("troubleshooting");
+            MCPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a[Entered troubleshooting mode]"));
         }
         // Otherwise,
         else {
             // Stop troubleshooting
-            player.removeScoreboardTag("troubleshooting");
-            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Exited troubleshooting mode]"));
+            MCPlayer.removeScoreboardTag("troubleshooting");
+            MCPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Exited troubleshooting mode]"));
         }
 
         return true;

@@ -11,40 +11,40 @@ import java.util.ArrayList;
  * @version March 5, 2023
  */
 abstract public class PlayerArea {
-    //FIELDS
-    protected ArrayList<GamePlayer> areaPlayers; //List of current players in the specified game or lobby area
+    // FIELDS
+    protected ArrayList<GamePlayer> areaPlayers; // List of current players in the specified game or lobby area
     protected String areaName;
 
 
-    //GENERAL PlayerArea FEATURES --------------------------------------------------------------------------------------
+    // GENERAL PlayerArea FEATURES --------------------------------------------------------------------------------------
 
     /**
      * Returns the players in the current PlayerArea that are ready for game start
-     * @param players
+     * @param gamePlayers
      * @return
      */
-    public ArrayList<GamePlayer> getReadyPlayers (ArrayList<GamePlayer> players) {
-        //Remove a player from the list if they are not ready
-        players.removeIf(guy -> !guy.isGameReady());
-        return players;
+    public ArrayList<GamePlayer> getReadyPlayers (ArrayList<GamePlayer> gamePlayers) {
+        // Remove a player from the list if they are not ready
+        gamePlayers.removeIf(gamePlayer -> !gamePlayer.isGameReady());
+        return gamePlayers;
     }
 
     /**
-     * Method adds the specified minecraft player reference to the PlayerArea object using that area's specific player object
-     * @param mcPlayer
+     * Method adds the specified minecraft player reference to the PlayerArea object using that area's specific GamePlayer object
+     * @param MCPlayer
      */
-    abstract public void addPlayer (Player mcPlayer);
+    abstract public void addPlayer (Player MCPlayer);
 
     /**
      * Method removes the specified minecraft player reference from the current PlayerArea object by
-     * comparing individual players to the reference
-     * @param player
+     * comparing individual GamePlayers to the reference
+     * @param MCPlayer
      */
-    public void removePlayer (Player player) {
-        for (GamePlayer listPlayer : areaPlayers)
+    public void removePlayer (Player MCPlayer) {
+        for (GamePlayer gamePlayer : areaPlayers)
         {
-            if (listPlayer.isPlayer(player)) {
-                areaPlayers.remove(listPlayer);
+            if (gamePlayer.isPlayer(MCPlayer)) {
+                areaPlayers.remove(gamePlayer);
                 break;
             }
         }

@@ -21,10 +21,10 @@ public class SetSpawn implements CommandExecutor {
             return true;
         }
 
-        Player player = (Player) sender;
-        spawnUtil.set(player.getLocation());
+        Player MCPlayer = (Player) sender;
+        spawnUtil.set(MCPlayer.getLocation());
 
-        player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSet the server spawn!"));
+        MCPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', "&aSet the server spawn!"));
 
         return true;
     }

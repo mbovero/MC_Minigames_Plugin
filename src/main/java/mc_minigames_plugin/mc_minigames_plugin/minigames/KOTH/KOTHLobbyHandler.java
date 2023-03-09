@@ -55,11 +55,11 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 // ---------------------------------------------------------------------------------------------------------------------
 
 
-    public KOTHLobbyHandler (MC_Minigames_Plugin plugin, Player player) {
+    public KOTHLobbyHandler (MC_Minigames_Plugin plugin, Player MCPlayer) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         //Add player to start of player list
         areaPlayers = new ArrayList<>();
-        areaPlayers.add(new KOTHPlayer(player));
+        areaPlayers.add(new KOTHPlayer(MCPlayer));
         areaName = "KOTHLobby";
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
@@ -72,9 +72,11 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
     /**
      * Method adds a new KOTPlayer to the list of current KOTHPlayers
-     * @param mcPlayer a reference to a minecraft players
+     * @param MCPlayer a reference to a minecraft players
      */
-    public void addPlayer (Player mcPlayer) {areaPlayers.add(new KOTHPlayer(mcPlayer));}
+    public void addPlayer (Player MCPlayer) {
+        areaPlayers.add(new KOTHPlayer(MCPlayer));
+    }
 
     /**
      * This observer method activates when a player interacts with a "Class Kit" armor
@@ -85,7 +87,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     public void onKitSelect (PlayerInteractAtEntityEvent event) {
         Entity clicked = event.getRightClicked();
         //Hold the player entity
-        Player player = event.getPlayer();
+        Player MCPlayer = event.getPlayer();
         Set<String> tags = event.getPlayer().getScoreboardTags();
         //Check for valid click and for an armor stand interaction
         if (clicked.getType() == EntityType.ARMOR_STAND && tags.contains("KOTHLobby")) {
@@ -94,108 +96,108 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             //Check if the player has selected a valid kit entity and selects the specified class
                 //Damage kits
             if (kitName.equals("§4Striker"))  {       //Striker
-                changeKit(player, "KOTH_kit_Striker");
-                player.sendTitle("Striker", "Deal damage, and take it too");
+                changeKit(MCPlayer, "KOTH_kit_Striker");
+                MCPlayer.sendTitle("Striker", "Deal damage, and take it too");
             }
             if (kitName.equals("§4Orc")) {        //Orc
-                changeKit(player, "KOTH_kit_Striker");
-                player.sendTitle("Orc", "Mean and green with a devastating axe");
+                changeKit(MCPlayer, "KOTH_kit_Striker");
+                MCPlayer.sendTitle("Orc", "Mean and green with a devastating axe");
             }
             if (kitName.equals("§4Pyro")) {        //Pyro
-                changeKit(player, "KOTH_kit_Pyro");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_Pyro");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4Sayain")) {        //Saiyan
-                changeKit(player, "KOTH_kit_Saiyan");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_Saiyan");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
                 //Tank kits
             if (kitName.equals("§1Knight")) {        //Kight
-                changeKit(player, "KOTH_kit_Tank");
-                player.sendTitle("Knight", "Try pushing me off now");
+                changeKit(MCPlayer, "KOTH_kit_Tank");
+                MCPlayer.sendTitle("Knight", "Try pushing me off now");
             }
             if (kitName.equals("§1TMNT")) {        //TMNT
-                changeKit(player, "KOTH_kit_TMNT");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_TMNT");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§1Trapper")) {        //Trapper
-                changeKit(player, "KOTH_kit_Trapper ");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_Trapper ");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4CockNBalls")) {        //Number 4
-                player.sendTitle("Sorry", "This class is not available yet");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
                 //Ranged kits
             if (kitName.equals("§2Archer")) {        //Archer
-                changeKit(player, "KOTH_kit_Archer");
-                player.sendTitle("Archer", "Yeah, I shoot stuff");
+                changeKit(MCPlayer, "KOTH_kit_Archer");
+                MCPlayer.sendTitle("Archer", "Yeah, I shoot stuff");
             }
             if (kitName.equals("§2Sniper")) {        //Sniper
-                changeKit(player, "KOTH_kit_Sniper");
-                player.sendTitle("Sniper", "Lol, get OPed");
+                changeKit(MCPlayer, "KOTH_kit_Sniper");
+                MCPlayer.sendTitle("Sniper", "Lol, get OPed");
             }
             if (kitName.equals("§aIce Spirit")) {        //Ice Spirit
-                changeKit(player, "KOTH_kit_IceSpirit");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_IceSpirit");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4CockNBalls")) {//Number 4
-                player.sendTitle("Sorry", "This class is not available yet");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
                 //Magic kits
             if (kitName.equals("§dWarper")) {        //Warper
-               changeKit(player, "KOTH_kit_Warper");
-                player.sendTitle("Warper", "You're neither here nor there");
+               changeKit(MCPlayer, "KOTH_kit_Warper");
+                MCPlayer.sendTitle("Warper", "You're neither here nor there");
             }
             if (kitName.equals("§dClockmaster")) {        //Clock Master
-                changeKit(player, "KOTH_kit_ClockMaster");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_ClockMaster");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§dwizard")) {        //Wizard
-                changeKit(player, "KOTH_kit_Wizard");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_Wizard");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§dDruid")) {        //Druid
-                changeKit(player, "KOTH_kit_Druid");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_Druid");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
                 //Misc. kits
             if (kitName.equals("§3Fisherman")) {        //Fisherman
-                changeKit(player, "KOTH_kit_Fisherman");
-                player.sendTitle("Sorry", "Yank and smack, but don't tell your mom");
+                changeKit(MCPlayer, "KOTH_kit_Fisherman");
+                MCPlayer.sendTitle("Sorry", "Yank and smack, but don't tell your mom");
             }
             if (kitName.equals("§bOcean Man")) {        //Ocean man
-                changeKit(player, "KOTH_kit_OceanMan");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_OceanMan");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§bBird Person")) {        //Bird Person
-                changeKit(player, "KOTH_kit_BirdPerson");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_BirdPerson");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§bSpider")) {        //Spider Man
-                changeKit(player, "KOTH_kit_SpiderMan");
-                player.sendTitle("Sorry", "This class is not available yet");
+                changeKit(MCPlayer, "KOTH_kit_SpiderMan");
+                MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
         }
     }
 
     /**
      * Method to change the player's current kit into the selected kit
-     * @param player
+     * @param MCPlayer
      * @param kit
      */
-    public void changeKit (Player player, String kit) {
+    public void changeKit (Player MCPlayer, String kit) {
         //Iterate through game players
-        for (GamePlayer reference : areaPlayers) {
+        for (GamePlayer gamePlayer : areaPlayers) {
             //Check if the current player matches the list reference player
-            if (reference.getPlayer().getDisplayName().equals(player.getDisplayName())) {
+            if (gamePlayer.isPlayer(MCPlayer)) {
                 //Type cast the list reference player into a KOTHPlayer
-                KOTHPlayer referenceKOTH = (KOTHPlayer) reference;
+                KOTHPlayer referenceKOTH = (KOTHPlayer) gamePlayer;
                 //Remove the currently held kit from the mcPlayer
-                player.removeScoreboardTag(referenceKOTH.getPlayerKit());
+                MCPlayer.removeScoreboardTag(referenceKOTH.getPlayerKit());
                 //Change the currently held kit from the KOTHPlayer to the new kit
                 referenceKOTH.changePlayerKit(kit);
                 //Add the new kit tag to the mcPlayer
-                player.addScoreboardTag(kit);
+                MCPlayer.addScoreboardTag(kit);
                 //Stop iterating
                 break;
             }
@@ -217,99 +219,99 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Setup
-        Player player = event.getPlayer();
-        Inventory inv = player.getInventory();
-        Set<String> tags = player.getScoreboardTags();
+        Player MCPlayer = event.getPlayer();
+        Inventory inv = MCPlayer.getInventory();
+        Set<String> tags = MCPlayer.getScoreboardTags();
 
         // For all players in the KOTH Lobby...
         if (tags.contains("KOTHLobby")) {
             // Detect when player clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
                 // Detect click with an item
-                if (player.getItemInHand().getItemMeta() != null) {
+                if (MCPlayer.getItemInHand().getItemMeta() != null) {
                     // QUEUE ITEM
                     // Detect click with KOTH queue item
-                    if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHQueue.getItemMeta().getDisplayName())) {
+                    if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHQueue.getItemMeta().getDisplayName())) {
                         // Queue player
-                        player.addScoreboardTag("KOTHQueued");
+                        MCPlayer.addScoreboardTag("KOTHQueued");
                         // Give glowing effect
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,2147483647, 1, true, false, false));
+                        MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,2147483647, 1, true, false, false));
                         // Switch to dequeue item
                         inv.setItem(0, KOTHDequeue);
                         // Play sound
-                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_CHIME, 5, 1.5f);
+                        MCPlayer.playSound(MCPlayer, Sound.BLOCK_NOTE_BLOCK_CHIME, 5, 1.5f);
                     }
                     // Detect click with KOTH dequeue item
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHDequeue.getItemMeta().getDisplayName())) {
+                    else if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHDequeue.getItemMeta().getDisplayName())) {
                         new DelayedTask(() -> {
                             // Dequeue player
-                        player.removeScoreboardTag("KOTHQueued");
+                        MCPlayer.removeScoreboardTag("KOTHQueued");
                         // Clear glowing potion effects
-                        Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+                        Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
                         for (PotionEffect pE : effectsToClear)
-                            player.removePotionEffect(pE.getType());
+                            MCPlayer.removePotionEffect(pE.getType());
                         // Switch to queue item
                         inv.setItem(0, KOTHQueue);
                         // Play sound
-                        player.playSound(player, Sound.BLOCK_NOTE_BLOCK_COW_BELL, 5, .8f);
+                        MCPlayer.playSound(MCPlayer, Sound.BLOCK_NOTE_BLOCK_COW_BELL, 5, .8f);
                         }, 3);
                     }
 
                     // TEAM SELECTOR
                     // Detect click with KOTH team selector (none)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamNone.getItemMeta().getDisplayName())) {
+                    else if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamNone.getItemMeta().getDisplayName())) {
                         new DelayedTask(() -> {
                         // Put player on red team
-                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHRed").addPlayer(player);
+                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHRed").addPlayer(MCPlayer);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamRed);
                         // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        MCPlayer.playSound(MCPlayer, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
                         }, 3);
                     }
                     // Detect click with KOTH team selector (red)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamRed.getItemMeta().getDisplayName())) {
+                    else if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamRed.getItemMeta().getDisplayName())) {
                         new DelayedTask(() -> {
                         // Put player on red team
-                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHBlue").addPlayer(player);
+                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHBlue").addPlayer(MCPlayer);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamBlue);
                         // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        MCPlayer.playSound(MCPlayer, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
                         }, 3);
                     }
                     // Detect click with KOTH team selector (blue)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamBlue.getItemMeta().getDisplayName())) {
+                    else if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamBlue.getItemMeta().getDisplayName())) {
                         new DelayedTask(() -> {
                         // Put player on red team
-                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHGreen").addPlayer(player);
+                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHGreen").addPlayer(MCPlayer);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamGreen);
                         // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        MCPlayer.playSound(MCPlayer, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
                         }, 3);
                     }
                     // Detect click with KOTH team selector (green)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamGreen.getItemMeta().getDisplayName())) {
+                    else if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamGreen.getItemMeta().getDisplayName())) {
                         new DelayedTask(() -> {
                         // Put player on red team
-                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHYellow").addPlayer(player);
+                        Bukkit.getScoreboardManager().getMainScoreboard().getTeam("KOTHYellow").addPlayer(MCPlayer);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamYellow);
                         // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        MCPlayer.playSound(MCPlayer, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
                         }, 3);
                     }
 
                     // Detect click with KOTH team selector (yellow)
-                    else if (player.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamYellow.getItemMeta().getDisplayName())) {
+                    else if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamYellow.getItemMeta().getDisplayName())) {
                         new DelayedTask(() -> {
                         // Put player on red team
-                        Tools.resetTeam(player);
+                        Tools.resetTeam(MCPlayer);
                         // Switch to next item
                         inv.setItem(2, KOTHTeamNone);
                         // Play sound
-                        player.playSound(player, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
+                        MCPlayer.playSound(MCPlayer, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
                         }, 3);
                     }
                 }
@@ -321,8 +323,8 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
      */
     @EventHandler
     public void returnPortal(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        Set<String> tags = player.getScoreboardTags();
+        Player MCPlayer = event.getPlayer();
+        Set<String> tags = MCPlayer.getScoreboardTags();
         // Detect players in portal range and in KOTH lobby
         if (event.getTo().getY() < -56 && event.getTo().getY() > -63 &&
                 event.getTo().getZ() < -594 && event.getTo().getZ() > -595 &&
@@ -332,7 +334,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             if (lastPortalTask != null)
                 new DelayedTask(() -> Bukkit.getScheduler().cancelTask(lastPortalTask.getId()), 2);
             // Transport player to main hub
-            lastPortalTask = GeneralLobbyHandler.sendMainHub(player, this);
+            lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer, this);
             new DelayedTask(() -> {event.setCancelled(true);}, 3);
         }
     }

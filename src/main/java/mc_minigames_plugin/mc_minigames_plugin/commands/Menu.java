@@ -35,16 +35,16 @@ public class Menu implements Listener, CommandExecutor {
         }
 
         // Retrieve the slot number that the player clicked on
-        Player player = (Player)event.getWhoClicked();
+        Player MCPlayer = (Player)event.getWhoClicked();
         int slot = event.getSlot();
 
         // Execute correlating operation
         if (slot == 11)
-            player.sendMessage("You clicked option 1");
+            MCPlayer.sendMessage("You clicked option 1");
         else if (slot == 13)
-            player.sendMessage("You clicked option 2");
+            MCPlayer.sendMessage("You clicked option 2");
         else if (slot == 15)
-            player.sendMessage("You clicked option 3");
+            MCPlayer.sendMessage("You clicked option 3");
 
         // Cannot move items around, only click on them
         event.setCancelled(true);
@@ -57,15 +57,15 @@ public class Menu implements Listener, CommandExecutor {
             return true;
         }
 
-        Player player = (Player)sender;
+        Player MCPlayer = (Player)sender;
 
-        Inventory inv = Bukkit.createInventory(player, 9 *3, invName);
+        Inventory inv = Bukkit.createInventory(MCPlayer, 9 *3, invName);
 
         inv.setItem(11, createItem(new ItemStack(Material.DIAMOND_SWORD), "&9PVP", "&aClick to Join", "&aBattle it out in our PVP arena!"));
         inv.setItem(13, createItem(new ItemStack(Material.BEACON), "&9Creative Plots", "&aClick to Join", "&aWeekly build competitions!"));
         inv.setItem(15, createItem(new ItemStack(Material.GRASS_BLOCK), "&9Sky Block", "&aClick to Join", "&aHow long can you survive?"));
 
-        player.openInventory(inv);
+        MCPlayer.openInventory(inv);
 
         return true;
     }

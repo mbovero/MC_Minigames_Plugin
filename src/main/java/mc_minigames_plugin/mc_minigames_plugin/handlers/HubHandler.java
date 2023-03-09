@@ -49,13 +49,13 @@ public class HubHandler extends PlayerArea implements Listener {
      */
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        Player player = event.getPlayer();
+        Player MCPlayer = event.getPlayer();
         // Reset player scores
-        Bukkit.getScoreboardManager().getMainScoreboard().resetScores(player);      // Resets all objective scores for player - get individual objectives and player score object to change individual scores
+        Bukkit.getScoreboardManager().getMainScoreboard().resetScores(MCPlayer);      // Resets all objective scores for player - get individual objectives and player score object to change individual scores
         // Remove player from team
-        Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
+        Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer);
         if (team != null)
-            Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player).removePlayer(player);
+            Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer).removePlayer(MCPlayer);
     }
 
     /**
@@ -64,41 +64,41 @@ public class HubHandler extends PlayerArea implements Listener {
     @EventHandler
     public void resetOnPlayerJoin(PlayerJoinEvent event) {
         // Setup & retrieve data
-        Player player = event.getPlayer();
+        Player MCPlayer = event.getPlayer();
 
         // Unless troubleshooting...
-        if (!player.getScoreboardTags().contains("troubleshooting")) {
+        if (!MCPlayer.getScoreboardTags().contains("troubleshooting")) {
             // Send player to hub (reset inv and tp)
-            areaPlayers.add(new HubPlayer(player));
-            GeneralLobbyHandler.sendMainHub(player, this);
+            areaPlayers.add(new HubPlayer(MCPlayer));
+            GeneralLobbyHandler.sendMainHub(MCPlayer, this);
             // Set to adventure mode
-            player.setGameMode(GameMode.ADVENTURE);
+            MCPlayer.setGameMode(GameMode.ADVENTURE);
             // Prevent/reset flying
-            player.setAllowFlight(false);
-            player.setFlying(false);
+            MCPlayer.setAllowFlight(false);
+            MCPlayer.setFlying(false);
             // Clear potion effects
-            Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+            Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
             for (PotionEffect pE : effectsToClear)
-                player.removePotionEffect(pE.getType());
+                MCPlayer.removePotionEffect(pE.getType());
             // Reset health
-            player.resetMaxHealth();
-            player.setHealth(player.getMaxHealth());
+            MCPlayer.resetMaxHealth();
+            MCPlayer.setHealth(MCPlayer.getMaxHealth());
             // Reset hunger
-            player.setFoodLevel(20);
+            MCPlayer.setFoodLevel(20);
 
             // Currently on leave and join, probably only need one
             // Reset player scores
-            Bukkit.getScoreboardManager().getMainScoreboard().resetScores(player);      // Resets all objective scores for player - get individual objectives and player score object to change individual scores
+            Bukkit.getScoreboardManager().getMainScoreboard().resetScores(MCPlayer);      // Resets all objective scores for player - get individual objectives and player score object to change individual scores
             // Remove player from team
-            Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
+            Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer);
             if (team != null)
-                Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player).removePlayer(player);
+                Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer).removePlayer(MCPlayer);
 
             // Clear player tags  -  change to handle actions based on current tags
-            Tools.resetTags(player);
+            Tools.resetTags(MCPlayer);
             // Give necessary tags
-            player.addScoreboardTag("mainHub");
-            player.addScoreboardTag("notInGame");
+            MCPlayer.addScoreboardTag("mainHub");
+            MCPlayer.addScoreboardTag("notInGame");
         }
     }
 
@@ -106,10 +106,10 @@ public class HubHandler extends PlayerArea implements Listener {
      * Gives functionality of button presses within main hub
      */
     @EventHandler
-    public void onInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent event) {
         // Setup
-        Player player = event.getPlayer();
-        Set<String> tags = player.getScoreboardTags();
+        Player MCPlayer = event.getPlayer();
+        Set<String> tags = MCPlayer.getScoreboardTags();
 
         // For players that are not in a game or troubleshooting...
         if (tags.contains("notInGame") || tags.contains("troubleshooting")) {
@@ -124,7 +124,7 @@ public class HubHandler extends PlayerArea implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc)) {
                     // Transport player
-                    GeneralLobbyHandler.sendKOTHLobby(player, this);
+                    GeneralLobbyHandler.sendKOTHLobby(MCPlayer, this);
                 }
             }
 
@@ -137,168 +137,14 @@ public class HubHandler extends PlayerArea implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(MMButtonLoc) || event.getClickedBlock().getLocation().equals(MMButtonLoc2)) {
                     // Transport player
-                    GeneralLobbyHandler.sendMMLobby(player, this);
+                    GeneralLobbyHandler.sendMMLobby(MCPlayer, this);
                 }
             }
         }
     }
 
-    /**
-     * Prevents players not in games and not troubleshooting from harvesting blocks.
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void preventHarvestBlock(PlayerHarvestBlockEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
-            event.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents players not in games and not troubleshooting from manipulating armor stands.
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void preventArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
-            event.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents players not in games and not troubleshooting from consuming items.
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void preventItemConsume(PlayerItemConsumeEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
-            event.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents players not in games and not troubleshooting from placing blacks.
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void preventBlockPlace(BlockPlaceEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
-            event.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents players not in games and not troubleshooting from breaking blocks.
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void preventBlockBreak(BlockBreakEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
-            event.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents players not in games and not troubleshooting from damaging entities and breaking armor stands.
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void preventEntityDamage(EntityDamageByEntityEvent event) {
-        Set<String> tags = event.getDamager().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
-            event.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents players not in games and not troubleshooting from killing entities.
-     */
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void preventEntityDeath(EntityDeathEvent event) {
-        if (event.getEntity().getKiller() == null)
-            return;
-        Set<String> tags = event.getEntity().getKiller().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
-            event.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents players not in games and not troubleshooting from dropping items in lobbies
-     */
-    @EventHandler
-    public void preventItemDrop(PlayerDropItemEvent event) {
-        Player player = event.getPlayer();
-        Set<String> tags = player.getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
-            event.setCancelled(true);
-    }
-
-    /**
-     * Prevents hunger in lobbies for players not in games and not troubleshooting
-     */
-    @EventHandler
-    public void preventHunger(FoodLevelChangeEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
-                event.setCancelled(true);
-        }
-    }
-
-    /**
-     * Prevents damage in lobbies for players not in games and not troubleshooting
-     */
-    @EventHandler
-    public void preventDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
-            Set<String> tags = player.getScoreboardTags();
-            if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
-                event.setCancelled(true);
-        }
-
-
-
-
-        // Tutorial stuff
-//        // Ensure that a player was hurt by fall damage
-//        if (!(event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL)) {
-//            return;
-//        }
-//
-//        // Give a player a diamond after five seconds
-//        DelayedTask task = new DelayedTask(() -> {player.getInventory().addItem(new ItemStack(Material.DIAMOND));}, 20 * 5);
-//        // Cancel the task
-//        Bukkit.getScheduler().cancelTask(task.getId());
-    }
-
-    /**
-     * Gives players not in games and not troubleshooting levitation when they fall below a certain Y-level in lobbies.
-     */
-    @EventHandler
-    public void voidLevitation(PlayerMoveEvent event) {
-        Player player = event.getPlayer();
-        Set<String> tags = player.getScoreboardTags();
-        // For all players not in a game and not troubleshooting...
-        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !tags.contains("troubleshooting")) {
-            // Apply main hub levitation
-            if (tags.contains("mainHub"))
-                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
-            // Apply KOTH lobby levitation
-            else if (tags.contains("KOTHLobby"))
-                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 10, false));
-            // Apply MM lobby levitation
-            else if (tags.contains("MMLobby"))
-                player.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 18, false));
-        }
-        // Return players to main hub when they go out of bounds
-        else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
-            GeneralLobbyHandler.sendMainHub(player, this);
-    }
-
     @Override
-    public void addPlayer(Player mcPlayer) {
-        areaPlayers.add(new HubPlayer(mcPlayer));
+    public void addPlayer(Player MCPlayer) {
+        areaPlayers.add(new HubPlayer(MCPlayer));
     }
 }

@@ -29,14 +29,14 @@ public class TroubleshootingHandler implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
         //Setup
-        Player player = event.getPlayer();
+        Player MCPlayer = event.getPlayer();
         Set<String> tags = event.getPlayer().getScoreboardTags();
         Location entityLoc = event.getRightClicked().getLocation();
 
-        if (player.getScoreboardTags().contains("troubleshooting")) {
+        if (MCPlayer.getScoreboardTags().contains("troubleshooting")) {
             // Print name/location of entities that the player right-clicks
-            player.sendMessage("You right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
-            Bukkit.getLogger().info(player.getName() + " right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
+            MCPlayer.sendMessage("You right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
+            Bukkit.getLogger().info(MCPlayer.getName() + " right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
         }
     }
 }

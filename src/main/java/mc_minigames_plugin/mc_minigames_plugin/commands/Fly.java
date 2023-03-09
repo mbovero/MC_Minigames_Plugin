@@ -20,17 +20,17 @@ public class Fly implements CommandExecutor {
             return true;
         }
 
-        Player player = (Player) sender;
+        Player MCPlayer = (Player) sender;
 
         // If the player can already fly, disable it
-        if (player.getAllowFlight()) {
-            player.setAllowFlight(false);
-            player.sendMessage("Flying disabled");
+        if (MCPlayer.getAllowFlight()) {
+            MCPlayer.setAllowFlight(false);
+            MCPlayer.sendMessage("Flying disabled");
         }
         // Otherwise, allow flight
         else {
-            player.setAllowFlight(true);
-            player.sendMessage("Flying enabled");
+            MCPlayer.setAllowFlight(true);
+            MCPlayer.sendMessage("Flying enabled");
         }
 
         // Command was run successfully (false returns error message)

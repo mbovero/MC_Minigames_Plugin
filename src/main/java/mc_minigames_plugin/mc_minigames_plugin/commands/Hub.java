@@ -21,10 +21,10 @@ public class Hub implements CommandExecutor {
             sender.sendMessage("Only players can use this command!");
             return true;
         }
-        Player player = (Player)sender;
+        Player MCPlayer = (Player)sender;
 
         // Teleport player to hub
-        player.teleport(Locations.mainHub);
+        MCPlayer.teleport(Locations.mainHub);
 
         return true;
     }

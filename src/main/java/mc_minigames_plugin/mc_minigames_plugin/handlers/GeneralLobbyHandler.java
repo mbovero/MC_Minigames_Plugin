@@ -14,13 +14,21 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.NameTagVisibility;
 
 import java.util.ArrayList;
@@ -72,14 +80,10 @@ public class GeneralLobbyHandler implements Listener {
         playerAreas = new ArrayList<>();
         playerAreas.add(new HubHandler(plugin));
         KOTHExist = false;  // KOTHLobbyHandler has not been created
-
-        // Create MM teams   --- MOVE TO MM HANDLER
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMRed", " ⧫ ", "Red", null, ChatColor.RED, false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMBlue", " ⧫ ", "Blue", null, ChatColor.BLUE, false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMGreen", " ⧫ ", "Green", null, ChatColor.GREEN, false, true, NameTagVisibility.ALWAYS);
-        Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMYellow", " ⧫ ", "Yellow", null, ChatColor.YELLOW, false, true, NameTagVisibility.ALWAYS);
     }
 
+
+// PLAYER INTERACTION --------------------------------------------------------------------------------------------------
 
     /*
      * Lobby/hub tags for keeping track of player location/status:
@@ -95,42 +99,42 @@ public class GeneralLobbyHandler implements Listener {
     /**
      * Sends the provided player to the main hub and sets their tags accordingly.
      *
-     * @param player player to be sent
+     * @param MCPlayer player to be sent
      */
-    public static DelayedTask sendMainHub(Player player, PlayerArea prevArea) {
+    public static DelayedTask sendMainHub(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
             if (!(prevArea.getAreaName().equals("mainHub"))) {
-                prevArea.removePlayer(player);
+                prevArea.removePlayer(MCPlayer);
 
-                player.sendMessage("Removed " + player.getName() + " from " + prevArea.getAreaName());
+                MCPlayer.sendMessage("Removed " + MCPlayer.getName() + " from " + prevArea.getAreaName());
 
                 // Add the player when an instance of HubHandler is found
                 for (PlayerArea lobby : playerAreas)
                     if (lobby instanceof HubHandler) {
-                        lobby.addPlayer(player);
-                        player.sendMessage("Added " + player.getName() + " to " + lobby.getAreaName());
+                        lobby.addPlayer(MCPlayer);
+                        MCPlayer.sendMessage("Added " + MCPlayer.getName() + " to " + lobby.getAreaName());
                     }
             }
 
             // Tp player
-            player.teleport(Locations.mainHub);
+            MCPlayer.teleport(Locations.mainHub);
             // Play tp sound
-            player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+            MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
             // Clear potion effects
-            Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+            Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
             for (PotionEffect pE : effectsToClear)
-                player.removePotionEffect(pE.getType());
+                MCPlayer.removePotionEffect(pE.getType());
             // Reset tags
-            Set<String> tags = player.getScoreboardTags();
-            Tools.resetTags(player);
+            Set<String> tags = MCPlayer.getScoreboardTags();
+            Tools.resetTags(MCPlayer);
             // Set tags
-            player.addScoreboardTag("mainHub");         // Player is now in main hub
-            player.addScoreboardTag("notInGame");       // Player is still not in a game
+            MCPlayer.addScoreboardTag("mainHub");         // Player is now in main hub
+            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
             // Reset team
-            Tools.resetTeam(player);
+            Tools.resetTeam(MCPlayer);
             // Reset inventory
-            Inventory inv = player.getInventory();
+            Inventory inv = MCPlayer.getInventory();
             if (!tags.contains("troubleshooting"))    // Only clear inventory if not troubleshooting
                 inv.clear();
             // Give lobby selector after some time
@@ -142,97 +146,95 @@ public class GeneralLobbyHandler implements Listener {
      * Sends the provided player to the King of The Hill lobby and sets their tags accordingly.
      * If an instance of KOTHLobbyHandler does not already exist, a new one is made.
      *
-     * @param player player to be sent
+     * @param MCPlayer player to be sent
      */
-    public static DelayedTask sendKOTHLobby(Player player, PlayerArea prevArea) {
+    public static DelayedTask sendKOTHLobby(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
             if (!(prevArea.getAreaName().equals("KOTHLobby"))) {
-                prevArea.removePlayer(player);
+                prevArea.removePlayer(MCPlayer);
 
                 // Change boolean and add the player when an instance of KOTHLobbyHandler is found
                 for (PlayerArea lobby : playerAreas)
                     if (lobby instanceof KOTHLobbyHandler) {
-                        lobby.addPlayer(player);
+                        lobby.addPlayer(MCPlayer);
                         KOTHExist = true;
                     }
                 // Create new KOTHLobbyHandler if one doesn't already exist
                 if (!KOTHExist) {
-                    playerAreas.add(new KOTHLobbyHandler(plugin, player));
+                    playerAreas.add(new KOTHLobbyHandler(plugin, MCPlayer));
                     KOTHExist = true;
                 }
             }
             // Tp player
-            player.teleport(Locations.KOTHLobby);
+            MCPlayer.teleport(Locations.KOTHLobby);
             // Play tp sound
-            player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+            MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
             // Clear potion effects
-            Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+            Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
             for (PotionEffect pE : effectsToClear)
-                player.removePotionEffect(pE.getType());
+                MCPlayer.removePotionEffect(pE.getType());
             // Reset tags
-            Set<String> tags = player.getScoreboardTags();
-            Tools.resetTags(player);
+            Set<String> tags = MCPlayer.getScoreboardTags();
+            Tools.resetTags(MCPlayer);
             // Set tags
-            player.addScoreboardTag("KOTHLobby");       // Player is now in KOTH lobby
-            player.addScoreboardTag("notInGame");       // Player is still not in a game
+            MCPlayer.addScoreboardTag("KOTHLobby");       // Player is now in KOTH lobby
+            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
             // Reset team
-            Tools.resetTeam(player);
+            Tools.resetTeam(MCPlayer);
             // Reset inventory
-            Inventory inv = player.getInventory();
+            Inventory inv = MCPlayer.getInventory();
             if (!tags.contains("troubleshooting"))    // Only clear inventory if not troubleshooting
                 inv.clear();
             // Give items for lobby hot bar menu after some time
             inv.setItem(0, KOTHQueue);        // Queue/Dequeue item
             inv.setItem(2, KOTHTeamNone);     // Team selector item (no team by default)
             inv.setItem(4, lobbySelector);    // Lobby selector item
-
-
         }, 5);
     }
 
     /**
      * Sends the provided player to the Murder Mystery lobby and sets their tags accordingly.
      *
-     * @param player player to be sent
+     * @param MCPlayer player to be sent
      */
-    public static DelayedTask sendMMLobby(Player player, PlayerArea prevArea) {
+    public static DelayedTask sendMMLobby(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
             if (!(prevArea.getAreaName().equals("MMLobby"))) {
-                prevArea.removePlayer(player);
+                prevArea.removePlayer(MCPlayer);
                 // Change boolean and add the player when an instance of MMLobbyHandler is found
                 for (PlayerArea lobby : playerAreas)
                     if (lobby instanceof MMLobbyHandler) {
-                        lobby.addPlayer(player);
+                        lobby.addPlayer(MCPlayer);
                         MMExist = true;
                     }
                 // Create new KOTHLobbyHandler if one doesn't already exist
                 if (!MMExist) {
-                    playerAreas.add(new MMLobbyHandler(plugin, player));
+                    playerAreas.add(new MMLobbyHandler(plugin, MCPlayer));
                     MMExist = true;
                 }
             }
 
             // Tp player
-            player.teleport(Locations.MMLobby);
+            MCPlayer.teleport(Locations.MMLobby);
             // Play tp sound
-            player.playSound(player, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+            MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
             // Clear potion effects
-            Collection<PotionEffect> effectsToClear = player.getActivePotionEffects();
+            Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
             for (PotionEffect pE : effectsToClear)
-                player.removePotionEffect(pE.getType());
+                MCPlayer.removePotionEffect(pE.getType());
             // Reset tags
-            Set<String> tags = player.getScoreboardTags();
-            Tools.resetTags(player);
+            Set<String> tags = MCPlayer.getScoreboardTags();
+            Tools.resetTags(MCPlayer);
             // Set tags
-            player.addScoreboardTag("MMLobby");         // Player is now in MM lobby
-            player.addScoreboardTag("notInGame");       // Player is still not in a game
+            MCPlayer.addScoreboardTag("MMLobby");         // Player is now in MM lobby
+            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
             // Reset team
-            Tools.resetTeam(player);
+            Tools.resetTeam(MCPlayer);
             // Reset inventory
-            Inventory inv = player.getInventory();
-            if (!player.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
+            Inventory inv = MCPlayer.getInventory();
+            if (!MCPlayer.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
                 inv.clear();
             // Give items for lobby hot bar menu
             inv.setItem(0, MMQueue);        // Queue/Dequeue item
@@ -242,24 +244,51 @@ public class GeneralLobbyHandler implements Listener {
     }
 
     /**
+     * Method returns the PlayerArea object that the associated player reference is currently held inside.
+     *
+     * @param MCPlayer
+     * @return
+     */
+    public PlayerArea findPlayer(Player MCPlayer) {
+        for (PlayerArea area : playerAreas) {
+
+            MCPlayer.sendMessage(area.getAreaName());
+
+            for (GamePlayer gamePlayer : area.getPlayers()) {
+                MCPlayer.sendMessage("Players: " + gamePlayer.getPlayer().getName());
+                if (gamePlayer.isPlayer(MCPlayer)) {
+                    return area;
+                }
+            }
+        }
+        MCPlayer.sendMessage("\nBAD BAD\n");
+        return null;
+    }
+
+
+
+
+// LOBBY ITEM FUNCTIONALITY --------------------------------------------------------------------------------------------
+
+    /**
      * Provides functionality to the Lobby Selector item
      */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Setup
-        Player player = event.getPlayer();
-        Inventory inv = player.getInventory();
-        Set<String> tags = player.getScoreboardTags();
+        Player MCPlayer = event.getPlayer();
+        Inventory inv = MCPlayer.getInventory();
+        Set<String> tags = MCPlayer.getScoreboardTags();
 
         // When a player interacts while not in a game or while troubleshooting...
         if (tags.contains("notInGame") || tags.contains("troubleshooting")) {
             // Detect when player right clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 // Detect right click with Lobby Selector compass
-                if (player.getItemInHand().getItemMeta() != null && player.getItemInHand().getItemMeta().getDisplayName().equals("§aLobby Selector")) {
+                if (MCPlayer.getItemInHand().getItemMeta() != null && MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals("§aLobby Selector")) {
 
                     // Create "UI"
-                    Inventory menu = Bukkit.createInventory(player, 9 * 3, "Lobby Selector");
+                    Inventory menu = Bukkit.createInventory(MCPlayer, 9 * 3, "Lobby Selector");
                     // UI options:
                     // KOTH lobby
                     menu.setItem(11, createItem(new ItemStack(Material.GRASS_BLOCK), "&aKOTH", "&7Conquer the Hill"));
@@ -269,7 +298,7 @@ public class GeneralLobbyHandler implements Listener {
                     menu.setItem(15, createItem(new ItemStack(Material.DIAMOND_SWORD), "&cMurder Mystery", "&7Stab your friends! :D"));
 
                     // Open the created "UI"
-                    player.openInventory(menu);
+                    MCPlayer.openInventory(menu);
                 }
         }
     }
@@ -279,10 +308,10 @@ public class GeneralLobbyHandler implements Listener {
      */
     @EventHandler
     public void onMenuClick(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-        Set<String> tags = player.getScoreboardTags();
+        Player MCPlayer = (Player) event.getWhoClicked();
+        Set<String> tags = MCPlayer.getScoreboardTags();
         // Holds the area the minecraft player reference is in based on the GamePlayer reference
-        PlayerArea playerArea = findPlayer(player);
+        PlayerArea playerArea = findPlayer(MCPlayer);
         // For players not in a game...
         if (tags.contains("notInGame")) {
             // Only handle inv clicks if player is in Lobby Selector inventory
@@ -298,21 +327,21 @@ public class GeneralLobbyHandler implements Listener {
                     // KOTH lobby
                     if (slot == 11 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aKOTH")) {
                         // Tp player to KOTH lobby
-                        GeneralLobbyHandler.sendKOTHLobby(player, playerArea);
+                        GeneralLobbyHandler.sendKOTHLobby(MCPlayer, playerArea);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
                     // Main Hub
                     else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub")) {
                         // Tp player to main hub
-                        GeneralLobbyHandler.sendMainHub(player, playerArea);
+                        GeneralLobbyHandler.sendMainHub(MCPlayer, playerArea);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
                     // MM lobby
                     else if (slot == 15 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§cMurder Mystery")) {
                         // Tp player to MM lobby
-                        GeneralLobbyHandler.sendMMLobby(player, playerArea);
+                        GeneralLobbyHandler.sendMMLobby(MCPlayer, playerArea);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
@@ -327,26 +356,162 @@ public class GeneralLobbyHandler implements Listener {
         }
     }
 
+
+
+
+// WORLD INTERACTION ---------------------------------------------------------------------------------------------------
+
     /**
-     * Method returns the PlayerArea object that the associated player reference is currently held inside.
-     *
-     * @param mcPlayer
-     * @return
+     * Prevents players not in games and not troubleshooting from harvesting blocks.
      */
-    public PlayerArea findPlayer(Player mcPlayer) {
-        for (PlayerArea area : playerAreas) {
-
-            mcPlayer.sendMessage(area.getAreaName());
-
-                for (GamePlayer gamePlayer : area.getPlayers()) {
-                    mcPlayer.sendMessage("Players: " + gamePlayer.getPlayer().getName());
-                    if (gamePlayer.isPlayer(mcPlayer)) {
-                        return area;
-                    }
-                }
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventHarvestBlock(PlayerHarvestBlockEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+            event.setCancelled(true);
         }
-        mcPlayer.sendMessage("\nBAD BAD\n");
-        return null;
     }
 
+    /**
+     * Prevents players not in games and not troubleshooting from manipulating armor stands.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Prevents players not in games and not troubleshooting from consuming items.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventItemConsume(PlayerItemConsumeEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Prevents players not in games and not troubleshooting from placing blacks.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventBlockPlace(BlockPlaceEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Prevents players not in games and not troubleshooting from breaking blocks.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventBlockBreak(BlockBreakEvent event) {
+        Set<String> tags = event.getPlayer().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Prevents players not in games and not troubleshooting from damaging entities and breaking armor stands.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventEntityDamage(EntityDamageByEntityEvent event) {
+        Set<String> tags = event.getDamager().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Prevents players not in games and not troubleshooting from killing entities.
+     */
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void preventEntityDeath(EntityDeathEvent event) {
+        if (event.getEntity().getKiller() == null)
+            return;
+        Set<String> tags = event.getEntity().getKiller().getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+            event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Prevents players not in games and not troubleshooting from dropping items in lobbies
+     */
+    @EventHandler
+    public void preventItemDrop(PlayerDropItemEvent event) {
+        Player MCPlayer = event.getPlayer();
+        Set<String> tags = MCPlayer.getScoreboardTags();
+        if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
+            event.setCancelled(true);
+    }
+
+    /**
+     * Prevents hunger in lobbies for players not in games and not troubleshooting
+     */
+    @EventHandler
+    public void preventHunger(FoodLevelChangeEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player MCPlayer = (Player) event.getEntity();
+            Set<String> tags = MCPlayer.getScoreboardTags();
+            if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
+                event.setCancelled(true);
+        }
+    }
+
+    /**
+     * Prevents damage in lobbies for players not in games and not troubleshooting
+     */
+    @EventHandler
+    public void preventDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player) {
+            Player MCPlayer = (Player) event.getEntity();
+            Set<String> tags = MCPlayer.getScoreboardTags();
+            if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
+                event.setCancelled(true);
+        }
+
+
+
+
+        // Tutorial stuff
+//        // Ensure that a player was hurt by fall damage
+//        if (!(event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL)) {
+//            return;
+//        }
+//
+//        // Give a player a diamond after five seconds
+//        DelayedTask task = new DelayedTask(() -> {player.getInventory().addItem(new ItemStack(Material.DIAMOND));}, 20 * 5);
+//        // Cancel the task
+//        Bukkit.getScheduler().cancelTask(task.getId());
+    }
+
+    /**
+     * Gives players not in games and not troubleshooting levitation when they fall below a certain Y-level in lobbies.
+     */
+    @EventHandler
+    public void voidLevitation(PlayerMoveEvent event) {
+        Player MCPlayer = event.getPlayer();
+        Set<String> tags = MCPlayer.getScoreboardTags();
+        // For all players not in a game and not troubleshooting...
+        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+            // Apply main hub levitation
+            if (tags.contains("mainHub"))
+                MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
+                // Apply KOTH lobby levitation
+            else if (tags.contains("KOTHLobby"))
+                MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 10, false));
+                // Apply MM lobby levitation
+            else if (tags.contains("MMLobby"))
+                MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 18, false));
+        }
+        // Return players to main hub when they go out of bounds
+        else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
+            GeneralLobbyHandler.sendMainHub(MCPlayer, findPlayer(MCPlayer));
+    }
 }

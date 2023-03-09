@@ -20,8 +20,8 @@ public class Spawn implements CommandExecutor {
             return true;
         }
 
-        Player player = (Player) sender;
-        spawnUtil.teleport(player);
+        Player MCPlayer = (Player) sender;
+        spawnUtil.teleport(MCPlayer);
 
         return true;
     }

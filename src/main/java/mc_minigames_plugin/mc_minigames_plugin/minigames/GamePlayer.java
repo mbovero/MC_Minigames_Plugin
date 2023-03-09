@@ -12,44 +12,32 @@ import java.util.Set;
 abstract public class GamePlayer {
     protected boolean gameReady; //identifies if the player is ready for the game to start
 
-    protected Player player;
+    protected Player MCPlayer;
 
-    public GamePlayer (Player player) {
+    public GamePlayer (Player MCPlayer) {
         gameReady = false;
-        this.player = player;
+        this.MCPlayer = MCPlayer;
     }
 
     /**
      * Method checks to see if a player is in a given lobby and returns the boolean state of that query.
-     * @param player
+     * @param MCPlayer
      * @param lobby
      * @return
      */
-    public boolean isInGame (Player player, String lobby) {
-        Set<String> tags = player.getScoreboardTags();
+    public boolean isInGame (Player MCPlayer, String lobby) {
+        Set<String> tags = MCPlayer.getScoreboardTags();
         for (String tag: tags) {if (tag.equals(lobby)) {return true;}}
         return false;
     }
 
     /**
-     * Method accesses the player reference and adds a tag to that player.
-     * @param tag
-     */
-    public void giveTag (String tag) {player.addScoreboardTag(tag);}
-
-    /**
-     * Method accesses the player reference and removes a tag from that player.
-     * @param tag
-     */
-    public void removeTag (String tag) {player.removeScoreboardTag(tag);}
-
-    /**
-     * Method compares a given minecraft player reference to a GamePlayer object and
+     * Method compares a given minecraft player reference to this GamePlayer object and
      * returns the boolean value of that comparison.
-     * @param compareTo
+     * @param MCPlayer
      * @return
      */
-    public boolean isPlayer (Player compareTo) {return player.getDisplayName().equals(compareTo.getDisplayName());}
+    public boolean isPlayer (Player MCPlayer) {return this.MCPlayer.getName().equals(MCPlayer.getName());}
 
     //Accessors --------------------------------------------------------------------------------------------------------
 
@@ -63,6 +51,6 @@ abstract public class GamePlayer {
      * Accessor method for returning the current reference of a minecraft player
      * @return
      */
-    public Player getPlayer () {return player;}
+    public Player getPlayer () {return MCPlayer;}
 
 }

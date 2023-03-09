@@ -15,9 +15,9 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
     String gameMode;        // The currently selected KOTH gamemode
     String map;             // The currently selected KOTH map
 
-    public KOTHGameHandler (MC_Minigames_Plugin plugin, ArrayList<GamePlayer> players, String gameMode, String map) {
+    public KOTHGameHandler (MC_Minigames_Plugin plugin, ArrayList<GamePlayer> gamePlayers, String gameMode, String map) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        this.areaPlayers = players;
+        this.areaPlayers = gamePlayers;
         gameStart();
     }
 
@@ -25,12 +25,12 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
     //Game start
     public void gameStart () {
         //Move everyone to the KOTH map
-        for (GamePlayer player : areaPlayers)
+        for (GamePlayer gamePlayer : areaPlayers)
         {
-            teleportToMap(player, map);
-            player.removeTag("notInGame");
+            teleportToMap(gamePlayer, map);
+            gamePlayer.getPlayer().removeScoreboardTag("notInGame");
 
-            giveKit(player);
+            giveKit(gamePlayer);
         }
         //Give everyone their kit abilities and items
 
@@ -45,12 +45,12 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
     //Game reset
 
     //KIT METHODS
-    public void giveKit (GamePlayer player)
+    public void giveKit (GamePlayer gamePlayer)
     {
 
     }
 
-    public void teleportToMap (GamePlayer player, String map) {
+    public void teleportToMap (GamePlayer gamePlayer, String map) {
 
         if (map.equals("CastleOfDreams")) {
 
