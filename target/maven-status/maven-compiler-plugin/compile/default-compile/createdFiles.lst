@@ -4,6 +4,7 @@ mc_minigames_plugin\mc_minigames_plugin\util\DelayedTask.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Spawn.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\MM\MMLobbyHandler.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\TroubleshootingHandler.class
+mc_minigames_plugin\mc_minigames_plugin\minigames\MM\MMPlayer.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\PlayerArea.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\GeneralLobbyHandler.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHLobbyHandler.class

@@ -1,5 +1,6 @@
 package mc_minigames_plugin.mc_minigames_plugin.commands;
 
+import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -7,6 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.Set;
+
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
 
 /**
  * Command that give the player troubleshooting abilities:
@@ -27,18 +30,19 @@ public class Troubleshoot implements CommandExecutor {
 
         // Setup
         Player MCPlayer = (Player)sender;
-        Set<String> tags = MCPlayer.getScoreboardTags();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // If not troubleshooting...
-        if (!tags.contains("troubleshooting")) {
+        if (!gamePlayer.isTroubleShooting()) {
             // Enter troubleshooting
-            MCPlayer.addScoreboardTag("troubleshooting");
+            gamePlayer.setTroubleShooting(true);
             MCPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a[Entered troubleshooting mode]"));
         }
         // Otherwise,
         else {
             // Stop troubleshooting
-            MCPlayer.removeScoreboardTag("troubleshooting");
+            gamePlayer.setTroubleShooting(false);
             MCPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Exited troubleshooting mode]"));
         }
 

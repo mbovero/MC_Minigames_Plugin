@@ -29,6 +29,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         {
             teleportToMap(gamePlayer, map);
             gamePlayer.setIsInGame(true);
+
             giveKit(gamePlayer);
         }
         //Give everyone their kit abilities and items
