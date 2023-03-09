@@ -28,7 +28,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         for (GamePlayer gamePlayer : areaPlayers)
         {
             teleportToMap(gamePlayer, map);
-            gamePlayer.getPlayer().removeScoreboardTag("notInGame");
+            gamePlayer.setIsInGame(true);
 
             giveKit(gamePlayer);
         }

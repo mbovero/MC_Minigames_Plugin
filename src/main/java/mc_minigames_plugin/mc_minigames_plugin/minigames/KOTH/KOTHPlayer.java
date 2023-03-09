@@ -13,8 +13,6 @@ public class KOTHPlayer extends GamePlayer {
 
     public KOTHPlayer(Player MCPlayer, PlayerArea currentArea) {
         super(MCPlayer, currentArea);
-        this.isTroubleShooting = false;
-        this.isInGame = false;
         this.playerKit = playerKit;
     }
 

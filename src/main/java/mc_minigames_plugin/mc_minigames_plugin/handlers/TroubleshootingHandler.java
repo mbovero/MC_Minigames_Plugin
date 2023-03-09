@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,6 +12,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 import java.util.Set;
+
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
 
 /**
  * Class that allows for troubleshooting of server functions.
@@ -30,10 +33,11 @@ public class TroubleshootingHandler implements Listener {
     public void onEntityInteract(PlayerInteractAtEntityEvent event) {
         //Setup
         Player MCPlayer = event.getPlayer();
-        Set<String> tags = event.getPlayer().getScoreboardTags();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
         Location entityLoc = event.getRightClicked().getLocation();
 
-        if (MCPlayer.getScoreboardTags().contains("troubleshooting")) {
+        if (!gamePlayer.isTroubleShooting()) {
             // Print name/location of entities that the player right-clicks
             MCPlayer.sendMessage("You right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
             Bukkit.getLogger().info(MCPlayer.getName() + " right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));

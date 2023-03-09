@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
+
 /**
  *  - Handles players when leaving/joining
  *  - Provides functionality for main hub buttons
@@ -65,9 +67,11 @@ public class HubHandler extends PlayerArea implements Listener {
     public void resetOnPlayerJoin(PlayerJoinEvent event) {
         // Setup & retrieve data
         Player MCPlayer = event.getPlayer();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // Unless troubleshooting...
-        if (!MCPlayer.getScoreboardTags().contains("troubleshooting")) {
+        if (!gamePlayer.isTroubleShooting()) {
             // Send player to hub (reset inv and tp)
             areaPlayers.add(new HubPlayer(MCPlayer, this));
             GeneralLobbyHandler.sendMainHub(MCPlayer, this);
@@ -109,10 +113,11 @@ public class HubHandler extends PlayerArea implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Setup
         Player MCPlayer = event.getPlayer();
-        Set<String> tags = MCPlayer.getScoreboardTags();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // For players that are not in a game or troubleshooting...
-        if (tags.contains("notInGame") || tags.contains("troubleshooting")) {
+        if (!gamePlayer.isInGame() || !gamePlayer.isTroubleShooting()) {
 
             // LOBBY BUTTON CLICK DETECTIONS:
 

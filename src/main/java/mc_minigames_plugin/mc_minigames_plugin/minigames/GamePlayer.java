@@ -22,20 +22,11 @@ abstract public class GamePlayer {
     public GamePlayer (Player MCPlayer, PlayerArea currentArea) {
         this.MCPlayer = MCPlayer;
         this.currentArea = currentArea;
+        this.isTroubleShooting = false;
+        this.isInGame = false;
         gameReady = false;
     }
 
-    /**
-     * Method checks to see if a player is in a given lobby and returns the boolean state of that query.
-     * @param MCPlayer
-     * @param lobby
-     * @return
-     */
-    public boolean isInGame (Player MCPlayer, String lobby) {
-        Set<String> tags = MCPlayer.getScoreboardTags();
-        for (String tag: tags) {if (tag.equals(lobby)) {return true;}}
-        return false;
-    }
 
     /**
      * Method compares a given minecraft player reference to this GamePlayer object and
