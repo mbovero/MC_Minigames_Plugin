@@ -9,6 +9,8 @@ public class MMPlayer extends GamePlayer {
 
     public MMPlayer(Player MCPlayer, PlayerArea currentArea) {
         super(MCPlayer, currentArea);
+        this.isTroubleShooting = false;
+        this.isInGame = false;
     }
 
 

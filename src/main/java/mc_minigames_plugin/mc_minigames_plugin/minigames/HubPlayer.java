@@ -7,6 +7,8 @@ public class HubPlayer extends GamePlayer {
 
     public HubPlayer(Player MCPlayer, PlayerArea currentArea) {
         super(MCPlayer, currentArea);
+        this.isTroubleShooting = false;
+        this.isInGame = false;
     }
 
     //METHODS
