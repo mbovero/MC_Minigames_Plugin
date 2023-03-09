@@ -3,7 +3,6 @@ package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import org.bukkit.entity.Player;
-import java.util.Set;
 
 public class KOTHPlayer extends GamePlayer {
     //FIELDS

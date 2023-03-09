@@ -1,7 +1,6 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.MM;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
-import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHPlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;

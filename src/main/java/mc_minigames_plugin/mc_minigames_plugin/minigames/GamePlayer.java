@@ -1,13 +1,9 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames;
 
-import mc_minigames_plugin.mc_minigames_plugin.commands.Troubleshoot;
 import mc_minigames_plugin.mc_minigames_plugin.util.TroubleshootUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Class represents the abstract blueprint of a player object for a game to be tracked and managed

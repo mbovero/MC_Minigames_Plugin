@@ -22,7 +22,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.NameTagVisibility;
-import org.checkerframework.checker.units.qual.K;
 
 import java.util.ArrayList;
 import java.util.Collection;
