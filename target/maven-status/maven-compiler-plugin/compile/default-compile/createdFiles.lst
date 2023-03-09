@@ -11,6 +11,7 @@ mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHLobbyHandler.class
 mc_minigames_plugin\mc_minigames_plugin\util\Tools.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\HubHandler.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\TorchHandler.class
+mc_minigames_plugin\mc_minigames_plugin\util\TroubleshootUtil.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHGameHandler.class
 mc_minigames_plugin\mc_minigames_plugin\util\SpawnUtil.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHPlayer.class

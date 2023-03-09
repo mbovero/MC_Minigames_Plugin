@@ -5,6 +5,7 @@ import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
+import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -334,7 +335,6 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     @EventHandler
     public void returnPortal(PlayerMoveEvent event) {
         Player MCPlayer = event.getPlayer();
-        Set<String> tags = MCPlayer.getScoreboardTags();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
         // Find gamePlayer's area
@@ -349,6 +349,9 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 new DelayedTask(() -> Bukkit.getScheduler().cancelTask(lastPortalTask.getId()), 2);
             // Transport player to main hub
             lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer, findPlayer(MCPlayer).getCurrentArea());
+            // Just tp if troubleshooting
+            if (gamePlayer.isTroubleShooting())
+                MCPlayer.teleport(Locations.mainHub);
             new DelayedTask(() -> {event.setCancelled(true);}, 3);
         }
     }

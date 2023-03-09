@@ -7,10 +7,12 @@ import mc_minigames_plugin.mc_minigames_plugin.handlers.HubHandler;
 import mc_minigames_plugin.mc_minigames_plugin.util.ConfigUtil;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.SpawnUtil;
+import mc_minigames_plugin.mc_minigames_plugin.util.TroubleshootUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,9 +29,34 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
         Bukkit.getLogger().info("Starting MC Minigames Plugin...");
 
         // Saves config file into plugins folder if it doesn't exist already
-        saveDefaultConfig();
+        this.saveDefaultConfig();
 
-        FileConfiguration defaultConfig = getConfig();
+
+        // Get default config "config.yml"
+//        FileConfiguration defaultConfig = this.getConfig();
+
+        // Adds a list of names to the troubleshooting path (replacing previous values)
+//        ArrayList<String> troubleshooters = new ArrayList<>();
+//        troubleshooters.add("bigbudderbob");
+//        troubleshooters.add("KirtRoboMan");
+//        defaultConfig.addDefault("troubleshooting", troubleshooters);
+
+        // Adds to the list of names in the troubleshooting path
+//        List<String> troubleshooters2 = (List<String>) defaultConfig.get("troubleshooting");
+//        troubleshooters2.add("LordKrandle");
+//        defaultConfig.addDefault("troubleshooting", troubleshooters2);
+
+        // Resets the troubleshooting path
+//        defaultConfig.set("troubleshooting", null);
+
+        // Save changes to config
+//        defaultConfig.options().copyDefaults(true);
+//        saveConfig();
+//
+//        Bukkit.getLogger().info(defaultConfig.getString("troubleshooting"));    // Print contents of troubleshooting path
+
+
+
 
         // Loops through config file and stores kit items
         List<String> kitItems = (List<String>)getConfig().getList("kit");
@@ -52,7 +79,7 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
 
         getCommand("fly").setExecutor(new Fly());
         getCommand("hub").setExecutor(new Hub());
-        getCommand("troubleshoot").setExecutor(new Troubleshoot());
+        getCommand("troubleshoot").setExecutor(new Troubleshoot(new TroubleshootUtil(this)));
 
 
 

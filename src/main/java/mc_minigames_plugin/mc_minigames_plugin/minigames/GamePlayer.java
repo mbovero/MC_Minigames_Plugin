@@ -1,7 +1,12 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames;
 
+import mc_minigames_plugin.mc_minigames_plugin.commands.Troubleshoot;
+import mc_minigames_plugin.mc_minigames_plugin.util.TroubleshootUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -22,7 +27,18 @@ abstract public class GamePlayer {
     public GamePlayer (Player MCPlayer, PlayerArea currentArea) {
         this.MCPlayer = MCPlayer;
         this.currentArea = currentArea;
+        // Set isTroubleShooting to false by default
         this.isTroubleShooting = false;
+        // Iterate through stored troubleshooters config if not null
+        List<String> troubleshooters = TroubleshootUtil.getTroubleshooters();
+        if (troubleshooters != null)
+            for (String troubleshooter : troubleshooters) {
+                // If the player is found in the list, update their isTroubleShooting
+                if (troubleshooter.equals(MCPlayer.getName())) {
+                    this.isTroubleShooting = true;
+                    break;
+                }
+            }
         this.isInGame = false;
         gameReady = false;
     }

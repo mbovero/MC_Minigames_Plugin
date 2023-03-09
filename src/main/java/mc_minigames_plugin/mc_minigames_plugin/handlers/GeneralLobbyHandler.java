@@ -102,10 +102,12 @@ public class GeneralLobbyHandler implements Listener {
     public static DelayedTask sendMainHub(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
+            // Setup
+            Inventory inv = MCPlayer.getInventory();
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
-            //
+            // If the previous lobby is not mainHub...
             if (!(prevArea.getAreaName().equals("mainHub"))) {
                 prevArea.removePlayer(MCPlayer);
 
@@ -121,24 +123,25 @@ public class GeneralLobbyHandler implements Listener {
                     }
             }
 
-            // Tp player
-            MCPlayer.teleport(Locations.mainHub);
-            // Play tp sound
-            MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
-            // Clear potion effects
-            Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
-            for (PotionEffect pE : effectsToClear)
-                MCPlayer.removePotionEffect(pE.getType());
-            // Reset tags
-            Set<String> tags = MCPlayer.getScoreboardTags();
-            Tools.resetTags(MCPlayer);
-            gamePlayer.setIsInGame(false);
-            // Reset team
-            Tools.resetTeam(MCPlayer);
-            // Reset inventory
-            Inventory inv = MCPlayer.getInventory();
-            if (!gamePlayer.isTroubleShooting())    // Only clear inventory if not troubleshooting
-                inv.clear();
+            // Only do if not troubleshooting
+            if (!gamePlayer.isTroubleShooting()) {
+                // Tp player
+                MCPlayer.teleport(Locations.mainHub);
+                // Play tp sound
+                MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+                // Clear potion effects
+                Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
+                for (PotionEffect pE : effectsToClear)
+                    MCPlayer.removePotionEffect(pE.getType());
+                // Reset tags
+                Set<String> tags = MCPlayer.getScoreboardTags();
+                Tools.resetTags(MCPlayer);
+                gamePlayer.setIsInGame(false);
+                // Reset team
+                Tools.resetTeam(MCPlayer);
+                // Reset inventory
+                    inv.clear();
+            }
             // Give lobby selector after some time
             inv.setItem(4, lobbySelector);
         }, 5);
@@ -153,6 +156,8 @@ public class GeneralLobbyHandler implements Listener {
     public static DelayedTask sendKOTHLobby(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
+            // Setup
+            Inventory inv = MCPlayer.getInventory();
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
@@ -176,24 +181,27 @@ public class GeneralLobbyHandler implements Listener {
                     KOTHExist = true;
                 }
             }
+
             // Tp player
             MCPlayer.teleport(Locations.KOTHLobby);
-            // Play tp sound
-            MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
-            // Clear potion effects
-            Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
-            for (PotionEffect pE : effectsToClear)
-                MCPlayer.removePotionEffect(pE.getType());
-            // Reset tags
-            Set<String> tags = MCPlayer.getScoreboardTags();
-            Tools.resetTags(MCPlayer);
-            gamePlayer.setIsInGame(false);
-            // Reset team
-            Tools.resetTeam(MCPlayer);
-            // Reset inventory
-            Inventory inv = MCPlayer.getInventory();
-            if (!gamePlayer.isTroubleShooting())    // Only clear inventory if not troubleshooting
+
+            // Only do if not troubleshooting
+            if (!gamePlayer.isTroubleShooting()) {
+                // Play tp sound
+                MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+                // Clear potion effects
+                Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
+                for (PotionEffect pE : effectsToClear)
+                    MCPlayer.removePotionEffect(pE.getType());
+                // Reset tags
+                Set<String> tags = MCPlayer.getScoreboardTags();
+                Tools.resetTags(MCPlayer);
+                gamePlayer.setIsInGame(false);
+                // Reset team
+                Tools.resetTeam(MCPlayer);
+                // Reset inventory
                 inv.clear();
+            }
             // Give items for lobby hot bar menu after some time
             inv.setItem(0, KOTHQueue);        // Queue/Dequeue item
             inv.setItem(2, KOTHTeamNone);     // Team selector item (no team by default)
@@ -209,6 +217,8 @@ public class GeneralLobbyHandler implements Listener {
     public static DelayedTask sendMMLobby(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
+            // Setup
+            Inventory inv = MCPlayer.getInventory();
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
@@ -229,22 +239,25 @@ public class GeneralLobbyHandler implements Listener {
 
             // Tp player
             MCPlayer.teleport(Locations.MMLobby);
-            // Play tp sound
-            MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
-            // Clear potion effects
-            Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
-            for (PotionEffect pE : effectsToClear)
-                MCPlayer.removePotionEffect(pE.getType());
-            // Reset tags
-            Set<String> tags = MCPlayer.getScoreboardTags();
-            Tools.resetTags(MCPlayer);
-            gamePlayer.setIsInGame(false);
-            // Reset team
-            Tools.resetTeam(MCPlayer);
-            // Reset inventory
-            Inventory inv = MCPlayer.getInventory();
-            if (!gamePlayer.isTroubleShooting())    // Only clear inventory if not troubleshooting
+
+            // Only do if not troubleshooting
+            if (!gamePlayer.isTroubleShooting()) {
+                // Play tp sound
+                MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
+                // Clear potion effects
+                Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
+                for (PotionEffect pE : effectsToClear)
+                    MCPlayer.removePotionEffect(pE.getType());
+                // Reset tags
+                Set<String> tags = MCPlayer.getScoreboardTags();
+                Tools.resetTags(MCPlayer);
+                gamePlayer.setIsInGame(false);
+                // Reset team
+                Tools.resetTeam(MCPlayer);
+                // Reset inventory
                 inv.clear();
+            }
+
             // Give items for lobby hot bar menu
             inv.setItem(0, MMQueue);        // Queue/Dequeue item
             inv.setItem(2, MMTeamNone);     // Team selector item (no team by default)
@@ -347,6 +360,9 @@ public class GeneralLobbyHandler implements Listener {
                     else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub")) {
                         // Tp player to main hub
                         GeneralLobbyHandler.sendMainHub(MCPlayer, playerArea);
+                        // Just tp if troubleshooting
+                        if (gamePlayer.isTroubleShooting())
+                            MCPlayer.teleport(Locations.mainHub);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
