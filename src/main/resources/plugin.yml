@@ -28,4 +28,11 @@ commands:
   troubleshoot:
     description: Gives game dev troubleshooting abilities/tools
     usage: /troubleshoot
-    permission: gameDev.troubleshoot
+    permission: troubleshoot
+  reset:
+    description: Resets an MCPlayer's data
+    usage: /reset <type> <username>
+    permission: gameDev.reset
+  getitem:
+    usage: /getitem <item> <username>
+    permission: getitem

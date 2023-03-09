@@ -81,6 +81,7 @@ public class HubHandler extends PlayerArea implements Listener {
             MCPlayer.setHealth(MCPlayer.getMaxHealth());
             // Reset hunger
             MCPlayer.setFoodLevel(20);
+            MCPlayer.setSaturation(5);
 
             // Currently on leave and join, probably only need one
             // Reset player scores

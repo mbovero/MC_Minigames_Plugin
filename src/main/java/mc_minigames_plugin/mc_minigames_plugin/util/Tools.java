@@ -3,16 +3,15 @@ package mc_minigames_plugin.mc_minigames_plugin.util;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A class full of useful tools/methods to simplify workflow.
@@ -78,27 +77,102 @@ public class Tools {
             team.setSuffix(ChatColor.translateAlternateColorCodes('&', suffix));
     }
 
+
+
+// Player reset methods ------------------------------------------------------------------------------------------------
+
     /**
-     * Removes the player from whatever team they were on
+     * Resets all the player's data using every possible Tools.reset() method
      */
-    public static void resetTeam(Player player) {
-        // Get team the player is on
-        Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player);
-        // If the player was on a team
-        if (team != null)
-            // Remove the player from that team
-            Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(player).removePlayer(player);
+    public static void resetAll(Player MCPlayer) {
+        resetTeam(MCPlayer);
+        resetTags(MCPlayer);
+        resetScores(MCPlayer);
+        resetFlight(MCPlayer);
+        resetPotionEffects(MCPlayer);
+        resetHealth(MCPlayer);
+        resetHunger(MCPlayer);
+        resetInventory(MCPlayer);
     }
 
     /**
-     * Removes all player tags (except tags for troubleshooting)
+     * Removes the player from whatever team they were on
      */
-    public static void resetTags(Player player) {
+    public static void resetTeam(Player MCPlayer) {
+        // Get team the player is on
+        Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer);
+        // If the player was on a team
+        if (team != null)
+            // Remove the player from that team
+            Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer).removePlayer(MCPlayer);
+    }
+
+    /**
+     * Removes all player tags
+     */
+    public static void resetTags(Player MCPlayer) {
         // Get copy of player's current tags
-        Set<String> tagsToRemove = new HashSet<>(player.getScoreboardTags());
+        Set<String> tagsToRemove = new HashSet<>(MCPlayer.getScoreboardTags());
         // Remove all tags
         for (String tag : tagsToRemove)
-            if (!tag.equals("GameDev") && !tag.equals("troubleshooting"))      // game dev is TEMP... only used for data pack capabilities
-                player.removeScoreboardTag(tag);
+            if (!tag.equals("GameDev"))      // game dev is TEMP... only used for data pack capabilities
+                MCPlayer.removeScoreboardTag(tag);
+    }
+
+    /**
+     * Resets all the player's objective scores
+     */
+    public static void resetScores(Player MCPlayer) {
+        // Resets all objective scores for player - get individual objectives and player score object to change individual scores
+        Bukkit.getScoreboardManager().getMainScoreboard().resetScores(MCPlayer);
+    }
+
+    /**
+     * Disables the player's flight and their ability to fly
+     */
+    public static void resetFlight(Player MCPlayer) {
+        // Disable ability to fly
+        MCPlayer.setAllowFlight(false);
+        // Disable flight
+        MCPlayer.setFlying(false);
+    }
+
+    /**
+     * Clears the player's current potion effects
+     */
+    public static void resetPotionEffects(Player MCPlayer) {
+        // Retrieve player's current effects
+        Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
+        // Remove each effect
+        for (PotionEffect pE : effectsToClear)
+            MCPlayer.removePotionEffect(pE.getType());
+    }
+
+    /**
+     * Resets the player's max health and sets their health to be full
+     */
+    public static void resetHealth(Player MCPlayer) {
+        // Reset maximum health to default
+        MCPlayer.resetMaxHealth();
+        // Set health to max health
+        MCPlayer.setHealth(MCPlayer.getMaxHealth());
+    }
+
+    /**
+     * Resets the player's hunger bar and saturation
+     */
+    public static void resetHunger(Player MCPlayer) {
+        // Fill up hunger bar
+        MCPlayer.setFoodLevel(20);
+        // Set saturation to default
+        MCPlayer.setSaturation(5);
+    }
+
+    /**
+     * Clears the player's inventory
+     */
+    public static void resetInventory(Player MCPlayer) {
+        Inventory inv = MCPlayer.getInventory();
+        inv.clear();
     }
 }

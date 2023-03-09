@@ -79,6 +79,8 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
 
         getCommand("fly").setExecutor(new Fly());
         getCommand("hub").setExecutor(new Hub());
+        getCommand("reset").setExecutor(new Reset());
+        getCommand("getitem").setExecutor(new GetItem());
         getCommand("troubleshoot").setExecutor(new Troubleshoot(new TroubleshootUtil(this)));
 
 

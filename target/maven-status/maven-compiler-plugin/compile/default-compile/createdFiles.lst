@@ -1,7 +1,9 @@
+mc_minigames_plugin\mc_minigames_plugin\commands\Reset.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Fly.class
 mc_minigames_plugin\mc_minigames_plugin\util\Locations.class
 mc_minigames_plugin\mc_minigames_plugin\util\DelayedTask.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Spawn.class
+mc_minigames_plugin\mc_minigames_plugin\commands\GetItem.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\MM\MMLobbyHandler.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\TroubleshootingHandler.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\MM\MMPlayer.class
