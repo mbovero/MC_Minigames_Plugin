@@ -9,7 +9,6 @@ import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -29,7 +28,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.NameTagVisibility;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -104,6 +102,10 @@ public class GeneralLobbyHandler implements Listener {
     public static DelayedTask sendMainHub(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
+            // Find the gamePlayer matching with the event's MCPlayer
+            GamePlayer gamePlayer = findPlayer(MCPlayer);
+
+            //
             if (!(prevArea.getAreaName().equals("mainHub"))) {
                 prevArea.removePlayer(MCPlayer);
 
@@ -113,7 +115,9 @@ public class GeneralLobbyHandler implements Listener {
                 for (PlayerArea lobby : playerAreas)
                     if (lobby instanceof HubHandler) {
                         lobby.addPlayer(MCPlayer);
+
                         MCPlayer.sendMessage("Added " + MCPlayer.getName() + " to " + lobby.getAreaName());
+
                     }
             }
 
@@ -135,7 +139,7 @@ public class GeneralLobbyHandler implements Listener {
             Tools.resetTeam(MCPlayer);
             // Reset inventory
             Inventory inv = MCPlayer.getInventory();
-            if (!tags.contains("troubleshooting"))    // Only clear inventory if not troubleshooting
+            if (!gamePlayer.isTroubleShooting())    // Only clear inventory if not troubleshooting
                 inv.clear();
             // Give lobby selector after some time
             inv.setItem(4, lobbySelector);
@@ -151,16 +155,24 @@ public class GeneralLobbyHandler implements Listener {
     public static DelayedTask sendKOTHLobby(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
+            // Find the gamePlayer matching with the event's MCPlayer
+            GamePlayer gamePlayer = findPlayer(MCPlayer);
+
+            // If the previous area is not KOTHLobby...
             if (!(prevArea.getAreaName().equals("KOTHLobby"))) {
+                // Remove the player from their previous area
                 prevArea.removePlayer(MCPlayer);
 
-                // Change boolean and add the player when an instance of KOTHLobbyHandler is found
+                // Search through current PlayerAreas
                 for (PlayerArea lobby : playerAreas)
+                    // If KOTHLobby is found...
                     if (lobby instanceof KOTHLobbyHandler) {
+                        // Add the player to that KOTHLobby
                         lobby.addPlayer(MCPlayer);
+                        // and update KOTHExist boolean
                         KOTHExist = true;
                     }
-                // Create new KOTHLobbyHandler if one doesn't already exist
+                // Create new KOTHLobbyHandler if one doesn't already exist, and add the player to it
                 if (!KOTHExist) {
                     playerAreas.add(new KOTHLobbyHandler(plugin, MCPlayer));
                     KOTHExist = true;
@@ -184,7 +196,7 @@ public class GeneralLobbyHandler implements Listener {
             Tools.resetTeam(MCPlayer);
             // Reset inventory
             Inventory inv = MCPlayer.getInventory();
-            if (!tags.contains("troubleshooting"))    // Only clear inventory if not troubleshooting
+            if (!gamePlayer.isTroubleShooting())    // Only clear inventory if not troubleshooting
                 inv.clear();
             // Give items for lobby hot bar menu after some time
             inv.setItem(0, KOTHQueue);        // Queue/Dequeue item
@@ -201,6 +213,9 @@ public class GeneralLobbyHandler implements Listener {
     public static DelayedTask sendMMLobby(Player MCPlayer, PlayerArea prevArea) {
         // Delay operation by some time
         return new DelayedTask(() -> {
+            // Find the gamePlayer matching with the event's MCPlayer
+            GamePlayer gamePlayer = findPlayer(MCPlayer);
+
             if (!(prevArea.getAreaName().equals("MMLobby"))) {
                 prevArea.removePlayer(MCPlayer);
                 // Change boolean and add the player when an instance of MMLobbyHandler is found
@@ -234,7 +249,7 @@ public class GeneralLobbyHandler implements Listener {
             Tools.resetTeam(MCPlayer);
             // Reset inventory
             Inventory inv = MCPlayer.getInventory();
-            if (!MCPlayer.getScoreboardTags().contains("troubleshooting"))    // Only clear inventory if not troubleshooting
+            if (!gamePlayer.isTroubleShooting())    // Only clear inventory if not troubleshooting
                 inv.clear();
             // Give items for lobby hot bar menu
             inv.setItem(0, MMQueue);        // Queue/Dequeue item
@@ -249,15 +264,15 @@ public class GeneralLobbyHandler implements Listener {
      * @param MCPlayer
      * @return
      */
-    public PlayerArea findPlayer(Player MCPlayer) {
+    public static GamePlayer findPlayer(Player MCPlayer) {
+        // Iterate through every existing playerArea
         for (PlayerArea area : playerAreas) {
-
-            MCPlayer.sendMessage(area.getAreaName());
-
+            // Iterate through each playerArea's list of gamePlayers
             for (GamePlayer gamePlayer : area.getPlayers()) {
-                MCPlayer.sendMessage("Players: " + gamePlayer.getPlayer().getName());
+                // Compare gamePlayer to MCPlayer
                 if (gamePlayer.isPlayer(MCPlayer)) {
-                    return area;
+                    // If the player is found, return gamePlayer
+                    return gamePlayer;
                 }
             }
         }
@@ -277,11 +292,12 @@ public class GeneralLobbyHandler implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Setup
         Player MCPlayer = event.getPlayer();
-        Inventory inv = MCPlayer.getInventory();
         Set<String> tags = MCPlayer.getScoreboardTags();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // When a player interacts while not in a game or while troubleshooting...
-        if (tags.contains("notInGame") || tags.contains("troubleshooting")) {
+        if (tags.contains("notInGame") || !gamePlayer.isTroubleShooting()) {
             // Detect when player right clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 // Detect right click with Lobby Selector compass
@@ -310,8 +326,10 @@ public class GeneralLobbyHandler implements Listener {
     public void onMenuClick(InventoryClickEvent event) {
         Player MCPlayer = (Player) event.getWhoClicked();
         Set<String> tags = MCPlayer.getScoreboardTags();
-        // Holds the area the minecraft player reference is in based on the GamePlayer reference
-        PlayerArea playerArea = findPlayer(MCPlayer);
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Store the gamePlayer's current area
+        PlayerArea playerArea = gamePlayer.getCurrentArea();
         // For players not in a game...
         if (tags.contains("notInGame")) {
             // Only handle inv clicks if player is in Lobby Selector inventory
@@ -350,7 +368,7 @@ public class GeneralLobbyHandler implements Listener {
                     event.setCancelled(true);
                 }
             }
-            if (!tags.contains("troubleshooting"))  // Unless troubleshooting...
+            if (!gamePlayer.isTroubleShooting())  // Unless troubleshooting...
                 // Lock inventory when not in a game
                 event.setCancelled(true);
         }
@@ -366,8 +384,10 @@ public class GeneralLobbyHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventHarvestBlock(PlayerHarvestBlockEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+        Player MCPlayer = (Player) event.getPlayer();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -377,8 +397,10 @@ public class GeneralLobbyHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+        Player MCPlayer = (Player) event.getPlayer();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -388,8 +410,10 @@ public class GeneralLobbyHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventItemConsume(PlayerItemConsumeEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+        Player MCPlayer = (Player) event.getPlayer();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -399,8 +423,10 @@ public class GeneralLobbyHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventBlockPlace(BlockPlaceEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+        Player MCPlayer = (Player) event.getPlayer();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -410,8 +436,10 @@ public class GeneralLobbyHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventBlockBreak(BlockBreakEvent event) {
-        Set<String> tags = event.getPlayer().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+        Player MCPlayer = (Player) event.getPlayer();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -421,8 +449,10 @@ public class GeneralLobbyHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventEntityDamage(EntityDamageByEntityEvent event) {
-        Set<String> tags = event.getDamager().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+        Player MCPlayer = (Player) event.getDamager();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -434,8 +464,10 @@ public class GeneralLobbyHandler implements Listener {
     public void preventEntityDeath(EntityDeathEvent event) {
         if (event.getEntity().getKiller() == null)
             return;
-        Set<String> tags = event.getEntity().getKiller().getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+        Player MCPlayer = (Player) event.getEntity().getKiller();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
             event.setCancelled(true);
         }
     }
@@ -446,8 +478,9 @@ public class GeneralLobbyHandler implements Listener {
     @EventHandler
     public void preventItemDrop(PlayerDropItemEvent event) {
         Player MCPlayer = event.getPlayer();
-        Set<String> tags = MCPlayer.getScoreboardTags();
-        if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting())
             event.setCancelled(true);
     }
 
@@ -458,8 +491,9 @@ public class GeneralLobbyHandler implements Listener {
     public void preventHunger(FoodLevelChangeEvent event) {
         if (event.getEntity() instanceof Player) {
             Player MCPlayer = (Player) event.getEntity();
-            Set<String> tags = MCPlayer.getScoreboardTags();
-            if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
+            // Find the gamePlayer matching with the event's MCPlayer
+            GamePlayer gamePlayer = findPlayer(MCPlayer);
+            if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting())
                 event.setCancelled(true);
         }
     }
@@ -471,8 +505,9 @@ public class GeneralLobbyHandler implements Listener {
     public void preventDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player) {
             Player MCPlayer = (Player) event.getEntity();
-            Set<String> tags = MCPlayer.getScoreboardTags();
-            if (tags.contains("notInGame") && !tags.contains("troubleshooting"))
+            // Find the gamePlayer matching with the event's MCPlayer
+            GamePlayer gamePlayer = findPlayer(MCPlayer);
+            if (tags.contains("notInGame") && !gamePlayer.isTroubleShooting())
                 event.setCancelled(true);
         }
 
@@ -498,8 +533,10 @@ public class GeneralLobbyHandler implements Listener {
     public void voidLevitation(PlayerMoveEvent event) {
         Player MCPlayer = event.getPlayer();
         Set<String> tags = MCPlayer.getScoreboardTags();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
         // For all players not in a game and not troubleshooting...
-        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !tags.contains("troubleshooting")) {
+        if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && tags.contains("notInGame") && !gamePlayer.isTroubleShooting()) {
             // Apply main hub levitation
             if (tags.contains("mainHub"))
                 MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
@@ -512,6 +549,6 @@ public class GeneralLobbyHandler implements Listener {
         }
         // Return players to main hub when they go out of bounds
         else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
-            GeneralLobbyHandler.sendMainHub(MCPlayer, findPlayer(MCPlayer));
+            GeneralLobbyHandler.sendMainHub(MCPlayer, findPlayer(MCPlayer).getCurrentArea());
     }
 }

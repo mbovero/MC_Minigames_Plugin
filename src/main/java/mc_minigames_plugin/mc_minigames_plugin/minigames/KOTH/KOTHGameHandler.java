@@ -59,5 +59,5 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
 
 
     @Override
-    public void addPlayer(Player mcPlayer) {areaPlayers.add(new KOTHPlayer(mcPlayer));}
+    public void addPlayer(Player mcPlayer) {areaPlayers.add(new KOTHPlayer(mcPlayer, this));}
 }

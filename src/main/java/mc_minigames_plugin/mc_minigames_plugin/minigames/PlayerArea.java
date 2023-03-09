@@ -13,7 +13,7 @@ import java.util.ArrayList;
 abstract public class PlayerArea {
     // FIELDS
     protected ArrayList<GamePlayer> areaPlayers; // List of current players in the specified game or lobby area
-    protected String areaName;
+    protected String areaName;                  // The name of this area
 
 
     // GENERAL PlayerArea FEATURES --------------------------------------------------------------------------------------
@@ -49,6 +49,8 @@ abstract public class PlayerArea {
             }
         }
     }
+
+
 
     //Accessors --------------------------------------------------------------------------------------------------------
 

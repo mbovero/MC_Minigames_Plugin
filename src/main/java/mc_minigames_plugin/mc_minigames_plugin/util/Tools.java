@@ -101,5 +101,4 @@ public class Tools {
             if (!tag.equals("GameDev") && !tag.equals("troubleshooting"))      // game dev is TEMP... only used for data pack capabilities
                 player.removeScoreboardTag(tag);
     }
-
 }

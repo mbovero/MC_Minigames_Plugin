@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import org.bukkit.entity.Player;
 import java.util.Set;
 
@@ -10,8 +11,8 @@ public class KOTHPlayer extends GamePlayer {
     // Hold player team??
     int killCount;  // Hold player kill count
 
-    public KOTHPlayer(Player MCPlayer) {
-        super(MCPlayer);
+    public KOTHPlayer(Player MCPlayer, PlayerArea currentArea) {
+        super(MCPlayer, currentArea);
         this.playerKit = playerKit;
     }
 

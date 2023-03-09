@@ -59,7 +59,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         //Add player to start of player list
         areaPlayers = new ArrayList<>();
-        areaPlayers.add(new KOTHPlayer(MCPlayer));
+        areaPlayers.add(new KOTHPlayer(MCPlayer, this));
         areaName = "KOTHLobby";
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
@@ -75,7 +75,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
      * @param MCPlayer a reference to a minecraft players
      */
     public void addPlayer (Player MCPlayer) {
-        areaPlayers.add(new KOTHPlayer(MCPlayer));
+        areaPlayers.add(new KOTHPlayer(MCPlayer, this));
     }
 
     /**
@@ -334,7 +334,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             if (lastPortalTask != null)
                 new DelayedTask(() -> Bukkit.getScheduler().cancelTask(lastPortalTask.getId()), 2);
             // Transport player to main hub
-            lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer, this);
+            lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer, GeneralLobbyHandler.findPlayer(MCPlayer).getCurrentArea());
             new DelayedTask(() -> {event.setCancelled(true);}, 3);
         }
     }

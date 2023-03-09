@@ -69,7 +69,7 @@ public class HubHandler extends PlayerArea implements Listener {
         // Unless troubleshooting...
         if (!MCPlayer.getScoreboardTags().contains("troubleshooting")) {
             // Send player to hub (reset inv and tp)
-            areaPlayers.add(new HubPlayer(MCPlayer));
+            areaPlayers.add(new HubPlayer(MCPlayer, this));
             GeneralLobbyHandler.sendMainHub(MCPlayer, this);
             // Set to adventure mode
             MCPlayer.setGameMode(GameMode.ADVENTURE);
@@ -145,6 +145,6 @@ public class HubHandler extends PlayerArea implements Listener {
 
     @Override
     public void addPlayer(Player MCPlayer) {
-        areaPlayers.add(new HubPlayer(MCPlayer));
+        areaPlayers.add(new HubPlayer(MCPlayer, this));
     }
 }

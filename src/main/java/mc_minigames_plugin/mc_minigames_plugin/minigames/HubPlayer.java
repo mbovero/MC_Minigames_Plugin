@@ -5,8 +5,8 @@ import org.bukkit.entity.Player;
 public class HubPlayer extends GamePlayer {
     //FIELDS
 
-    public HubPlayer(Player MCPlayer) {
-        super(MCPlayer);
+    public HubPlayer(Player MCPlayer, PlayerArea currentArea) {
+        super(MCPlayer, currentArea);
     }
 
     //METHODS
