@@ -67,14 +67,16 @@ public class HubHandler extends PlayerArea implements Listener {
     public void resetOnPlayerJoin(PlayerJoinEvent event) {
         // Setup & retrieve data
         Player MCPlayer = event.getPlayer();
+
+        // Send player to hub (reset inv and tp)
+        areaPlayers.add(new HubPlayer(MCPlayer, this));
+        GeneralLobbyHandler.sendMainHub(MCPlayer, this);
+
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // Unless troubleshooting...
         if (!gamePlayer.isTroubleShooting()) {
-            // Send player to hub (reset inv and tp)
-            areaPlayers.add(new HubPlayer(MCPlayer, this));
-            GeneralLobbyHandler.sendMainHub(MCPlayer, this);
             // Set to adventure mode
             MCPlayer.setGameMode(GameMode.ADVENTURE);
             // Prevent/reset flying

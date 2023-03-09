@@ -34,7 +34,9 @@ abstract public class GamePlayer {
      * @param MCPlayer
      * @return
      */
-    public boolean isPlayer (Player MCPlayer) {return this.MCPlayer.getName().equals(MCPlayer.getName());}
+    public boolean isPlayer (Player MCPlayer) {
+        return this.MCPlayer.getName().equals(MCPlayer.getName());
+    }
 
     //Accessors --------------------------------------------------------------------------------------------------------
 
