@@ -132,9 +132,7 @@ public class GeneralLobbyHandler implements Listener {
             // Reset tags
             Set<String> tags = MCPlayer.getScoreboardTags();
             Tools.resetTags(MCPlayer);
-            // Set tags
-            MCPlayer.addScoreboardTag("mainHub");         // Player is now in main hub
-            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
+            gamePlayer.setIsInGame(false);
             // Reset team
             Tools.resetTeam(MCPlayer);
             // Reset inventory
@@ -189,9 +187,7 @@ public class GeneralLobbyHandler implements Listener {
             // Reset tags
             Set<String> tags = MCPlayer.getScoreboardTags();
             Tools.resetTags(MCPlayer);
-            // Set tags
-            MCPlayer.addScoreboardTag("KOTHLobby");       // Player is now in KOTH lobby
-            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
+            gamePlayer.setIsInGame(false);
             // Reset team
             Tools.resetTeam(MCPlayer);
             // Reset inventory
@@ -242,9 +238,7 @@ public class GeneralLobbyHandler implements Listener {
             // Reset tags
             Set<String> tags = MCPlayer.getScoreboardTags();
             Tools.resetTags(MCPlayer);
-            // Set tags
-            MCPlayer.addScoreboardTag("MMLobby");         // Player is now in MM lobby
-            MCPlayer.addScoreboardTag("notInGame");       // Player is still not in a game
+            gamePlayer.setIsInGame(false);
             // Reset team
             Tools.resetTeam(MCPlayer);
             // Reset inventory
@@ -297,7 +291,7 @@ public class GeneralLobbyHandler implements Listener {
         GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // When a player interacts while not in a game or while troubleshooting...
-        if (tags.contains("notInGame") || !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() || !gamePlayer.isTroubleShooting()) {
             // Detect when player right clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 // Detect right click with Lobby Selector compass
@@ -331,7 +325,7 @@ public class GeneralLobbyHandler implements Listener {
         // Store the gamePlayer's current area
         PlayerArea playerArea = gamePlayer.getCurrentArea();
         // For players not in a game...
-        if (tags.contains("notInGame")) {
+        if (!gamePlayer.isInGame()) {
             // Only handle inv clicks if player is in Lobby Selector inventory
             if (event.getView().getTitle().equals("Lobby Selector")) {
 
@@ -535,20 +529,22 @@ public class GeneralLobbyHandler implements Listener {
         Set<String> tags = MCPlayer.getScoreboardTags();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Find gamePlayer's area
+        String currentArea = gamePlayer.getCurrentArea().getAreaName();
         // For all players not in a game and not troubleshooting...
         if (event.getTo().getY() < -66 && event.getTo().getY() > -85 && !gamePlayer.isInGame() && !gamePlayer.isTroubleShooting()) {
             // Apply main hub levitation
-            if (tags.contains("mainHub"))
+            if (currentArea.equals("mainHub"))
                 MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 22, false));
                 // Apply KOTH lobby levitation
-            else if (tags.contains("KOTHLobby"))
+            else if (currentArea.equals("KOTHLobby"))
                 MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 10, false));
                 // Apply MM lobby levitation
-            else if (tags.contains("MMLobby"))
+            else if (currentArea.equals("MMLobby"))
                 MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, 20, 18, false));
         }
         // Return players to main hub when they go out of bounds
-        else if (event.getTo().getY() < -90 && tags.contains("notInGame"))
+        else if (event.getTo().getY() < -90 && !gamePlayer.isInGame())
             GeneralLobbyHandler.sendMainHub(MCPlayer, findPlayer(MCPlayer).getCurrentArea());
     }
 }

@@ -27,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 
 /**
@@ -89,8 +90,13 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         //Hold the player entity
         Player MCPlayer = event.getPlayer();
         Set<String> tags = event.getPlayer().getScoreboardTags();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Find gamePlayer's area
+        String currentArea = gamePlayer.getCurrentArea().getAreaName();
+
         //Check for valid click and for an armor stand interaction
-        if (clicked.getType() == EntityType.ARMOR_STAND && tags.contains("KOTHLobby")) {
+        if (clicked.getType() == EntityType.ARMOR_STAND && currentArea.equals("KOTHLobby")) {
             //Hold the location of armor stand "kit" to be selected
             String kitName = clicked.getName();
             //Check if the player has selected a valid kit entity and selects the specified class
@@ -220,11 +226,15 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Setup
         Player MCPlayer = event.getPlayer();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Find gamePlayer's area
+        String currentArea = gamePlayer.getCurrentArea().getAreaName();
         Inventory inv = MCPlayer.getInventory();
         Set<String> tags = MCPlayer.getScoreboardTags();
 
         // For all players in the KOTH Lobby...
-        if (tags.contains("KOTHLobby")) {
+        if (currentArea.equals("KOTHLobby")) {
             // Detect when player clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
                 // Detect click with an item
@@ -325,16 +335,20 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     public void returnPortal(PlayerMoveEvent event) {
         Player MCPlayer = event.getPlayer();
         Set<String> tags = MCPlayer.getScoreboardTags();
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Find gamePlayer's area
+        String currentArea = gamePlayer.getCurrentArea().getAreaName();
         // Detect players in portal range and in KOTH lobby
         if (event.getTo().getY() < -56 && event.getTo().getY() > -63 &&
                 event.getTo().getZ() < -594 && event.getTo().getZ() > -595 &&
                 event.getTo().getX() < 11 && event.getTo().getX() > 5 &&
-                tags.contains("KOTHLobby")) {
+                currentArea.equals("KOTHLobby")) {
             // Cancel duplicate tasks
             if (lastPortalTask != null)
                 new DelayedTask(() -> Bukkit.getScheduler().cancelTask(lastPortalTask.getId()), 2);
             // Transport player to main hub
-            lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer, GeneralLobbyHandler.findPlayer(MCPlayer).getCurrentArea());
+            lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer, findPlayer(MCPlayer).getCurrentArea());
             new DelayedTask(() -> {event.setCancelled(true);}, 3);
         }
     }
