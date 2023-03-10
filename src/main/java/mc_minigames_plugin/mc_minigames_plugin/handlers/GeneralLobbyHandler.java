@@ -90,13 +90,7 @@ public class GeneralLobbyHandler implements Listener {
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
-            // If the player's current area is not mainHub...
-            if (!(gamePlayer.getCurrentArea().getAreaName().equals("mainHub"))) {
-                // Remove the player from their previous area
-                gamePlayer.getCurrentArea().removePlayer(gamePlayer);
-                // Add the player to the main hub
-                mainHub.addPlayer(gamePlayer);
-            }
+            MainHubHandler.sendPlayer(gamePlayer);
 
             // Only do if not troubleshooting
             if (!gamePlayer.isTroubleshooting()) {
@@ -132,23 +126,7 @@ public class GeneralLobbyHandler implements Listener {
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
-            // If the player's current area is not KOTHLobby...
-            if (!(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby"))) {
-                gamePlayer.getCurrentArea().removePlayer(gamePlayer);
-                // If a KOTHLobby already exists...
-                if (KOTHLobby != null)
-                    // Add the player to that KOTHLobby
-                    KOTHLobby.addPlayer(gamePlayer);
-                // Otherwise...
-                else {
-                    // Make a new KOTHLobby
-                    KOTHLobby = new KOTHLobbyHandler(plugin);
-                    // Add the new KOTHLobby to the list of player areas
-                    allPlayerAreas.add(KOTHLobby);
-                    // And add the player to the new KOTHLobby
-                    KOTHLobby.addPlayer(gamePlayer);
-                }
-            }
+            KOTHLobbyHandler.sendPlayer(gamePlayer);
 
             // Tp player
             MCPlayer.teleport(Locations.KOTHLobby);
@@ -186,23 +164,7 @@ public class GeneralLobbyHandler implements Listener {
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
-            // If the player's current area is not the MMLobby...
-            if (!(gamePlayer.getCurrentArea().getAreaName().equals("MMLobby"))) {
-                gamePlayer.getCurrentArea().removePlayer(gamePlayer);
-                // If an MMLobby already exists...
-                if (MMLobby != null)
-                    // Add the player to that MMLobby
-                    MMLobby.addPlayer(gamePlayer);
-                // Otherwise...
-                else {
-                    // Make a new MMLobby
-                    MMLobby = new MMLobbyHandler(plugin);
-                    // Add the new MMLobby to the list of player areas
-                    allPlayerAreas.add(MMLobby);
-                    // And add the player to the new MMLobby
-                    MMLobby.addPlayer(gamePlayer);
-                }
-            }
+            MMLobbyHandler.sendPlayer(gamePlayer);
 
             // Tp player
             MCPlayer.teleport(Locations.MMLobby);
@@ -538,5 +500,23 @@ public class GeneralLobbyHandler implements Listener {
 
     public static PlayerArea getKOTHLobby() {
         return KOTHLobby;
+    }
+
+    public static void createKOTHLobby() {
+        // Make a new KOTHLobby
+        KOTHLobby = new KOTHLobbyHandler(plugin);
+        // Add the new KOTHLobby to the list of player areas
+        allPlayerAreas.add(KOTHLobby);
+    }
+
+    public static PlayerArea getMMLobby() {
+        return MMLobby;
+    }
+
+    public static void createMMLobby() {
+        // Make a new MMLobby
+        MMLobby = new MMLobbyHandler(plugin);
+        // Add the new MMLobby to the list of player areas
+        allPlayerAreas.add(MMLobby);
     }
 }

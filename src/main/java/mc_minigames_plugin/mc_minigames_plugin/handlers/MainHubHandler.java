@@ -17,7 +17,7 @@ import org.bukkit.scoreboard.Team;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.*;
 
 /**
  *  - Handles players when leaving/joining
@@ -30,6 +30,7 @@ import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandl
  * @version March 6, 2023
  */
 public class MainHubHandler extends PlayerArea implements Listener {
+
     public MainHubHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         areaPlayers = new ArrayList<>();
@@ -151,5 +152,15 @@ public class MainHubHandler extends PlayerArea implements Listener {
         gamePlayer.setIsInGame(false);
         gamePlayer.setIsGameReady(false);
         areaPlayers.add(new HubPlayer(gamePlayer));
+    }
+
+    public static void sendPlayer(GamePlayer gamePlayer) {
+        // If the player's current area is not mainHub...
+        if (!(gamePlayer.getCurrentArea().getAreaName().equals("mainHub"))) {
+            // Remove the player from their previous area
+            gamePlayer.getCurrentArea().removePlayer(gamePlayer);
+            // Add the player to the main hub
+            mainHub.addPlayer(gamePlayer);
+        }
     }
 }

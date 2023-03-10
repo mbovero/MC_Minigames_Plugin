@@ -15,7 +15,7 @@ abstract public class PlayerArea {
     // FIELDS
     protected Plugin plugin;                     // Reference to master plugin for initializing new objects
     protected ArrayList<GamePlayer> areaPlayers; // List of current players in the specified game or lobby area
-    protected String areaName;                   // The name of this area
+    protected String areaName;                   // The name of this area  -- DO NOT MAKE THIS STATIC
 
 
     // GENERAL PlayerArea FEATURES --------------------------------------------------------------------------------------
@@ -26,27 +26,11 @@ abstract public class PlayerArea {
      */
     abstract public void addPlayer (GamePlayer gamePlayer);
 
-
     /**
-     * Removes the specified MCPlayer from the current PlayerArea object by
-     * comparing individual GamePlayers to the provided MCPlayer
-     * @param MCPlayer the MCPlayer to be removed from this area
-     */
-    public void removePlayer (Player MCPlayer) {
-        for (GamePlayer gamePlayer : areaPlayers)
-        {
-            if (gamePlayer.isPlayer(MCPlayer)) {
-                areaPlayers.remove(gamePlayer);
-                break;
-            }
-        }
-    }
-
-    /**
-     * Removes the specified MCPlayer from the current PlayerArea object by
-     * comparing individual GamePlayers to the provided MCPlayer
-     * @param gamePlayer the gamePlayer to be removed from this area
-     */
+         * Removes the specified MCPlayer from the current PlayerArea object by
+         * comparing individual GamePlayers to the provided MCPlayer
+         * @param gamePlayer the gamePlayer to be removed from this area
+         */
     public void removePlayer (GamePlayer gamePlayer) {
         areaPlayers.remove(gamePlayer);
     }

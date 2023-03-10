@@ -13,6 +13,7 @@ import org.bukkit.scoreboard.NameTagVisibility;
 
 import java.util.ArrayList;
 
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.*;
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 
 public class MMLobbyHandler extends PlayerArea implements Listener {
@@ -48,4 +49,24 @@ public class MMLobbyHandler extends PlayerArea implements Listener {
         gamePlayer.setIsGameReady(false);
         areaPlayers.add(new MMPlayer(gamePlayer));
     }
+
+    public static void sendPlayer(GamePlayer gamePlayer) {
+        // If the player's current area is not MMLobby...
+        if (!(gamePlayer.getCurrentArea().getAreaName().equals("MMLobby"))) {
+            // Remove player from their current area
+            gamePlayer.getCurrentArea().removePlayer(gamePlayer);
+            // If a MMLobby already exists...
+            if (getMMLobby() != null)
+                // Add the player to that MMLobby
+                getMMLobby().addPlayer(gamePlayer);
+                // Otherwise...
+            else {
+                // Make a new MMLobby
+                createMMLobby();
+                // And add the player to the new MMLobby
+                getMMLobby().addPlayer(gamePlayer);
+            }
+        }
+    }
+
 }

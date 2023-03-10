@@ -27,8 +27,7 @@ import org.bukkit.scoreboard.NameTagVisibility;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
-import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.getKOTHLobby;
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.*;
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 
 /**
@@ -222,6 +221,25 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         areaPlayers.add(new KOTHPlayer(gamePlayer));
     }
 
+    public static void sendPlayer(GamePlayer gamePlayer) {
+        // If the player's current area is not KOTHLobby...
+        if (!(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby"))) {
+            // Remove player from their current area
+            gamePlayer.getCurrentArea().removePlayer(gamePlayer);
+            // If a KOTHLobby already exists...
+            if (getKOTHLobby() != null)
+                // Add the player to that KOTHLobby
+                getKOTHLobby().addPlayer(gamePlayer);
+            // Otherwise...
+            else {
+                // Make a new KOTHLobby
+                createKOTHLobby();
+                // And add the player to the new KOTHLobby
+                getKOTHLobby().addPlayer(gamePlayer);
+            }
+        }
+    }
+
     public void startNewGame() {
         // Get list of ready players
         ArrayList<GamePlayer> readyPlayers = getReadyPlayers();
@@ -374,9 +392,9 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         return activeGames;
     }
 
-    /**
-     * Provides functionality for portal returning players to main hub from KOTH lobby
-     */
+        /**
+         * Provides functionality for portal returning players to main hub from KOTH lobby
+         */
     @EventHandler
     public void returnPortal(PlayerMoveEvent event) {
         Player MCPlayer = event.getPlayer();

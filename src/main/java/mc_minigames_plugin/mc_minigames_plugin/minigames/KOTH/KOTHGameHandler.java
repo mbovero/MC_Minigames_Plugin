@@ -23,20 +23,17 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         this.areaPlayers = gamePlayers;
         this.gameMode = gameMode;
         this.map = map;
-        this.areaName = "KOTHGame";     // Eventually use map objects and change this to map name
+        areaName = "KOTHGame";     // Eventually use map objects and change this to map name
         gameStart();
     }
 
     //Game start
     public void gameStart() {
-        // Update all game players
+        // Update all game players' data / MCPlayers
         for (GamePlayer gamePlayer : areaPlayers)
         {
-            if (gamePlayer != null) {
-                gamePlayer.setCurrentArea(this);
-                gamePlayer.setIsInGame(true);
-                gamePlayer.getPlayer().sendMessage("Length: " + areaPlayers.size());
-            }
+            gamePlayer.setCurrentArea(this);
+            gamePlayer.setIsInGame(true);
         }
         // Give everyone their kit abilities and items
 
@@ -54,14 +51,9 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         // Return all gamePlayer objects to lobby
         List<GamePlayer> playersToReturn = new ArrayList<>(areaPlayers);
         for (GamePlayer gamePlayer : playersToReturn) {
-            GeneralLobbyHandler.getKOTHLobby().addPlayer(gamePlayer);
-            this.areaPlayers.remove(gamePlayer);
+            KOTHLobbyHandler.sendPlayer(gamePlayer);
             gamePlayer.getPlayer().sendMessage("Stopped KOTH game");
         }
-    }
-
-    public ArrayList<GamePlayer> getPlayers() {
-        return this.areaPlayers;
     }
 
     @Override
