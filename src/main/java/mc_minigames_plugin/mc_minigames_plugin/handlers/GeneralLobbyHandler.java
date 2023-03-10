@@ -413,8 +413,10 @@ public class GeneralLobbyHandler implements Listener {
      */
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventEntityDeath(EntityDeathEvent event) {
+        // Make sure there was a killer
         if (event.getEntity().getKiller() == null)
             return;
+        // Get killer as a player
         Player MCPlayer = event.getEntity().getKiller();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
