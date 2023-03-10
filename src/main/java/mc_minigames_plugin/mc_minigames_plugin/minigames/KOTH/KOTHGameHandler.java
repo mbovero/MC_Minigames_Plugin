@@ -3,11 +3,11 @@ package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.Map;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.MapCastleOfDreams;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,7 +15,6 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
 
@@ -29,8 +28,8 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.areaPlayers = gamePlayers;
         this.gameMode = gameMode;
-        this.map = (Map) new MapCastleOfDreams();
-        areaName = this.map.;     // Eventually use map objects and change this to map name
+        this.map = map;
+        areaName = this.map.getMapName();
         gameStart();
     }
 

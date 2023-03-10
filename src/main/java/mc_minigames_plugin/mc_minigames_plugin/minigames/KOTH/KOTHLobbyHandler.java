@@ -4,6 +4,8 @@ import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KitStriker;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.Map;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.MapCastleOfDreams;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
@@ -51,7 +53,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 // ---------------------------------------------------------------------------------------------------------------------
 
     private String selectedGamemode;              // The KOTH gamemode that is currently selected
-    private Location selectedMap;                 // The KOTH map that is currently selected
+    private Map selectedMap;                 // The KOTH map that is currently selected
     private KOTHGameHandler[] activeGames;        // A list of the currently running KOTH games
 
     /**
@@ -64,7 +66,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         areaPlayers = new ArrayList<>();
         areaName = "KOTHLobby";
         selectedGamemode = "default";
-        selectedMap = Locations.KOTHCastleOfDreams;
+        selectedMap = new MapCastleOfDreams();
         activeGames = new KOTHGameHandler[9];       // An array of the possible active games, each index correlates to a map
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);

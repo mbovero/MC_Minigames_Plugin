@@ -43,4 +43,8 @@ public abstract class Map {
     public void cleanUp() {
         // Use bounds to reset map
     }
+
+    public String getMapName() {
+        return this.mapName;
+    }
 }
