@@ -82,13 +82,13 @@ public class GeneralLobbyHandler implements Listener {
     /**
      * Sends the provided player to the main hub and sets their tags accordingly.
      *
-     * @param MCPlayer player to be sent
+     * @param gamePlayer gamePlayer to be sent
      */
-    public static DelayedTask sendMainHub(Player MCPlayer) {
+    public static DelayedTask sendMainHub(GamePlayer gamePlayer) {
         // Delay operation by some time
         return new DelayedTask(() -> {
-            // Find the gamePlayer matching with the event's MCPlayer
-            GamePlayer gamePlayer = findPlayer(MCPlayer);
+            // Store gamePlayer's MCPlayer reference
+            Player MCPlayer = gamePlayer.getPlayer();
 
             // Send gamePlayer to mainHub
             MainHubHandler.sendPlayer(gamePlayer);
@@ -119,13 +119,13 @@ public class GeneralLobbyHandler implements Listener {
      * Sends the provided player to the King of The Hill lobby and sets their tags accordingly.
      * If an instance of KOTHLobbyHandler does not already exist, a new one is made.
      *
-     * @param MCPlayer player to be sent
+     * @param gamePlayer gamePlayer to be sent
      */
-    public static DelayedTask sendKOTHLobby(Player MCPlayer) {
+    public static DelayedTask sendKOTHLobby(GamePlayer gamePlayer) {
         // Delay operation by some time
         return new DelayedTask(() -> {
-            // Find the gamePlayer matching with the event's MCPlayer
-            GamePlayer gamePlayer = findPlayer(MCPlayer);
+            // Store gamePlayer's MCPlayer reference
+            Player MCPlayer = gamePlayer.getPlayer();
 
             // Send gamePlayer to KOTHLobby
             KOTHLobbyHandler.sendPlayer(gamePlayer);
@@ -159,13 +159,13 @@ public class GeneralLobbyHandler implements Listener {
     /**
      * Sends the provided player to the Murder Mystery lobby and sets their tags accordingly.
      *
-     * @param MCPlayer player to be sent
+     * @param gamePlayer gamePlayer to be sent
      */
-    public static DelayedTask sendMMLobby(Player MCPlayer) {
+    public static DelayedTask sendMMLobby(GamePlayer gamePlayer) {
         // Delay operation by some time
         return new DelayedTask(() -> {
-            // Find the gamePlayer matching with the event's MCPlayer
-            GamePlayer gamePlayer = findPlayer(MCPlayer);
+            // Store gamePlayer's MCPlayer reference
+            Player MCPlayer = gamePlayer.getPlayer();
 
             // Send gamePlayer to MMLobby
             MMLobbyHandler.sendPlayer(gamePlayer);
@@ -293,14 +293,14 @@ public class GeneralLobbyHandler implements Listener {
                     // KOTH lobby
                     if (slot == 11 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§aKOTH")) {
                         // Tp player to KOTH lobby
-                        GeneralLobbyHandler.sendKOTHLobby(MCPlayer);
+                        GeneralLobbyHandler.sendKOTHLobby(gamePlayer);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
                     // Main Hub
                     else if (slot == 13 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§2Main Hub")) {
                         // Tp player to main hub
-                        GeneralLobbyHandler.sendMainHub(MCPlayer);
+                        GeneralLobbyHandler.sendMainHub(gamePlayer);
                         // Just tp if troubleshooting
                         if (gamePlayer.isTroubleshooting())
                             MCPlayer.teleport(Locations.mainHub);
@@ -310,7 +310,7 @@ public class GeneralLobbyHandler implements Listener {
                     // MM lobby
                     else if (slot == 15 && event.getCurrentItem().getItemMeta().getDisplayName().equals("§cMurder Mystery")) {
                         // Tp player to MM lobby
-                        GeneralLobbyHandler.sendMMLobby(MCPlayer);
+                        GeneralLobbyHandler.sendMMLobby(gamePlayer);
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }
@@ -501,7 +501,7 @@ public class GeneralLobbyHandler implements Listener {
         }
         // Return players to main hub when they go out of bounds
         else if (event.getTo().getY() < -90 && !gamePlayer.isInGame())
-            GeneralLobbyHandler.sendMainHub(MCPlayer);
+            GeneralLobbyHandler.sendMainHub(gamePlayer);
     }
 
     /**

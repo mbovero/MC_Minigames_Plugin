@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
+import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
@@ -56,7 +57,8 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         // Return all gamePlayer objects to lobby
         List<GamePlayer> playersToReturn = new ArrayList<>(areaPlayers);
         for (GamePlayer gamePlayer : playersToReturn) {
-            KOTHLobbyHandler.sendPlayer(gamePlayer);
+            // Send
+            GeneralLobbyHandler.sendKOTHLobby(gamePlayer);
             gamePlayer.getPlayer().sendMessage("Stopped KOTH game");
         }
     }

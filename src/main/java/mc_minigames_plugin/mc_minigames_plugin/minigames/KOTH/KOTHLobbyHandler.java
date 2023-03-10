@@ -442,7 +442,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
             // Transport player to main hub
             MCPlayer.teleport(Locations.mainHub);       // Prevents duplicate sends
-            GeneralLobbyHandler.sendMainHub(MCPlayer);
+            GeneralLobbyHandler.sendMainHub(gamePlayer);
         }
     }
 }

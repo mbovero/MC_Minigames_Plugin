@@ -69,10 +69,13 @@ public class MainHubHandler extends PlayerArea implements Listener {
 
         // Send player to hub (reset inv and tp)
         areaPlayers.add(new HubPlayer(MCPlayer, this));
-        GeneralLobbyHandler.sendMainHub(MCPlayer);
 
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
+
+        // Send to mainHub
+        GeneralLobbyHandler.sendMainHub(gamePlayer);
+
 
         // Unless troubleshooting...
         if (!gamePlayer.isTroubleshooting()) {
@@ -128,7 +131,7 @@ public class MainHubHandler extends PlayerArea implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc))
                     // Transport player
-                    GeneralLobbyHandler.sendKOTHLobby(MCPlayer);
+                    GeneralLobbyHandler.sendKOTHLobby(gamePlayer);
             }
 
             // MM lobby button
@@ -140,7 +143,7 @@ public class MainHubHandler extends PlayerArea implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(MMButtonLoc) || event.getClickedBlock().getLocation().equals(MMButtonLoc2)) {
                     // Transport player
-                    GeneralLobbyHandler.sendMMLobby(MCPlayer);
+                    GeneralLobbyHandler.sendMMLobby(gamePlayer);
                 }
             }
         }
