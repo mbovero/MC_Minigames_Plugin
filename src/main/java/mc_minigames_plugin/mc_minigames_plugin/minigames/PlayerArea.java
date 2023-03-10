@@ -13,32 +13,22 @@ import java.util.ArrayList;
 abstract public class PlayerArea {
     // FIELDS
     protected ArrayList<GamePlayer> areaPlayers; // List of current players in the specified game or lobby area
-    protected String areaName;                  // The name of this area
+    protected String areaName;                   // The name of this area
 
 
     // GENERAL PlayerArea FEATURES --------------------------------------------------------------------------------------
 
     /**
-     * Returns the players in the current PlayerArea that are ready for game start
-     * @param gamePlayers
-     * @return
+     * Adds the specified minecraft player reference to the PlayerArea object using that area's specific GamePlayer object
+     * @param gamePlayer the MCPlayer to be added to this area
      */
-    public ArrayList<GamePlayer> getReadyPlayers (ArrayList<GamePlayer> gamePlayers) {
-        // Remove a player from the list if they are not ready
-        gamePlayers.removeIf(gamePlayer -> !gamePlayer.isGameReady());
-        return gamePlayers;
-    }
+    abstract public void addPlayer (GamePlayer gamePlayer);
+
 
     /**
-     * Method adds the specified minecraft player reference to the PlayerArea object using that area's specific GamePlayer object
-     * @param MCPlayer
-     */
-    abstract public void addPlayer (Player MCPlayer);
-
-    /**
-     * Method removes the specified minecraft player reference from the current PlayerArea object by
-     * comparing individual GamePlayers to the reference
-     * @param MCPlayer
+     * Removes the specified MCPlayer from the current PlayerArea object by
+     * comparing individual GamePlayers to the provided MCPlayer
+     * @param MCPlayer the MCPlayer to be removed from this area
      */
     public void removePlayer (Player MCPlayer) {
         for (GamePlayer gamePlayer : areaPlayers)
@@ -50,19 +40,24 @@ abstract public class PlayerArea {
         }
     }
 
-
+    /**
+     * Removes the specified MCPlayer from the current PlayerArea object by
+     * comparing individual GamePlayers to the provided MCPlayer
+     * @param gamePlayer the gamePlayer to be removed from this area
+     */
+    public void removePlayer (GamePlayer gamePlayer) {
+        areaPlayers.remove(gamePlayer);
+    }
 
     //Accessors --------------------------------------------------------------------------------------------------------
 
     /**
      * Accessor method that returns the name of the current PlayerArea
-     * @return
      */
     public String getAreaName () {return areaName;}
 
     /**
      * Accessor method that returns the list of GamePlayer objects from the current PlayerArea
-     * @return
      */
     public ArrayList<GamePlayer> getPlayers () {return areaPlayers;}
 

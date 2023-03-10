@@ -40,11 +40,11 @@ public class Troubleshoot implements CommandExecutor {
         GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // If not troubleshooting...
-        if (!gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isTroubleshooting()) {
             // Add player to list of troubleshooters
             troubleshootUtil.add(MCPlayer);
             // Enter troubleshooting
-            gamePlayer.setTroubleShooting(true);
+            gamePlayer.setTroubleshooting(true);
             MCPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a[Entered troubleshooting mode]"));
         }
         // Otherwise,
@@ -52,7 +52,7 @@ public class Troubleshoot implements CommandExecutor {
             // Add player to list of troubleshooters
             troubleshootUtil.remove(MCPlayer);
             // Stop troubleshooting
-            gamePlayer.setTroubleShooting(false);
+            gamePlayer.setTroubleshooting(false);
             MCPlayer.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c[Exited troubleshooting mode]"));
         }
 

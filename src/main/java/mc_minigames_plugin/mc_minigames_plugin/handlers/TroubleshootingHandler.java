@@ -35,7 +35,7 @@ public class TroubleshootingHandler implements Listener {
         GamePlayer gamePlayer = findPlayer(MCPlayer);
         Location entityLoc = event.getRightClicked().getLocation();
 
-        if (!gamePlayer.isTroubleShooting()) {
+        if (gamePlayer.isTroubleshooting()) {
             // Print name/location of entities that the player right-clicks
             MCPlayer.sendMessage("You right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));
             Bukkit.getLogger().info(MCPlayer.getName() + " right-clicked " + event.getRightClicked().getName() + ChatColor.translateAlternateColorCodes('&',  "&f at " + entityLoc.getX() + ", " + entityLoc.getY() + ", " + entityLoc.getZ()));

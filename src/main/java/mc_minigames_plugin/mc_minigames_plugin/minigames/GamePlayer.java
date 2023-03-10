@@ -11,9 +11,9 @@ import java.util.List;
  * @version March 6, 2023
  */
 abstract public class GamePlayer {
-    protected boolean gameReady; //identifies if the player is ready for the game to start
+    protected boolean isGameReady; //identifies if the player is ready for the game to start
 
-    protected boolean isTroubleShooting;      // Whether the player is troubleshooting or not
+    protected boolean isTroubleshooting;      // Whether the player is troubleshooting or not
     protected boolean isInGame;               // Whether the player is in a game or not
 
     protected Player MCPlayer;
@@ -24,21 +24,29 @@ abstract public class GamePlayer {
         this.MCPlayer = MCPlayer;
         this.currentArea = currentArea;
         // Set isTroubleShooting to false by default
-        this.isTroubleShooting = false;
+        this.isTroubleshooting = false;
         // Iterate through stored troubleshooters config if not null
         List<String> troubleshooters = TroubleshootUtil.getTroubleshooters();
         if (troubleshooters != null)
             for (String troubleshooter : troubleshooters) {
-                // If the player is found in the list, update their isTroubleShooting
+                // If the player is found in the list, update their isTroubleshooting
                 if (troubleshooter.equals(MCPlayer.getName())) {
-                    this.isTroubleShooting = true;
+                    this.isTroubleshooting = true;
                     break;
                 }
             }
         this.isInGame = false;
-        gameReady = false;
+        isGameReady = false;
     }
 
+    public GamePlayer (GamePlayer gamePlayer) {
+        MCPlayer = gamePlayer.getPlayer();
+        currentArea = gamePlayer.getCurrentArea();
+        // Set isTroubleShooting to false by default
+        isTroubleshooting = gamePlayer.isTroubleshooting();
+        isInGame = gamePlayer.isInGame;
+        isGameReady = gamePlayer.isGameReady;
+    }
 
     /**
      * Method compares a given minecraft player reference to this GamePlayer object and
@@ -56,7 +64,7 @@ abstract public class GamePlayer {
      * Accessor method for returning the gameReady value of this GamePlayer
      * @return boolean value for game readiness
      */
-    public boolean isGameReady () {return gameReady;}
+    public boolean isGameReady () {return isGameReady;}
 
     /**
      * Accessor method for returning the current reference of a minecraft player
@@ -68,8 +76,8 @@ abstract public class GamePlayer {
      * Accessor method for returning the troubleShooting value of this GamePlayer
      * @return whether the player is troubleshooting or not.
      */
-    public boolean isTroubleShooting() {
-        return isTroubleShooting;
+    public boolean isTroubleshooting() {
+        return isTroubleshooting;
     }
 
 
@@ -91,6 +99,13 @@ abstract public class GamePlayer {
     //Mutators --------------------------------------------------------------------------------------------------------
 
     /**
+     * Mutator method for changing the isGameReady value of this GamePlayer
+     */
+    public void setIsGameReady(boolean isGameReady) {
+        this.isGameReady = isGameReady;
+    }
+
+    /**
      * Mutator method for changing the isInGame value of this GamePlayer
      */
     public void setIsInGame(boolean isInGame) {
@@ -100,13 +115,12 @@ abstract public class GamePlayer {
     /**
      * Mutator method for changing the troubleShooting value of this GamePlayer
      */
-    public void setTroubleShooting(boolean isTroubleshooting) {
-        this.isTroubleShooting = isTroubleshooting;
+    public void setTroubleshooting(boolean isTroubleshooting) {
+        this.isTroubleshooting = isTroubleshooting;
     }
 
     /**
      * Mutator method that changes the currentArea value of this GamePlayer
-     * @param newArea
      */
     public void setCurrentArea (PlayerArea newArea) {this.currentArea = newArea;}
 }

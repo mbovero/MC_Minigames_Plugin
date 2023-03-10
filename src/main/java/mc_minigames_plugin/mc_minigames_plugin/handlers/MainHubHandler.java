@@ -29,8 +29,8 @@ import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandl
  * @author Kirt Robinson, Miles Bovero
  * @version March 6, 2023
  */
-public class HubHandler extends PlayerArea implements Listener {
-    public HubHandler(MC_Minigames_Plugin plugin) {
+public class MainHubHandler extends PlayerArea implements Listener {
+    public MainHubHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         areaPlayers = new ArrayList<>();
         areaName = "mainHub";
@@ -48,6 +48,14 @@ public class HubHandler extends PlayerArea implements Listener {
         Team team = Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer);
         if (team != null)
             Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer).removePlayer(MCPlayer);
+
+        // Find the gamePlayer matching with the event's MCPlayer
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Get the player's current area
+        PlayerArea playerArea = gamePlayer.getCurrentArea();
+        // Remove the player from that area
+        playerArea.removePlayer(gamePlayer);
+
     }
 
     /**
@@ -60,13 +68,13 @@ public class HubHandler extends PlayerArea implements Listener {
 
         // Send player to hub (reset inv and tp)
         areaPlayers.add(new HubPlayer(MCPlayer, this));
-        GeneralLobbyHandler.sendMainHub(MCPlayer, this);
+        GeneralLobbyHandler.sendMainHub(MCPlayer);
 
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // Unless troubleshooting...
-        if (!gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isTroubleshooting()) {
             // Set to adventure mode
             MCPlayer.setGameMode(GameMode.ADVENTURE);
             // Prevent/reset flying
@@ -107,7 +115,7 @@ public class HubHandler extends PlayerArea implements Listener {
         GamePlayer gamePlayer = findPlayer(MCPlayer);
 
         // For players that are not in a game or troubleshooting...
-        if (!gamePlayer.isInGame() || !gamePlayer.isTroubleShooting()) {
+        if (!gamePlayer.isInGame() || !gamePlayer.isTroubleshooting()) {
 
             // LOBBY BUTTON CLICK DETECTIONS:
 
@@ -119,7 +127,7 @@ public class HubHandler extends PlayerArea implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc)) {
                     // Transport player
-                    GeneralLobbyHandler.sendKOTHLobby(MCPlayer, this);
+                    GeneralLobbyHandler.sendKOTHLobby(MCPlayer);
                 }
             }
 
@@ -132,14 +140,17 @@ public class HubHandler extends PlayerArea implements Listener {
                 // Detect click on button
                 if (event.getClickedBlock().getLocation().equals(MMButtonLoc) || event.getClickedBlock().getLocation().equals(MMButtonLoc2)) {
                     // Transport player
-                    GeneralLobbyHandler.sendMMLobby(MCPlayer, this);
+                    GeneralLobbyHandler.sendMMLobby(MCPlayer);
                 }
             }
         }
     }
 
     @Override
-    public void addPlayer(Player MCPlayer) {
-        areaPlayers.add(new HubPlayer(MCPlayer, this));
+    public void addPlayer(GamePlayer gamePlayer) {
+        gamePlayer.setCurrentArea(this);
+        gamePlayer.setIsInGame(false);
+        gamePlayer.setIsGameReady(false);
+        areaPlayers.add(new HubPlayer(gamePlayer));
     }
 }

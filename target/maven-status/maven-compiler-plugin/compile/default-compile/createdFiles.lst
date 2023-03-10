@@ -1,6 +1,7 @@
 mc_minigames_plugin\mc_minigames_plugin\commands\Reset.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Fly.class
 mc_minigames_plugin\mc_minigames_plugin\util\Locations.class
+mc_minigames_plugin\mc_minigames_plugin\commands\GetData.class
 mc_minigames_plugin\mc_minigames_plugin\util\DelayedTask.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Spawn.class
 mc_minigames_plugin\mc_minigames_plugin\commands\GetItem.class
@@ -11,9 +12,9 @@ mc_minigames_plugin\mc_minigames_plugin\minigames\PlayerArea.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\GeneralLobbyHandler.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHLobbyHandler.class
 mc_minigames_plugin\mc_minigames_plugin\util\Tools.class
-mc_minigames_plugin\mc_minigames_plugin\handlers\HubHandler.class
 mc_minigames_plugin\mc_minigames_plugin\handlers\TorchHandler.class
 mc_minigames_plugin\mc_minigames_plugin\util\TroubleshootUtil.class
+mc_minigames_plugin\mc_minigames_plugin\handlers\MainHubHandler.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHGameHandler.class
 mc_minigames_plugin\mc_minigames_plugin\util\SpawnUtil.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHPlayer.class

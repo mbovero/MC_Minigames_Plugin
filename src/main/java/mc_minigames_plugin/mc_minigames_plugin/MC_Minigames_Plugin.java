@@ -3,16 +3,13 @@ package mc_minigames_plugin.mc_minigames_plugin;
 import mc_minigames_plugin.mc_minigames_plugin.commands.*;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.TroubleshootingHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
-import mc_minigames_plugin.mc_minigames_plugin.handlers.HubHandler;
 import mc_minigames_plugin.mc_minigames_plugin.util.ConfigUtil;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.SpawnUtil;
 import mc_minigames_plugin.mc_minigames_plugin.util.TroubleshootUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -81,6 +78,7 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
         getCommand("hub").setExecutor(new Hub());
         getCommand("reset").setExecutor(new Reset());
         getCommand("getitem").setExecutor(new GetItem());
+        getCommand("getdata").setExecutor(new GetData());
         getCommand("troubleshoot").setExecutor(new Troubleshoot(new TroubleshootUtil(this)));
 
 

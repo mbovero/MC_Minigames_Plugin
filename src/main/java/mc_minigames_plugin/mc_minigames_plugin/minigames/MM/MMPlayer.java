@@ -11,5 +11,8 @@ public class MMPlayer extends GamePlayer {
         super(MCPlayer, currentArea);
     }
 
+    public MMPlayer(GamePlayer gamePlayer) {
+        super(gamePlayer);
+    }
 
 }

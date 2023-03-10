@@ -31,14 +31,14 @@ public class GetItem implements CommandExecutor {
 
 
     // List of items
-    String list = "lobbySelector, KOTHQueue, KOTHTeamNone, MMQueue, MMTeamNone";
+    String list = ChatColor.AQUA + "lobbySelector, KOTHQueue, KOTHTeamNone, MMQueue, MMTeamNone";
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         // If no item or player is specified
         if (args.length == 0) {
             // Send warning
-            commandSender.sendMessage("Specify an item to receive. Type '/getitem list' to see a list of items");
+            commandSender.sendMessage(ChatColor.RED + "Specify an item to receive. Type '/getitem list' to see a list of items");
             return true;
         }
 
@@ -49,7 +49,7 @@ public class GetItem implements CommandExecutor {
         if (args.length == 1) {
             // Send warning if the sender is not a player
             if (!(commandSender instanceof Player)) {
-                commandSender.sendMessage("Specify which player to give the item to:\n/getitem <item> <username>");
+                commandSender.sendMessage(ChatColor.RED + "Specify which player to give the item to:\n/getitem <item> <username>");
                 return true;
             }
             // Otherwise, set target as the command sender
@@ -63,11 +63,11 @@ public class GetItem implements CommandExecutor {
 
         // Send warning if specified player was not found
         if (MCPlayer == null) {
-            commandSender.sendMessage("Player " + args[1] + " could not be found");
+            commandSender.sendMessage(ChatColor.RED + "Player " + args[1] + " could not be found");
             return true;
         }
 
-        // Store specified type to reset
+        // Store specified item to give
         String item = args[0];
         // Get target inventory
         Inventory inv = MCPlayer.getInventory();
@@ -78,18 +78,23 @@ public class GetItem implements CommandExecutor {
                 break;
             case "lobbySelector":
                 inv.addItem(lobbySelector);
+                commandSender.sendMessage(ChatColor.GREEN + "Gave " + MCPlayer.getName() + " a " + ChatColor.AQUA + item);
                 break;
             case "KOTHQueue":
                 inv.addItem(KOTHQueue);
+                commandSender.sendMessage(ChatColor.GREEN + "Gave " + MCPlayer.getName() + " a " + ChatColor.AQUA + item);
                 break;
             case "KOTHTeamNone":
                 inv.addItem(KOTHTeamNone);
+                commandSender.sendMessage(ChatColor.GREEN + "Gave " + MCPlayer.getName() + " a " + ChatColor.AQUA + item);
                 break;
             case "MMQueue":
                 inv.addItem(MMQueue);
+                commandSender.sendMessage(ChatColor.GREEN + "Gave " + MCPlayer.getName() + " a " + ChatColor.AQUA + item);
                 break;
             case "MMTeamNone":
                 inv.addItem(MMTeamNone);
+                commandSender.sendMessage(ChatColor.GREEN + "Gave " + MCPlayer.getName() + " a " + ChatColor.AQUA + item);
                 break;
             default:
                 commandSender.sendMessage(ChatColor.RED + "Specify a valid item to receive. Type '/getitem list' to see a list of items");

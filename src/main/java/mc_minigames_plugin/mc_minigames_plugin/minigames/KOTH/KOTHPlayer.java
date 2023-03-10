@@ -15,6 +15,11 @@ public class KOTHPlayer extends GamePlayer {
         this.playerKit = playerKit;
     }
 
+    public KOTHPlayer(GamePlayer gamePlayer) {
+        super(gamePlayer);
+        this.playerKit = playerKit;
+    }
+
     //METHODS
 
     //Basic item give methods

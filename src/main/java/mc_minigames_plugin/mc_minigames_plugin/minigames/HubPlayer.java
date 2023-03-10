@@ -9,6 +9,10 @@ public class HubPlayer extends GamePlayer {
         super(MCPlayer, currentArea);
     }
 
+    public HubPlayer(GamePlayer gamePlayer) {
+        super(gamePlayer);
+    }
+
     //METHODS
 
     //Basic item give methods

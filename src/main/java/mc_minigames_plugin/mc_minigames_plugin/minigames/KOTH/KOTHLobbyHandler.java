@@ -41,9 +41,6 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     private DelayedTask lastPortalTask;             // Reference to the last called portal use to prevent duplicate operations
 
 // ITEMS ---------------------------------------------------------------------------------------------------------------
-    // Lobby selector tool
-    static ItemStack lobbySelector = createItem(new ItemStack(Material.COMPASS), "&aLobby Selector", "&fExplore our selection of games!");
-
     // KOTH lobby hot bar menu items
     static ItemStack KOTHQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the KOTH queue!");
     static ItemStack KOTHDequeue = createItem(new ItemStack(Material.LIME_DYE), "&aReady", "&fClick with this item to leave the KOTH queue");
@@ -55,28 +52,26 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     static ItemStack KOTHTeamYellow = createItem(new ItemStack(Material.YELLOW_WOOL), "&eYellow Team", "&fClick with this item to change KOTH teams!");
 // ---------------------------------------------------------------------------------------------------------------------
 
-
-    public KOTHLobbyHandler (MC_Minigames_Plugin plugin, Player MCPlayer) {
+    public KOTHLobbyHandler (MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        //Add player to start of player list
+        // Create new list of players for this area
         areaPlayers = new ArrayList<>();
-        areaPlayers.add(new KOTHPlayer(MCPlayer, this));
         areaName = "KOTHLobby";
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHGreen", " ⧫ ", "Green", null, ChatColor.GREEN,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHYellow", " ⧫ ", "Yellow", null, ChatColor.YELLOW,false, true, NameTagVisibility.ALWAYS);
-        }
+    }
 
     //KOTH LOBBY FEATURES-----------------------------------------------------------------------------------------------
 
-    /**
-     * Method adds a new KOTPlayer to the list of current KOTHPlayers
-     * @param MCPlayer a reference to a minecraft players
-     */
-    public void addPlayer (Player MCPlayer) {
-        areaPlayers.add(new KOTHPlayer(MCPlayer, this));
+    @Override
+    public void addPlayer(GamePlayer gamePlayer) {
+        gamePlayer.setCurrentArea(this);
+        gamePlayer.setIsInGame(false);
+        gamePlayer.setIsGameReady(false);
+        areaPlayers.add(new KOTHPlayer(gamePlayer));
     }
 
     /**
@@ -231,31 +226,32 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         // Find gamePlayer's area
         String currentArea = gamePlayer.getCurrentArea().getAreaName();
         Inventory inv = MCPlayer.getInventory();
-        Set<String> tags = MCPlayer.getScoreboardTags();
 
         // For all players in the KOTH Lobby...
         if (currentArea.equals("KOTHLobby")) {
-            // Detect when player clicks
-            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK || event.getAction() == Action.LEFT_CLICK_AIR || event.getAction() == Action.LEFT_CLICK_BLOCK)
+            // Detect when player right-clicks
+            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 // Detect click with an item
                 if (MCPlayer.getItemInHand().getItemMeta() != null) {
                     // QUEUE ITEM
                     // Detect click with KOTH queue item
                     if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHQueue.getItemMeta().getDisplayName())) {
+                        new DelayedTask(() -> {
                         // Queue player
-                        MCPlayer.addScoreboardTag("KOTHQueued");
+                        gamePlayer.setIsGameReady(true);
                         // Give glowing effect
-                        MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,2147483647, 1, true, false, false));
+                        MCPlayer.addPotionEffect(new PotionEffect(PotionEffectType.GLOWING,Integer.MAX_VALUE, 1, true, false, false));
                         // Switch to dequeue item
                         inv.setItem(0, KOTHDequeue);
                         // Play sound
                         MCPlayer.playSound(MCPlayer, Sound.BLOCK_NOTE_BLOCK_CHIME, 5, 1.5f);
+                        }, 3);
                     }
                     // Detect click with KOTH dequeue item
                     else if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHDequeue.getItemMeta().getDisplayName())) {
                         new DelayedTask(() -> {
-                            // Dequeue player
-                        MCPlayer.removeScoreboardTag("KOTHQueued");
+                        // Dequeue player
+                        gamePlayer.setIsGameReady(false);
                         // Clear glowing potion effects
                         Collection<PotionEffect> effectsToClear = MCPlayer.getActivePotionEffects();
                         for (PotionEffect pE : effectsToClear)
@@ -312,7 +308,6 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                         MCPlayer.playSound(MCPlayer, Sound.ITEM_ARMOR_EQUIP_LEATHER, 5, 1);
                         }, 3);
                     }
-
                     // Detect click with KOTH team selector (yellow)
                     else if (MCPlayer.getItemInHand().getItemMeta().getDisplayName().equals(KOTHTeamYellow.getItemMeta().getDisplayName())) {
                         new DelayedTask(() -> {
@@ -343,15 +338,15 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 event.getTo().getZ() < -594 && event.getTo().getZ() > -595 &&
                 event.getTo().getX() < 11 && event.getTo().getX() > 5 &&
                 currentArea.equals("KOTHLobby")) {
-            // Cancel duplicate tasks
-            if (lastPortalTask != null)
-                new DelayedTask(() -> Bukkit.getScheduler().cancelTask(lastPortalTask.getId()), 2);
+
+            // If not troubleshooting...
+            if (!(gamePlayer.isTroubleshooting()))
+                // Prevent lobby item glitches
+                MCPlayer.getInventory().clear();
+
             // Transport player to main hub
-            lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer, findPlayer(MCPlayer).getCurrentArea());
-            // Just tp if troubleshooting
-            if (gamePlayer.isTroubleShooting())
-                MCPlayer.teleport(Locations.mainHub);
-            new DelayedTask(() -> {event.setCancelled(true);}, 3);
+            MCPlayer.teleport(Locations.mainHub);       // Prevents duplicate sends
+            lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer);
         }
     }
 }
