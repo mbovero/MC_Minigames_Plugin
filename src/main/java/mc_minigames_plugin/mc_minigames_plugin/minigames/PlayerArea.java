@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
  */
 abstract public class PlayerArea {
     // FIELDS
+    protected Plugin plugin;                     // Reference to master plugin for initializing new objects
     protected ArrayList<GamePlayer> areaPlayers; // List of current players in the specified game or lobby area
     protected String areaName;                   // The name of this area
 

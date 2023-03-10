@@ -2,6 +2,7 @@ package mc_minigames_plugin.mc_minigames_plugin.handlers;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHGameHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.MM.MMLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
@@ -246,7 +247,16 @@ public class GeneralLobbyHandler implements Listener {
                     return gamePlayer;
                 }
             }
-        }
+            // Also search through KOTH games
+            if (area instanceof KOTHLobbyHandler)
+                for (KOTHGameHandler KOTHGame : ((KOTHLobbyHandler) area).getActiveGames())
+                    if (KOTHGame != null)
+                        for (GamePlayer gamePlayer : KOTHGame.getPlayers())
+                            // Compare gamePlayer to MCPlayer
+                            if (gamePlayer.isPlayer(MCPlayer))
+                                // If the player is found, return gamePlayer
+                                return gamePlayer;
+                            }
         MCPlayer.sendMessage("\nBAD BAD\n");
         return null;
     }
@@ -523,5 +533,10 @@ public class GeneralLobbyHandler implements Listener {
         // Return players to main hub when they go out of bounds
         else if (event.getTo().getY() < -90 && !gamePlayer.isInGame())
             GeneralLobbyHandler.sendMainHub(MCPlayer);
+    }
+
+
+    public static PlayerArea getKOTHLobby() {
+        return KOTHLobby;
     }
 }
