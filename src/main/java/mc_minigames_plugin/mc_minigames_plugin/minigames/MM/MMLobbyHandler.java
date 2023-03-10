@@ -42,6 +42,12 @@ public class MMLobbyHandler extends PlayerArea implements Listener {
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMYellow", " ⧫ ", "Yellow", null, ChatColor.YELLOW, false, true, NameTagVisibility.ALWAYS);
     }
 
+    /**
+     * Adds the specified gamePlayer to MMLobby's list of players. Also resets
+     * the gamePlayer's current area, isInGame, and isGameReady
+     *
+     * @param gamePlayer the gamePlayer to be added to this area
+     */
     @Override
     public void addPlayer(GamePlayer gamePlayer) {
         gamePlayer.setCurrentArea(this);
@@ -50,6 +56,11 @@ public class MMLobbyHandler extends PlayerArea implements Listener {
         areaPlayers.add(new MMPlayer(gamePlayer));
     }
 
+    /**
+     * If the given gamePlayer is not already in the MMLobby, they are
+     * removed from their previous area and placed in the list of MMLobby players.
+     * @param gamePlayer object to be set to MMLobby
+     */
     public static void sendPlayer(GamePlayer gamePlayer) {
         // If the player's current area is not MMLobby...
         if (!(gamePlayer.getCurrentArea().getAreaName().equals("MMLobby"))) {

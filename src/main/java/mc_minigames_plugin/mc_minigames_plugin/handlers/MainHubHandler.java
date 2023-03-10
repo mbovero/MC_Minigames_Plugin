@@ -146,6 +146,12 @@ public class MainHubHandler extends PlayerArea implements Listener {
         }
     }
 
+    /**
+     * Adds the specified gamePlayer to mainHub's list of players. Also resets
+     * the gamePlayer's current area, isInGame, and isGameReady
+     *
+     * @param gamePlayer the gamePlayer to be added to this area
+     */
     @Override
     public void addPlayer(GamePlayer gamePlayer) {
         gamePlayer.setCurrentArea(this);
@@ -154,6 +160,11 @@ public class MainHubHandler extends PlayerArea implements Listener {
         areaPlayers.add(new HubPlayer(gamePlayer));
     }
 
+    /**
+     * If the given gamePlayer is not already in the mainHub, they are
+     * removed from their previous area and placed in the list of mainHub players.
+     * @param gamePlayer object to be set to mainHub
+     */
     public static void sendPlayer(GamePlayer gamePlayer) {
         // If the player's current area is not mainHub...
         if (!(gamePlayer.getCurrentArea().getAreaName().equals("mainHub"))) {

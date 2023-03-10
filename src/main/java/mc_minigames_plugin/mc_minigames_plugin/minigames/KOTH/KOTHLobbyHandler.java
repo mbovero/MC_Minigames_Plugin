@@ -33,7 +33,7 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 /**
  *Class Description: Holds players in lobby and handles run time events for those players
  *
- * @author Kirt Robinson
+ * @author Kirt Robinson and Miles Bovero
  * @version March 5, 2023
  */
 public class KOTHLobbyHandler extends PlayerArea implements Listener {
@@ -50,9 +50,9 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     private static final ItemStack KOTHTeamYellow = createItem(new ItemStack(Material.YELLOW_WOOL), "&eYellow Team", "&fClick with this item to change KOTH teams!");
 // ---------------------------------------------------------------------------------------------------------------------
 
-    private String chosenGamemode;
-    private Location chosenMap;
-    private KOTHGameHandler[] activeGames;
+    private String selectedGamemode;              // The KOTH gamemode that is currently selected
+    private Location selectedMap;                 // The KOTH map that is currently selected
+    private KOTHGameHandler[] activeGames;        // A list of the currently running KOTH games
 
     /**
      * Constructor that initiates this area's list of players, the area name, and the KOTH teams
@@ -63,8 +63,8 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         // Create new list of players for this area
         areaPlayers = new ArrayList<>();
         areaName = "KOTHLobby";
-        chosenGamemode = "default";
-        chosenMap = Locations.KOTHCastleOfDreams;
+        selectedGamemode = "default";
+        selectedMap = Locations.KOTHCastleOfDreams;
         activeGames = new KOTHGameHandler[9];       // An array of the possible active games, each index correlates to a map
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
@@ -209,10 +209,21 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
 
     // Gamemode selection (teams or no teams)
-    public void setChosenGamemode(String chosenGamemode) {
-        this.chosenGamemode = chosenGamemode;
+
+    /**
+     * Sets the currently chosen gamemode to the specified gamemode
+     * @param selectedGamemode the gamemode to set the current, chosen gamemode to
+     */
+    public void setSelectedGamemode(String selectedGamemode) {
+        this.selectedGamemode = selectedGamemode;
     }
 
+    /**
+     * Adds the specified gamePlayer to KOTHLobby's list of players. Also resets
+     * the gamePlayer's current area, isInGame, and isGameReady
+     *
+     * @param gamePlayer the gamePlayer to be added to this area
+     */
     @Override
     public void addPlayer(GamePlayer gamePlayer) {
         gamePlayer.setCurrentArea(this);
@@ -221,6 +232,11 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         areaPlayers.add(new KOTHPlayer(gamePlayer));
     }
 
+    /**
+     * If the given gamePlayer is not already in the KOTHLobby, they are
+     * removed from their previous area and placed in the list of KOTHLobby players.
+     * @param gamePlayer object to be set to KOTHLobby
+     */
     public static void sendPlayer(GamePlayer gamePlayer) {
         // If the player's current area is not KOTHLobby...
         if (!(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby"))) {
@@ -240,6 +256,11 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         }
     }
 
+    /**
+     * If there is at least one player ready in the KOTHLobby, a new KOTHGame
+     * is started. All ready gamePlayers are removed from this lobby and put
+     * inside the KOTHGame's list of players.
+     */
     public void startNewGame() {
         // Get list of ready players
         ArrayList<GamePlayer> readyPlayers = getReadyPlayers();
@@ -248,7 +269,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             for (GamePlayer gamePlayer : this.areaPlayers)
                 gamePlayer.getPlayer().sendMessage("Starting a new KOTH game...");
             // Create new KOTHGame
-            this.activeGames[0] = new KOTHGameHandler((MC_Minigames_Plugin) plugin, readyPlayers, chosenGamemode, chosenMap);        // Change to insert into correct map slot
+            this.activeGames[0] = new KOTHGameHandler((MC_Minigames_Plugin) plugin, readyPlayers, selectedGamemode, selectedMap);        // Change to insert into correct map slot
             // Remove ready players from this lobby
             this.areaPlayers.removeAll(readyPlayers);
         }
@@ -281,7 +302,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                     Location KOTHStartButtonLoc = new Location(Bukkit.getWorld("world"), 8, -59, -631);
                     // Detect click on button
                     if (event.getClickedBlock().getLocation().equals(KOTHStartButtonLoc)) {
-                        // Create new game
+                        // Create new KOTH game
                         startNewGame();
                     }
                 }
@@ -380,6 +401,9 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         }
     }
 
+    /**
+     * Returns a list of the KOTHLobby's players that are ready/queued
+     */
     public ArrayList<GamePlayer> getReadyPlayers() {
         ArrayList<GamePlayer> readyPlayers = new ArrayList<>();
         for (GamePlayer gamePlayer : this.areaPlayers)
@@ -388,13 +412,16 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         return readyPlayers;
     }
 
+    /**
+     * Returns the KOTHLobby's array of active games
+     */
     public KOTHGameHandler[] getActiveGames() {
         return activeGames;
     }
 
-        /**
-         * Provides functionality for portal returning players to main hub from KOTH lobby
-         */
+    /**
+     * Provides functionality for portal returning players to main hub from KOTH lobby
+     */
     @EventHandler
     public void returnPortal(PlayerMoveEvent event) {
         Player MCPlayer = event.getPlayer();

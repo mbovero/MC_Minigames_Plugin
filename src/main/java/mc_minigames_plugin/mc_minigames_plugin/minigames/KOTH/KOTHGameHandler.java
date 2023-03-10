@@ -1,7 +1,6 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
-import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
@@ -27,7 +26,10 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         gameStart();
     }
 
-    //Game start
+    /**
+     * Begins this KOTHGame, updates the gamePlayers currentAreas and isInGame values,
+     * and begins other initial game functions.
+     */
     public void gameStart() {
         // Update all game players' data / MCPlayers
         for (GamePlayer gamePlayer : areaPlayers)
@@ -41,12 +43,15 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         // Initialize game specific blocks and objects
         // Scoreboard displays
 
+        // Stop game in 5 seconds
         new DelayedTask(this::gameStop, 100);
     }
 
     // Running Game
 
-    // Game reset
+    /**
+     * Stops this KOTHGame's functions and returns all gamePlayers to the KOTHLobby
+     */
     public void gameStop() {
         // Return all gamePlayer objects to lobby
         List<GamePlayer> playersToReturn = new ArrayList<>(areaPlayers);
@@ -56,6 +61,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         }
     }
 
+    // Never used?
     @Override
     public void addPlayer(GamePlayer gamePlayer) {
     }

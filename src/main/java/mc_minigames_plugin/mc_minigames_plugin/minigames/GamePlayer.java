@@ -23,8 +23,7 @@ abstract public class GamePlayer {
     public GamePlayer (Player MCPlayer, PlayerArea currentArea) {
         this.MCPlayer = MCPlayer;
         this.currentArea = currentArea;
-        // Set isTroubleShooting to false by default
-        this.isTroubleshooting = false;
+        this.isTroubleshooting = false;     // Set isTroubleShooting to false by default
         // Iterate through stored troubleshooters config if not null
         List<String> troubleshooters = TroubleshootUtil.getTroubleshooters();
         if (troubleshooters != null)

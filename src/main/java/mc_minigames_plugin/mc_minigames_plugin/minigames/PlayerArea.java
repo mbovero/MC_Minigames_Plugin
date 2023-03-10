@@ -22,7 +22,7 @@ abstract public class PlayerArea {
 
     /**
      * Adds the specified minecraft player reference to the PlayerArea object using that area's specific GamePlayer object
-     * @param gamePlayer the MCPlayer to be added to this area
+     * @param gamePlayer the gamePlayer to be added to this area
      */
     abstract public void addPlayer (GamePlayer gamePlayer);
 

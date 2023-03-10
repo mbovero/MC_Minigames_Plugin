@@ -90,6 +90,7 @@ public class GeneralLobbyHandler implements Listener {
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
+            // Send gamePlayer to mainHub
             MainHubHandler.sendPlayer(gamePlayer);
 
             // Only do if not troubleshooting
@@ -109,7 +110,7 @@ public class GeneralLobbyHandler implements Listener {
                 Tools.resetInventory(MCPlayer);
             }
 
-            // Give lobby selector after some time
+            // Give lobby selector
             MCPlayer.getInventory().setItem(4, lobbySelector);
         }, 5);
     }
@@ -126,6 +127,7 @@ public class GeneralLobbyHandler implements Listener {
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
+            // Send gamePlayer to KOTHLobby
             KOTHLobbyHandler.sendPlayer(gamePlayer);
 
             // Tp player
@@ -145,7 +147,8 @@ public class GeneralLobbyHandler implements Listener {
                 // Reset inventory
                 Tools.resetInventory(MCPlayer);
             }
-            // Give items for lobby hot bar menu after some time
+
+            // Give items for lobby hot bar menu
             Inventory inv = MCPlayer.getInventory();
             inv.setItem(0, KOTHQueue);        // Queue/Dequeue item
             inv.setItem(2, KOTHTeamNone);     // Team selector item (no team by default)
@@ -164,6 +167,7 @@ public class GeneralLobbyHandler implements Listener {
             // Find the gamePlayer matching with the event's MCPlayer
             GamePlayer gamePlayer = findPlayer(MCPlayer);
 
+            // Send gamePlayer to MMLobby
             MMLobbyHandler.sendPlayer(gamePlayer);
 
             // Tp player
@@ -211,8 +215,11 @@ public class GeneralLobbyHandler implements Listener {
             }
             // Also search through KOTH games
             if (area instanceof KOTHLobbyHandler)
+                // Retrieve and search through KOTHLobby active games
                 for (KOTHGameHandler KOTHGame : ((KOTHLobbyHandler) area).getActiveGames())
+                    // If the game object is not null...
                     if (KOTHGame != null)
+                        // Iterate through game's players
                         for (GamePlayer gamePlayer : KOTHGame.getPlayers())
                             // Compare gamePlayer to MCPlayer
                             if (gamePlayer.isPlayer(MCPlayer))
@@ -497,11 +504,16 @@ public class GeneralLobbyHandler implements Listener {
             GeneralLobbyHandler.sendMainHub(MCPlayer);
     }
 
-
+    /**
+     * Returns GeneralLobbyHandler's KOTHLobby, null if not yet initialized
+     */
     public static PlayerArea getKOTHLobby() {
         return KOTHLobby;
     }
 
+    /**
+     * Creates a new KOTHLobbyHandler and adds it to the list of all player areas
+     */
     public static void createKOTHLobby() {
         // Make a new KOTHLobby
         KOTHLobby = new KOTHLobbyHandler(plugin);
@@ -509,10 +521,16 @@ public class GeneralLobbyHandler implements Listener {
         allPlayerAreas.add(KOTHLobby);
     }
 
+    /**
+     * Returns GeneralLobbyHandler's MMLobby, null if not yet initialized
+     */
     public static PlayerArea getMMLobby() {
         return MMLobby;
     }
 
+    /**
+     * Creates a new MMLobbyHandler and adds it to the list of all player areas
+     */
     public static void createMMLobby() {
         // Make a new MMLobby
         MMLobby = new MMLobbyHandler(plugin);
