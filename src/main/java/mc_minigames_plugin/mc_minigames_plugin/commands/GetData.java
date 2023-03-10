@@ -2,6 +2,7 @@ package mc_minigames_plugin.mc_minigames_plugin.commands;
 
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -80,6 +81,12 @@ public class GetData implements CommandExecutor {
                 break;
             case "currentArea":
                 commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s currentArea name is " + ChatColor.GRAY + (gamePlayer.getCurrentArea().getAreaName()));
+                break;
+            case "KOTHKit":
+                if(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby") || gamePlayer.getCurrentArea().getAreaName().equals("KOTHGame"))
+                    commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s kit name is " + ChatColor.GRAY + (((KOTHPlayer)gamePlayer).getKit().getKitName()));
+                else
+                    commandSender.sendMessage(ChatColor.RED + MCPlayer.getName() + " is not currently a KOTHPlayer");
                 break;
             default:
                 commandSender.sendMessage(ChatColor.RED + "Specify a valid data type to receive. Type '/getdata list' to see a list of data types");

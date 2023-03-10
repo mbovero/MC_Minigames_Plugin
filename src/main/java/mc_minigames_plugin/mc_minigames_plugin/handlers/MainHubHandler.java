@@ -114,8 +114,8 @@ public class MainHubHandler extends PlayerArea implements Listener {
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
 
-        // For players that are not in a game or troubleshooting...
-        if (!gamePlayer.isInGame() || !gamePlayer.isTroubleshooting()) {
+        // For players that are not in a game or are troubleshooting and are in mainHub...
+        if (!gamePlayer.isInGame() || gamePlayer.isTroubleshooting() && gamePlayer.getCurrentArea().getAreaName().equals("mainHub")) {
 
             // LOBBY BUTTON CLICK DETECTIONS:
 
@@ -125,10 +125,9 @@ public class MainHubHandler extends PlayerArea implements Listener {
                 // Define button location
                 Location KOTHButtonLoc = new Location(Bukkit.getWorld("world"), 17, -46, -26);
                 // Detect click on button
-                if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc)) {
+                if (event.getClickedBlock().getLocation().equals(KOTHButtonLoc))
                     // Transport player
                     GeneralLobbyHandler.sendKOTHLobby(MCPlayer);
-                }
             }
 
             // MM lobby button

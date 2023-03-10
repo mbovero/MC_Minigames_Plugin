@@ -3,6 +3,7 @@ package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KitStriker;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
@@ -25,7 +26,6 @@ import org.bukkit.scoreboard.NameTagVisibility;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Set;
 
 import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
@@ -38,40 +38,36 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
  */
 public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
-    private DelayedTask lastPortalTask;             // Reference to the last called portal use to prevent duplicate operations
-
 // ITEMS ---------------------------------------------------------------------------------------------------------------
     // KOTH lobby hot bar menu items
-    static ItemStack KOTHQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the KOTH queue!");
-    static ItemStack KOTHDequeue = createItem(new ItemStack(Material.LIME_DYE), "&aReady", "&fClick with this item to leave the KOTH queue");
+    private static final ItemStack KOTHQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the KOTH queue!");
+    private static final ItemStack KOTHDequeue = createItem(new ItemStack(Material.LIME_DYE), "&aReady", "&fClick with this item to leave the KOTH queue");
 
-    static ItemStack KOTHTeamNone = createItem(new ItemStack(Material.LIGHT_GRAY_WOOL), "&7No Team", "&fClick with this item to change KOTH teams!");
-    static ItemStack KOTHTeamRed = createItem(new ItemStack(Material.RED_WOOL), "&4Red Team", "&fClick with this item to change KOTH teams!");
-    static ItemStack KOTHTeamBlue = createItem(new ItemStack(Material.BLUE_WOOL), "&1Blue Team", "&fClick with this item to change KOTH teams!");
-    static ItemStack KOTHTeamGreen = createItem(new ItemStack(Material.LIME_WOOL), "&2Green Team", "&fClick with this item to change KOTH teams!");
-    static ItemStack KOTHTeamYellow = createItem(new ItemStack(Material.YELLOW_WOOL), "&eYellow Team", "&fClick with this item to change KOTH teams!");
+    private static final ItemStack KOTHTeamNone = createItem(new ItemStack(Material.LIGHT_GRAY_WOOL), "&7No Team", "&fClick with this item to change KOTH teams!");
+    private static final ItemStack KOTHTeamRed = createItem(new ItemStack(Material.RED_WOOL), "&4Red Team", "&fClick with this item to change KOTH teams!");
+    private static final ItemStack KOTHTeamBlue = createItem(new ItemStack(Material.BLUE_WOOL), "&1Blue Team", "&fClick with this item to change KOTH teams!");
+    private static final ItemStack KOTHTeamGreen = createItem(new ItemStack(Material.LIME_WOOL), "&2Green Team", "&fClick with this item to change KOTH teams!");
+    private static final ItemStack KOTHTeamYellow = createItem(new ItemStack(Material.YELLOW_WOOL), "&eYellow Team", "&fClick with this item to change KOTH teams!");
 // ---------------------------------------------------------------------------------------------------------------------
 
+    private String gamemode;
+    private KOTHGameHandler[] activeGames;
+
+    /**
+     * Constructor that initiates this area's list of players, the area name, and the KOTH teams
+     */
     public KOTHLobbyHandler (MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         // Create new list of players for this area
         areaPlayers = new ArrayList<>();
         areaName = "KOTHLobby";
+        gamemode = "default";
+        activeGames = new KOTHGameHandler[9];       // An array of the possible active games, each index correlates to a map
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHGreen", " ⧫ ", "Green", null, ChatColor.GREEN,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHYellow", " ⧫ ", "Yellow", null, ChatColor.YELLOW,false, true, NameTagVisibility.ALWAYS);
-    }
-
-    //KOTH LOBBY FEATURES-----------------------------------------------------------------------------------------------
-
-    @Override
-    public void addPlayer(GamePlayer gamePlayer) {
-        gamePlayer.setCurrentArea(this);
-        gamePlayer.setIsInGame(false);
-        gamePlayer.setIsGameReady(false);
-        areaPlayers.add(new KOTHPlayer(gamePlayer));
     }
 
     /**
@@ -82,9 +78,8 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     @EventHandler
     public void onKitSelect (PlayerInteractAtEntityEvent event) {
         Entity clicked = event.getRightClicked();
-        //Hold the player entity
+        // Hold the player entity
         Player MCPlayer = event.getPlayer();
-        Set<String> tags = event.getPlayer().getScoreboardTags();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
         // Find gamePlayer's area
@@ -92,37 +87,39 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
         //Check for valid click and for an armor stand interaction
         if (clicked.getType() == EntityType.ARMOR_STAND && currentArea.equals("KOTHLobby")) {
+            KOTHPlayer KOTHPlayer = (KOTHPlayer)gamePlayer;
             //Hold the location of armor stand "kit" to be selected
             String kitName = clicked.getName();
             //Check if the player has selected a valid kit entity and selects the specified class
                 //Damage kits
             if (kitName.equals("§4Striker"))  {       //Striker
-                changeKit(MCPlayer, "KOTH_kit_Striker");
+                changeKitName(MCPlayer, "KOTH_kit_Striker");
+                KOTHPlayer.setKit(new KitStriker(KOTHPlayer));
                 MCPlayer.sendTitle("Striker", "Deal damage, and take it too");
             }
             if (kitName.equals("§4Orc")) {        //Orc
-                changeKit(MCPlayer, "KOTH_kit_Striker");
+                changeKitName(MCPlayer, "KOTH_kit_Striker");
                 MCPlayer.sendTitle("Orc", "Mean and green with a devastating axe");
             }
             if (kitName.equals("§4Pyro")) {        //Pyro
-                changeKit(MCPlayer, "KOTH_kit_Pyro");
+                changeKitName(MCPlayer, "KOTH_kit_Pyro");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4Sayain")) {        //Saiyan
-                changeKit(MCPlayer, "KOTH_kit_Saiyan");
+                changeKitName(MCPlayer, "KOTH_kit_Saiyan");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
                 //Tank kits
             if (kitName.equals("§1Knight")) {        //Kight
-                changeKit(MCPlayer, "KOTH_kit_Tank");
+                changeKitName(MCPlayer, "KOTH_kit_Tank");
                 MCPlayer.sendTitle("Knight", "Try pushing me off now");
             }
             if (kitName.equals("§1TMNT")) {        //TMNT
-                changeKit(MCPlayer, "KOTH_kit_TMNT");
+                changeKitName(MCPlayer, "KOTH_kit_TMNT");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§1Trapper")) {        //Trapper
-                changeKit(MCPlayer, "KOTH_kit_Trapper ");
+                changeKitName(MCPlayer, "KOTH_kit_Trapper ");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4CockNBalls")) {        //Number 4
@@ -130,15 +127,15 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             }
                 //Ranged kits
             if (kitName.equals("§2Archer")) {        //Archer
-                changeKit(MCPlayer, "KOTH_kit_Archer");
+                changeKitName(MCPlayer, "KOTH_kit_Archer");
                 MCPlayer.sendTitle("Archer", "Yeah, I shoot stuff");
             }
             if (kitName.equals("§2Sniper")) {        //Sniper
-                changeKit(MCPlayer, "KOTH_kit_Sniper");
+                changeKitName(MCPlayer, "KOTH_kit_Sniper");
                 MCPlayer.sendTitle("Sniper", "Lol, get OPed");
             }
             if (kitName.equals("§aIce Spirit")) {        //Ice Spirit
-                changeKit(MCPlayer, "KOTH_kit_IceSpirit");
+                changeKitName(MCPlayer, "KOTH_kit_IceSpirit");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4CockNBalls")) {//Number 4
@@ -146,36 +143,36 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             }
                 //Magic kits
             if (kitName.equals("§dWarper")) {        //Warper
-               changeKit(MCPlayer, "KOTH_kit_Warper");
+               changeKitName(MCPlayer, "KOTH_kit_Warper");
                 MCPlayer.sendTitle("Warper", "You're neither here nor there");
             }
             if (kitName.equals("§dClockmaster")) {        //Clock Master
-                changeKit(MCPlayer, "KOTH_kit_ClockMaster");
+                changeKitName(MCPlayer, "KOTH_kit_ClockMaster");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§dwizard")) {        //Wizard
-                changeKit(MCPlayer, "KOTH_kit_Wizard");
+                changeKitName(MCPlayer, "KOTH_kit_Wizard");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§dDruid")) {        //Druid
-                changeKit(MCPlayer, "KOTH_kit_Druid");
+                changeKitName(MCPlayer, "KOTH_kit_Druid");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
                 //Misc. kits
             if (kitName.equals("§3Fisherman")) {        //Fisherman
-                changeKit(MCPlayer, "KOTH_kit_Fisherman");
+                changeKitName(MCPlayer, "KOTH_kit_Fisherman");
                 MCPlayer.sendTitle("Sorry", "Yank and smack, but don't tell your mom");
             }
             if (kitName.equals("§bOcean Man")) {        //Ocean man
-                changeKit(MCPlayer, "KOTH_kit_OceanMan");
+                changeKitName(MCPlayer, "KOTH_kit_OceanMan");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§bBird Person")) {        //Bird Person
-                changeKit(MCPlayer, "KOTH_kit_BirdPerson");
+                changeKitName(MCPlayer, "KOTH_kit_BirdPerson");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
             if (kitName.equals("§bSpider")) {        //Spider Man
-                changeKit(MCPlayer, "KOTH_kit_SpiderMan");
+                changeKitName(MCPlayer, "KOTH_kit_SpiderMan");
                 MCPlayer.sendTitle("Sorry", "This class is not available yet");
             }
         }
@@ -186,7 +183,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
      * @param MCPlayer
      * @param kit
      */
-    public void changeKit (Player MCPlayer, String kit) {
+    public void changeKitName(Player MCPlayer, String kit) {
         //Iterate through game players
         for (GamePlayer gamePlayer : areaPlayers) {
             //Check if the current player matches the list reference player
@@ -194,9 +191,9 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 //Type cast the list reference player into a KOTHPlayer
                 KOTHPlayer referenceKOTH = (KOTHPlayer) gamePlayer;
                 //Remove the currently held kit from the mcPlayer
-                MCPlayer.removeScoreboardTag(referenceKOTH.getPlayerKit());
+                MCPlayer.removeScoreboardTag(referenceKOTH.getKitName());
                 //Change the currently held kit from the KOTHPlayer to the new kit
-                referenceKOTH.changePlayerKit(kit);
+                referenceKOTH.changePlayerKitName(kit);
                 //Add the new kit tag to the mcPlayer
                 MCPlayer.addScoreboardTag(kit);
                 //Stop iterating
@@ -208,11 +205,22 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     //Map Selection
 
 
-    //Gamemode selection (teams or no teams)
+    // Gamemode selection (teams or no teams)
+    public void setGamemode(String gamemode) {
+        this.gamemode = gamemode;
+    }
 
-    //Team Selection
+    @Override
+    public void addPlayer(GamePlayer gamePlayer) {
+        gamePlayer.setCurrentArea(this);
+        gamePlayer.setIsInGame(false);
+        gamePlayer.setIsGameReady(false);
+        areaPlayers.add(new KOTHPlayer(gamePlayer));
+    }
 
-    //Enter Que/Ready up
+    public void startGame() {
+
+    }
 
     /**
      * Handles lobby hot bar menu items
@@ -229,8 +237,22 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
         // For all players in the KOTH Lobby...
         if (currentArea.equals("KOTHLobby")) {
+
+            // START BUTTON
+            // Detect when player right-clicks a block
+            if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK) {
+                // Define button location
+                Location KOTHStartButtonLoc = new Location(Bukkit.getWorld("world"), 8, -59, -631);
+                // Detect click on button
+                if (event.getClickedBlock().getLocation().equals(KOTHStartButtonLoc)) {
+                    // Create new game
+                    MCPlayer.sendMessage("Detected KOTH start!");
+                }
+            }
+
+            // ITEM FUNCTIONALITY
             // Detect when player right-clicks
-            if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
+            else if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK)
                 // Detect click with an item
                 if (MCPlayer.getItemInHand().getItemMeta() != null) {
                     // QUEUE ITEM
@@ -346,7 +368,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
             // Transport player to main hub
             MCPlayer.teleport(Locations.mainHub);       // Prevents duplicate sends
-            lastPortalTask = GeneralLobbyHandler.sendMainHub(MCPlayer);
+            GeneralLobbyHandler.sendMainHub(MCPlayer);
         }
     }
 }

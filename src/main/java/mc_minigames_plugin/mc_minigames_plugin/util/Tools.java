@@ -2,11 +2,14 @@ package mc_minigames_plugin.mc_minigames_plugin.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.NameTagVisibility;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -33,13 +36,60 @@ public class Tools {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.translateAlternateColorCodes('&', itemName));
 
-        List<String> lores = new ArrayList<>();
-        for (String s : lore) {
-            lores.add(ChatColor.translateAlternateColorCodes('&', s));
+        if (lore != null) {
+            List<String> lores = new ArrayList<>();
+            for (String s : lore)
+                lores.add(ChatColor.translateAlternateColorCodes('&', s));
+            // Check for empty lore
+            if (!lores.contains(""))
+                meta.setLore(lores);
         }
-        meta.setLore(lores);
         item.setItemMeta(meta);
         return item;
+    }
+
+    /**
+     * Method that creates an item with a specified name and lore.
+     *
+     * @param item the item to create
+     * @param itemName the item's display name
+     * @param lore the item's description
+     * @return your custom made item
+     */
+    public static ItemStack createItem(ItemStack item, String itemName, boolean isUnbreakable, String ... lore) {
+        // Create basic item using existing method
+        ItemStack specialItem = createItem(item, itemName, lore);
+        // Retrieve new item meta
+        ItemMeta meta = specialItem.getItemMeta();
+        // Set unbreakability
+        meta.setUnbreakable(isUnbreakable);
+        // Update item meta
+        specialItem.setItemMeta(meta);
+
+        return specialItem;
+    }
+
+    /**
+     * Method that creates an item with a specified name and lore.
+     *
+     * @param item the item to create
+     * @param itemName the item's display name
+     * @param lore the item's description
+     * @return your custom made item
+     */
+    public static ItemStack createItem(ItemStack item, String itemName, short durability, String ... lore) {
+        // Create basic item using existing method
+        ItemStack specialItem = createItem(item, itemName, lore);
+        // Set durability
+        specialItem.setDurability(durability);
+
+        return specialItem;
+    }
+
+    public static void addPotionItemEffect(ItemStack potionItem, PotionEffectType potionEffectType, int duration, int amplifier, boolean overwrite) {
+        PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
+        potionMeta.addCustomEffect(new PotionEffect(potionEffectType, duration, amplifier), overwrite);
+        potionItem.setItemMeta(potionMeta);
     }
 
     /**

@@ -6,11 +6,6 @@ import org.bukkit.entity.Player;
 
 public class MMPlayer extends GamePlayer {
 
-
-    public MMPlayer(Player MCPlayer, PlayerArea currentArea) {
-        super(MCPlayer, currentArea);
-    }
-
     public MMPlayer(GamePlayer gamePlayer) {
         super(gamePlayer);
     }

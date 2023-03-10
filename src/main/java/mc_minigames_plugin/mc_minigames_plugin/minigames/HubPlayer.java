@@ -5,6 +5,10 @@ import org.bukkit.entity.Player;
 public class HubPlayer extends GamePlayer {
     //FIELDS
 
+    /**
+     * Called the very first time a player joins, converting the MCPlayer
+     * into a GamePlayer object.
+     */
     public HubPlayer(Player MCPlayer, PlayerArea currentArea) {
         super(MCPlayer, currentArea);
     }
