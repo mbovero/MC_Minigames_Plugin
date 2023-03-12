@@ -22,7 +22,7 @@ public class MapCastleOfDreams extends Map{
                 new Location (Bukkit.getWorld("world"), -899, 12, 8, -180, 0),
                 new Location (Bukkit.getWorld("world"), -907, 12, 0, -180, 0),
                 new Location (Bukkit.getWorld("world"), -899, 12, -7, -180, 0)};
-        this.lowSWBound = new int[0];
-        this.highNEBound = new int[0];
+        this.lowSWBound = new int[]{1, 2, 3};
+        this.highNEBound = new int[]{1, 2, 3};
     }
 }

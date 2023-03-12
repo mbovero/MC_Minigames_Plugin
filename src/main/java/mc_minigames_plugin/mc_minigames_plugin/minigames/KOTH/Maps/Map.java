@@ -18,12 +18,15 @@ public abstract class Map {
      * Randomly teleports an ArrayList of gamePlayers to this map's respawn locations.
      */
     public void tpAll(ArrayList<GamePlayer> playersToTeleport) {
+
+        // CHANGE TO ASSIGN EACH PLAYER THEIR OWN SPAWN LOCATION
+
         // Setup
         Random rand = new Random();
         int respawnLocCount = this.respawnLocs.length;
         // Teleport each gamePlayer to a random respawn location
         for (GamePlayer gamePlayer : playersToTeleport)
-            gamePlayer.getPlayer().teleport(this.respawnLocs[(rand.nextInt(respawnLocCount) + 1)]);
+            gamePlayer.getPlayer().teleport(this.respawnLocs[rand.nextInt(respawnLocCount)]);
     }
 
     /**

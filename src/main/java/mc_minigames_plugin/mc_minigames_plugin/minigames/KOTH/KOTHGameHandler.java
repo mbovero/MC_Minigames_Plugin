@@ -7,6 +7,7 @@ import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.Map;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.MapCastleOfDreams;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
+import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,12 +39,20 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
      * and begins other initial game functions.
      */
     public void gameStart() {
-        // Update all game players' data / MCPlayers
+        // Update/reset all players'
         for (GamePlayer gamePlayer : areaPlayers)
         {
+            // Change gamePlayer's current area to this game
             gamePlayer.setCurrentArea(this);
+            // Set gamePlayer to be inGame
             gamePlayer.setIsInGame(true);
+            // Reset MCPlayer's tags, scores, flight, potion effects, health, hunger, and inventory
+            Tools.resetAllKOTH(gamePlayer.getPlayer());
         }
+
+        // Tp all MCPlayers to this game's map
+        this.map.tpAll(areaPlayers);
+
         // Give everyone their kit abilities and items
 
         // Initialize game timers

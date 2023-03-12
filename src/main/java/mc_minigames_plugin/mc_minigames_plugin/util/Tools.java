@@ -146,6 +146,19 @@ public class Tools {
     }
 
     /**
+     * Resets all the player's data according to KOTH game needs
+     */
+    public static void resetAllKOTH(Player MCPlayer) {
+        resetTags(MCPlayer);
+        resetScores(MCPlayer);
+        resetFlight(MCPlayer);
+        resetPotionEffects(MCPlayer);
+        resetHealth(MCPlayer);
+        resetHunger(MCPlayer);
+        resetInventory(MCPlayer);
+    }
+
+    /**
      * Removes the player from whatever team they were on
      */
     public static void resetTeam(Player MCPlayer) {

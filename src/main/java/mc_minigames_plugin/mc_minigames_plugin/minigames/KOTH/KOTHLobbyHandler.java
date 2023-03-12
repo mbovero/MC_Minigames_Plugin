@@ -52,9 +52,13 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     private static final ItemStack KOTHTeamYellow = createItem(new ItemStack(Material.YELLOW_WOOL), "&eYellow Team", "&fClick with this item to change KOTH teams!");
 // ---------------------------------------------------------------------------------------------------------------------
 
-    private String selectedGamemode;              // The KOTH gamemode that is currently selected
-    private Map selectedMap;                 // The KOTH map that is currently selected
-    private KOTHGameHandler[] activeGames;        // A list of the currently running KOTH games
+    private String selectedGamemode;                // The KOTH gamemode that is currently selected
+    private Map selectedMap;                        // The KOTH map that is currently selected
+    private final KOTHGameHandler[] activeGames;    // A list of the currently running KOTH games
+
+    private boolean isStartingGame;                 // Whether a game is currently starting or not
+    private final DelayedTask[] countdownTasks;     // Stores the game start countdown's delayed tasks to allow for start cancellation
+
 
     /**
      * Constructor that initiates this area's list of players, the area name, and the KOTH teams
@@ -68,6 +72,8 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         selectedGamemode = "default";
         selectedMap = new MapCastleOfDreams();
         activeGames = new KOTHGameHandler[9];       // An array of the possible active games, each index correlates to a map
+        isStartingGame = false;
+        countdownTasks = new DelayedTask[11];
         // Create KOTH teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHRed", " ⧫ ", "Red", null, ChatColor.RED,false, true, NameTagVisibility.ALWAYS);
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "KOTHBlue", " ⧫ ", "Blue", null, ChatColor.BLUE,false, true, NameTagVisibility.ALWAYS);
@@ -78,7 +84,6 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     /**
      * This observer method activates when a player interacts with a "Class Kit" armor
      * stand in the KOTH lobby and assigns the player the respective kit
-     * @param event
      */
     @EventHandler
     public void onKitSelect (PlayerInteractAtEntityEvent event) {
@@ -264,23 +269,72 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
      * inside the KOTHGame's list of players.
      */
     public void startNewGame() {
-        // Get list of ready players
-        ArrayList<GamePlayer> readyPlayers = getReadyPlayers();
-        // Start the game if there is a ready player
-        if (readyPlayers.size() > 0) {
-            for (GamePlayer gamePlayer : this.areaPlayers)
-                gamePlayer.getPlayer().sendMessage("Starting a new KOTH game...");
-            // Create new KOTHGame
-            this.activeGames[0] = new KOTHGameHandler((MC_Minigames_Plugin) plugin, readyPlayers, selectedGamemode, selectedMap);        // Change to insert into correct map slot
-            // Remove ready players from this lobby
-            this.areaPlayers.removeAll(readyPlayers);
-        }
+        // If a game is not already starting...
+        if (!isStartingGame) {
+            // Start countdown if there is a ready player
+            if (getReadyPlayers().size() > 0) {
+                // Update boolean
+                isStartingGame = true;
+                // Alert all players in the lobby that a new game is starting
+                for (GamePlayer gamePlayer : this.areaPlayers)
+                    gamePlayer.getPlayer().sendMessage(ChatColor.GREEN + "Starting a new KOTH game...");
 
+                // Create and store delayed task to ACTUALLY START a new game
+                countdownTasks[0] = new DelayedTask(() -> {
+                    // Create new KOTHGame
+                    this.activeGames[0] = new KOTHGameHandler((MC_Minigames_Plugin) plugin, getReadyPlayers(), selectedGamemode, selectedMap);        // Change to insert into correct map slot
+                    // Remove ready players from this lobby
+                    this.areaPlayers.removeAll(getReadyPlayers());
+                }, 20*11);  // Start after 11 seconds
+
+
+                // Count down
+                // for 10 -> 1 seconds, schedule delayed task and store in array of ids
+                long delay = 1;     // Seperate variable for task delay time (seconds)
+                for (int t=10; t>0; t--, delay++) {
+                    int time = t;     // Stored cause lambda gets angry >:(
+                    // Create and store new delayed task...
+                    countdownTasks[t] = new DelayedTask(() -> {
+                        // Cancel game start if there are no longer queued players
+                        if (getReadyPlayers().size() < 1)
+                            cancelNewGame();
+                        // Otherwise, display countdown to all ready players
+                        for (GamePlayer gamePlayer : getReadyPlayers())
+                            gamePlayer.getPlayer().sendTitle(ChatColor.GOLD + "" + time, "");
+                    }, 20*delay);
+                }
+            }
+            // If no players are ready
+            else
+                // Alert lobby players that someone must be ready to start a game
+                for (GamePlayer gamePlayer : this.areaPlayers)
+                    gamePlayer.getPlayer().sendMessage(ChatColor.RED + "Players must enter the queue to start a KOTH game!");
+        }
+        // If a game is already starting, cancel the currently starting game
+        else
+            cancelNewGame();
     }
 
     /**
-     * Handles lobby hot bar menu items
+     * Cancels the currently starting KOTH game, updating necessary fields, cancelling tasks,
+     * and alerting lobby players.
      */
+    public void cancelNewGame() {
+        // Update boolean
+        isStartingGame = false;
+        // Cancel running delayed tasks
+        for (DelayedTask task : countdownTasks)
+            Bukkit.getScheduler().cancelTask(task.getId());
+        // Alert all players that the game was cancelled
+        for (GamePlayer gamePlayer : this.areaPlayers) {
+            gamePlayer.getPlayer().sendMessage(ChatColor.RED + "The starting KOTH game was cancelled");
+            gamePlayer.getPlayer().clearTitle();    // Clear countdown title
+        }
+    }
+
+        /**
+         * Handles lobby hot bar menu items
+         */
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Setup
@@ -297,14 +351,14 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             // Detect when player right-clicks
             if (event.getAction() == Action.RIGHT_CLICK_AIR || event.getAction() == Action.RIGHT_CLICK_BLOCK) {
 
-                // START BUTTON
+                // START/CANCEL NEW GAME BUTTON
                 // Detect when player right-clicks a block
                 if (event.getClickedBlock() != null && event.getAction() == Action.RIGHT_CLICK_BLOCK && MCPlayer.getItemInHand().getItemMeta() == null) {
                     // Define button location
                     Location KOTHStartButtonLoc = new Location(Bukkit.getWorld("world"), 8, -59, -631);
                     // Detect click on button
                     if (event.getClickedBlock().getLocation().equals(KOTHStartButtonLoc)) {
-                        // Create new KOTH game
+                        // If a game is not already starting
                         startNewGame();
                     }
                 }
