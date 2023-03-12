@@ -4,15 +4,18 @@ import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.Map;
-import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.MapCastleOfDreams;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +39,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
 
     /**
      * Begins this KOTHGame, updates the gamePlayers currentAreas and isInGame values,
-     * and begins other initial game functions.
+     * and begins other initial game functions
      */
     public void gameStart() {
         // Update/reset all players'
@@ -46,45 +49,71 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
             gamePlayer.setCurrentArea(this);
             // Set gamePlayer to be inGame
             gamePlayer.setIsInGame(true);
+
             // Reset MCPlayer's tags, scores, flight, potion effects, health, hunger, and inventory
             Tools.resetAllKOTH(gamePlayer.getPlayer());
+            // Give player kit gear
+            ((KOTHPlayer)gamePlayer).getKit().giveBasicGear();
+            // Alert players of game start
+            gamePlayer.getPlayer().playSound(gamePlayer.getPlayer(), Sound.BLOCK_NOTE_BLOCK_BIT, 5, 2);
+            gamePlayer.getPlayer().sendTitle(ChatColor.GOLD + "KOTH", "");
+            gamePlayer.getPlayer().playSound(gamePlayer.getPlayer(), Sound.ENTITY_ENDER_DRAGON_GROWL, 5, .1F);
         }
 
         // Tp all MCPlayers to this game's map
         this.map.tpAll(areaPlayers);
-
-        // Give everyone their kit abilities and items
 
         // Initialize game timers
         // Initialize game specific blocks and objects
         // Scoreboard displays
 
         // Stop game in 5 seconds
-        new DelayedTask(this::gameStop, 100);
+        new DelayedTask(this::gameStop, 20*10);
     }
 
     // Running Game
     /**
-     * Updates KOTHPlayer's kills/kill rewards when they kill another player.
+     * Updates KOTHPlayer's kills/kill rewards when they kill another player
      */
     @EventHandler
-    public void onPlayerKill(PlayerDeathEvent event) {
+    public void onPlayerDeath(PlayerDeathEvent event) {
         // Store player that died
         Player MCPlayer = event.getPlayer();
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-
         // Check that player died in this game
         if (!gamePlayer.getCurrentArea().getAreaName().equals(this.areaName))
             return;
-
-        // Store killer
+        // Store MC killer
         Player MCKiller = event.getPlayer().getKiller();
+        // Check that killer is not null
+        if(MCKiller == null)
+            return;
+        // Locate killer's gamePlayer
         GamePlayer gameKiller = findPlayer(MCKiller);
-
         // Check that the killer exists in this KOTHGame
-        if(MCKiller != null && gameKiller.getCurrentArea().getAreaName().equals(this.areaName)) {
+        if(gameKiller.getCurrentArea().getAreaName().equals(this.areaName)) {
             // Update KOTHPlayer kills
             ((KOTHPlayer)gameKiller).updateKills();
+        }
+    }
+
+    /**
+     * Randomly respawns game players at the map's possible respawn locations with
+     * their kit's gear
+     */
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        // Store player that is respawning
+        Player MCPlayer = event.getPlayer();
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Check that player is respawning in this game
+        if (gamePlayer.getCurrentArea().getAreaName().equals(this.areaName)) {
+            // Set respawn location
+            event.setRespawnLocation(this.map.randomRespawnLoc());
+            // Reset MCPlayer's tags, scores, flight, potion effects, health, hunger, and inventory
+            Tools.resetAllKOTH(gamePlayer.getPlayer());
+            // Give player kit gear
+            ((KOTHPlayer)gamePlayer).getKit().giveBasicGear();
         }
     }
 
@@ -102,7 +131,22 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
             gamePlayer.getPlayer().sendMessage("Stopped KOTH game");
         }
 
-        // Remove this game from the KOTHLobby game list
+        // Remove this game from the KOTHLobby game list after some time
+        new DelayedTask(this::gameKill, 20);    // Allows gamePlayers to be moved before deleting this game area
+    }
+
+    /**
+     * Removes this game from KOTHLobbyHandler's list of active games and
+     * unregisters this game's Event Handlers.
+     */
+    public void gameKill() {
+        KOTHGameHandler[] activeGames = KOTHLobbyHandler.getActiveGames();
+        for (int i=0; i<activeGames.length; i++)
+            if (activeGames[i] == this) {
+                activeGames[i] = null;
+                HandlerList.unregisterAll(this);
+                return;
+            }
     }
 
     // Never used?

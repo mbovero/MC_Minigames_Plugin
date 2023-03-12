@@ -143,6 +143,7 @@ public class Tools {
         resetHealth(MCPlayer);
         resetHunger(MCPlayer);
         resetInventory(MCPlayer);
+        resetDisplayName(MCPlayer);
     }
 
     /**
@@ -237,5 +238,12 @@ public class Tools {
     public static void resetInventory(Player MCPlayer) {
         Inventory inv = MCPlayer.getInventory();
         inv.clear();
+    }
+
+    /**
+     * Resets the player's display name to their actual username
+     */
+    public static void resetDisplayName(Player MCPlayer) {
+        MCPlayer.setDisplayName(MCPlayer.getName());
     }
 }

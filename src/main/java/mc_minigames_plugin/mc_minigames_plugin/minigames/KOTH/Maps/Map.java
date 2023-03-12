@@ -37,7 +37,18 @@ public abstract class Map {
         Random rand = new Random();
         int respawnLocCount = this.respawnLocs.length;
         // Teleport gamePlayer to a random respawn location
-        playerToTeleport.getPlayer().teleport(this.respawnLocs[(rand.nextInt(respawnLocCount) + 1)]);
+        playerToTeleport.getPlayer().teleport(this.respawnLocs[rand.nextInt(respawnLocCount)]);
+    }
+
+    /**
+     * Randomly returns one of this map's respawn locations.
+     */
+    public Location randomRespawnLoc() {
+        // Setup
+        Random rand = new Random();
+        int respawnLocCount = this.respawnLocs.length;
+        // Return a random respawn location
+        return this.respawnLocs[rand.nextInt(respawnLocCount)];
     }
 
     /**

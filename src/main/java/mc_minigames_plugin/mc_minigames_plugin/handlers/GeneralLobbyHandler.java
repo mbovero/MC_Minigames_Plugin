@@ -106,6 +106,8 @@ public class GeneralLobbyHandler implements Listener {
                 Tools.resetTags(MCPlayer);
                 // Reset team
                 Tools.resetTeam(MCPlayer);
+                // Reset display name
+                Tools.resetDisplayName(MCPlayer);
                 // Reset inventory
                 Tools.resetInventory(MCPlayer);
             }
@@ -144,6 +146,8 @@ public class GeneralLobbyHandler implements Listener {
                 Tools.resetTags(MCPlayer);
                 // Reset team
                 Tools.resetTeam(MCPlayer);
+                // Reset display name
+                Tools.resetDisplayName(MCPlayer);
                 // Reset inventory
                 Tools.resetInventory(MCPlayer);
             }
@@ -184,6 +188,8 @@ public class GeneralLobbyHandler implements Listener {
                 Tools.resetTags(MCPlayer);
                 // Reset team
                 Tools.resetTeam(MCPlayer);
+                // Reset display name
+                Tools.resetDisplayName(MCPlayer);
                 // Reset inventory
                 Tools.resetInventory(MCPlayer);
             }
@@ -414,7 +420,7 @@ public class GeneralLobbyHandler implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void preventEntityDeath(EntityDeathEvent event) {
         // Make sure there was a killer
-        if (event.getEntity().getKiller() == null)
+        if (event.getEntity() instanceof Player || event.getEntity().getKiller() == null)
             return;
         // Get killer as a player
         Player MCPlayer = event.getEntity().getKiller();
@@ -453,6 +459,7 @@ public class GeneralLobbyHandler implements Listener {
 
     /**
      * Prevents damage in lobbies for players not in games and not troubleshooting
+     * NOTE: This prevents the ability to /kill
      */
     @EventHandler
     public void preventDamage(EntityDamageEvent event) {

@@ -10,18 +10,18 @@ public class MapCastleOfDreams extends Map{
     public MapCastleOfDreams() {
         this.mapName = "Castle Of Dreams";
         this.respawnLocs = new Location[] {
-                new Location(Bukkit.getWorld("world"), -899, 12, 3, -180, 0),
-                new Location (Bukkit.getWorld("world"), -902, 12, 0, -180, 0),
-                new Location (Bukkit.getWorld("world"), -899, 12, -2, -180, 0),
-                new Location (Bukkit.getWorld("world"), -896, 12, 0,-180, 0),
-                new Location (Bukkit.getWorld("world"), -895, 12, 4, -180, 0),
-                new Location (Bukkit.getWorld("world"), -903, 12, 4, -180, 0),
-                new Location (Bukkit.getWorld("world"), -903, 12, -3, -180, 0),
-                new Location (Bukkit.getWorld("world"), -895, 12, -3, -180, 0),
-                new Location (Bukkit.getWorld("world"), -891, 12, 0, -180, 0),
-                new Location (Bukkit.getWorld("world"), -899, 12, 8, -180, 0),
-                new Location (Bukkit.getWorld("world"), -907, 12, 0, -180, 0),
-                new Location (Bukkit.getWorld("world"), -899, 12, -7, -180, 0)};
+                new Location(Bukkit.getWorld("world"), -899.5, 12, 8.5, 180, 0),
+                new Location (Bukkit.getWorld("world"), -903.5, 12, 4.5, 45, 0),
+                new Location (Bukkit.getWorld("world"), -899.5, 12, 3.5, 180, 0),
+                new Location (Bukkit.getWorld("world"), -895.5, 12, 4.5,-45, 0),
+                new Location (Bukkit.getWorld("world"), -907.5, 12, 0.5, -90, 0),
+                new Location (Bukkit.getWorld("world"), -902.5, 12, 0.5, 90, 0),
+                new Location (Bukkit.getWorld("world"), -896.5, 12, 0.5, -90, 0),
+                new Location (Bukkit.getWorld("world"), -891.5, 12, 0.5, 90, 0),
+                new Location (Bukkit.getWorld("world"), -903.5, 12, -3.5, 135, 0),
+                new Location (Bukkit.getWorld("world"), -899.5, 12, -2.5, 180, 0),
+                new Location (Bukkit.getWorld("world"), -895.5, 12, -3.5, -135, 0),
+                new Location (Bukkit.getWorld("world"), -899.5, 12, -7.5, 0, 0)};
         this.lowSWBound = new int[]{1, 2, 3};
         this.highNEBound = new int[]{1, 2, 3};
     }

@@ -35,7 +35,7 @@ public class KitStriker extends Kit {
         inv.clear();
 
         inv.setHelmet(helmetStriker);
-        inv.setHelmet(chestplateStriker);
+        inv.setChestplate(chestplateStriker);
         inv.setItem(0, swordStriker);
     }
 
