@@ -3,6 +3,7 @@ package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHPlayer;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -25,8 +26,11 @@ public class KitStriker extends Kit {
         swordStriker.addEnchantment(Enchantment.DAMAGE_ALL, 4);
         // Slowness potion
         Tools.addPotionItemEffect(slownessPotion, PotionEffectType.SLOW, 400, 3, true);
+        Tools.setPotionItemColor(slownessPotion, Color.fromRGB(97, 91, 90));
         // Resistance potion
         Tools.addPotionItemEffect(resistancePotion, PotionEffectType.DAMAGE_RESISTANCE, 200, 2, true);
+        Tools.setPotionItemColor(resistancePotion, Color.fromRGB(179, 177, 177));
+
     }
 
     @Override

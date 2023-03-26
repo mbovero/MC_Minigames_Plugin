@@ -311,7 +311,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                         // Otherwise...
                         else
                             // Display countdown to all ready players
-                            for (GamePlayer gamePlayer : getReadyPlayers()) {
+                            for (GamePlayer gamePlayer : this.areaPlayers) {
                                 gamePlayer.getPlayer().sendTitle(ChatColor.YELLOW + "" + time, "");
                                 gamePlayer.getPlayer().playSound(gamePlayer.getPlayer(), Sound.BLOCK_NOTE_BLOCK_BIT, 5, 1);
                             }

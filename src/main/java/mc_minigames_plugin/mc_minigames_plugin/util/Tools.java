@@ -2,6 +2,7 @@ package mc_minigames_plugin.mc_minigames_plugin.util;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -89,6 +90,19 @@ public class Tools {
     public static void addPotionItemEffect(ItemStack potionItem, PotionEffectType potionEffectType, int duration, int amplifier, boolean overwrite) {
         PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
         potionMeta.addCustomEffect(new PotionEffect(potionEffectType, duration, amplifier), overwrite);
+        potionItem.setItemMeta(potionMeta);
+    }
+
+    /**
+     * Method that assists in setting the potion color of a potion item.
+     * Tip: use Color.fromRGB(R, G, B) for custom colors
+     *
+     * @param potionItem the potion item to be changed
+     * @param color the color to set the potion item to
+     */
+    public static void setPotionItemColor(ItemStack potionItem, Color color) {
+        PotionMeta potionMeta = (PotionMeta) potionItem.getItemMeta();
+        potionMeta.setColor(color);
         potionItem.setItemMeta(potionMeta);
     }
 

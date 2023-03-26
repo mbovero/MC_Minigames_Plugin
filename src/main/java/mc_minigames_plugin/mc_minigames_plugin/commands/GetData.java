@@ -18,7 +18,7 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 public class GetData implements CommandExecutor {
 
     // List of data types
-    String list = ChatColor.AQUA + "isGameReady, isTroubleshooting, isInGame, MCPlayer, currentArea";
+    String list = ChatColor.AQUA + "isGameReady, isTroubleshooting, isInGame, MCPlayer, currentArea, KOTHKit";
 
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {

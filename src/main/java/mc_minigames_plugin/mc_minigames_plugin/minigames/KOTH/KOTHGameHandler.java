@@ -67,8 +67,8 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         // Initialize game specific blocks and objects
         // Scoreboard displays
 
-        // Stop game in 5 seconds
-        new DelayedTask(this::gameStop, 20*10);
+        // Stop game in 60 seconds
+        new DelayedTask(this::gameStop, 20*60);
     }
 
     // Running Game
