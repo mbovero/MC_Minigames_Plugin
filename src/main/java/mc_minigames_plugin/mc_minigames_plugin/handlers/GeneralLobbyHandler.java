@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 
 /**
- * Class Description: Class handles the states of game
- * lobbies and their relationships to players
+ * Class Description: Class handles the states of game,
+ * lobbies, and their relationships to players
  *
  * @author Kirt Robinson, Miles Bovero
  * @version March 6, 2023
@@ -48,7 +48,7 @@ public class GeneralLobbyHandler implements Listener {
     protected static MC_Minigames_Plugin plugin;            // Overarching plugin
 
     protected static PlayerArea mainHub;
-    protected static PlayerArea KOTHLobby;
+    protected static KOTHLobbyHandler KOTHLobby;
     protected static PlayerArea MMLobby;
 
 
@@ -203,35 +203,32 @@ public class GeneralLobbyHandler implements Listener {
     }
 
     /**
-     * Method returns the PlayerArea object that the associated player reference is currently held inside.
+     * Method returns the GamePlayer object that the provided MCPlayer is associated with.
      *
-     * @param MCPlayer
-     * @return
+     * @param MCPlayer player to find associated GamePlayer of
+     * @return GamePlayer object associated with provided MCPlayer
      */
     public static GamePlayer findPlayer(Player MCPlayer) {
-        // Iterate through every existing playerArea
+        // Search allPlayerAreas (lobbies)
         for (PlayerArea area : allPlayerAreas) {
-            // Iterate through each playerArea's list of gamePlayers
-            for (GamePlayer gamePlayer : area.getPlayers()) {
-                // Compare gamePlayer to MCPlayer
-                if (gamePlayer.isPlayer(MCPlayer)) {
-                    // If the player is found, return gamePlayer
-                    return gamePlayer;
-                }
+            // Try to retrieve gamePlayer
+            GamePlayer result = area.getAreaPlayers().get(MCPlayer.getName());
+            // Return gamePlayer if gamePlayer is found
+            if (result != null)
+                return result;
+        }
+
+        // Search KOTH games
+        if (KOTHLobby != null)
+            for (KOTHGameHandler KOTHGame : KOTHLobbyHandler.getActiveGames()) {
+                // Try to retrieve gamePlayer
+                GamePlayer result = KOTHGame.getAreaPlayers().get(MCPlayer.getName());
+                // Return gamePlayer if gamePlayer is found
+                if (result != null)
+                    return result;
             }
-            // Also search through KOTH games
-            if (area instanceof KOTHLobbyHandler)
-                // Retrieve and search through KOTHLobby active games
-                for (KOTHGameHandler KOTHGame : ((KOTHLobbyHandler) area).getActiveGames())
-                    // If the game object is not null...
-                    if (KOTHGame != null)
-                        // Iterate through game's players
-                        for (GamePlayer gamePlayer : KOTHGame.getPlayers())
-                            // Compare gamePlayer to MCPlayer
-                            if (gamePlayer.isPlayer(MCPlayer))
-                                // If the player is found, return gamePlayer
-                                return gamePlayer;
-                            }
+
+        // PROBLEMS ARE OCCURRING:
         MCPlayer.sendMessage("\nBAD BAD\n");
         return null;
     }

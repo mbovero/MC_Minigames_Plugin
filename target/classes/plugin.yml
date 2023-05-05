@@ -37,5 +37,5 @@ commands:
     usage: /getitem <item> <username>
     permission: getitem
   getdata:
-    usage: /getdata <type> <usernam>
+    usage: /getdata <type> <username>
     permission: getdata

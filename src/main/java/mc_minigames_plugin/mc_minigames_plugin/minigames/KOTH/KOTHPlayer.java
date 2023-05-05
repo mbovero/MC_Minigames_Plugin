@@ -6,7 +6,6 @@ import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KitStriker;
 
 public class KOTHPlayer extends GamePlayer {
     //FIELDS
-    String kitName;     // Player kit name          not needed?
     Kit kit;            // Player kit object
     int kills1;         // Player kill count 1
     int kills2;         // Player kill count 2
@@ -16,7 +15,6 @@ public class KOTHPlayer extends GamePlayer {
 
     public KOTHPlayer(GamePlayer gamePlayer) {
         super(gamePlayer);
-        this.kitName = "KOTH_kit_Striker";            // Assign Striker kit name by default             not needed?
         this.kit = new KitStriker(this);    // Assign Striker kit by default
     }
 
@@ -38,14 +36,6 @@ public class KOTHPlayer extends GamePlayer {
     }
 
     //Mutators
-
-    /**
-     * Mutator method to change the playerKitName field into the preferred kitName value
-     * @param kitName name to change into
-     */
-    public void changePlayerKitName(String kitName) {
-        this.kitName = kitName;
-    }
 
     /**
      * Changes this KOTHPlayer's kit object
@@ -89,12 +79,6 @@ public class KOTHPlayer extends GamePlayer {
 
 
     //Accessors
-    /**
-     * Accessor method that returns this KOTHPlayer's kit name
-     */
-    public String getKitName() {
-        return kitName;
-    }
 
     /**
      * Accessor method that returns this KOTHPlayer's kit object

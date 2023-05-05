@@ -18,7 +18,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 
 import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
 
@@ -30,7 +30,11 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
 
     public KOTHGameHandler (MC_Minigames_Plugin plugin, ArrayList<GamePlayer> gamePlayers, String gameMode, Map map) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        this.areaPlayers = gamePlayers;
+        // Update areaPlayers
+        this.areaPlayers = new HashMap<>();
+        for (GamePlayer gamePlayer : gamePlayers)
+            this.areaPlayers.put(gamePlayer.getPlayer().getName(), gamePlayer);
+
         this.gameMode = gameMode;
         this.map = map;
         areaName = this.map.getMapName();
@@ -43,7 +47,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
      */
     public void gameStart() {
         // Update/reset all players'
-        for (GamePlayer gamePlayer : areaPlayers)
+        for (GamePlayer gamePlayer : areaPlayers.values())
         {
             // Change gamePlayer's current area to this game
             gamePlayer.setCurrentArea(this);
@@ -122,8 +126,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
      */
     public void gameStop() {
         // Return all gamePlayer objects to lobby
-        List<GamePlayer> playersToReturn = new ArrayList<>(areaPlayers);
-        for (GamePlayer gamePlayer : playersToReturn) {
+        for (GamePlayer gamePlayer : areaPlayers.values()) {
             // Send/reset all game players to KOTH Lobby
             GeneralLobbyHandler.sendKOTHLobby(gamePlayer);
 

@@ -3,7 +3,7 @@ package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import org.bukkit.Location;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public abstract class Map {
@@ -17,7 +17,7 @@ public abstract class Map {
     /**
      * Randomly teleports an ArrayList of gamePlayers to this map's respawn locations.
      */
-    public void tpAll(ArrayList<GamePlayer> playersToTeleport) {
+    public void tpAll(HashMap<String, GamePlayer> playersToTeleport) {
 
         // CHANGE TO ASSIGN EACH PLAYER THEIR OWN SPAWN LOCATION
 
@@ -25,7 +25,7 @@ public abstract class Map {
         Random rand = new Random();
         int respawnLocCount = this.respawnLocs.length;
         // Teleport each gamePlayer to a random respawn location
-        for (GamePlayer gamePlayer : playersToTeleport)
+        for (GamePlayer gamePlayer : playersToTeleport.values())
             gamePlayer.getPlayer().teleport(this.respawnLocs[rand.nextInt(respawnLocCount)]);
     }
 

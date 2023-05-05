@@ -28,6 +28,7 @@ import org.bukkit.scoreboard.NameTagVisibility;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.*;
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
@@ -69,7 +70,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
         // Create new list of players for this area
-        areaPlayers = new ArrayList<>();
+        areaPlayers = new HashMap<>();
         areaName = "KOTHLobby";
         selectedGamemode = "default";
         selectedMap = new MapCastleOfDreams();
@@ -104,35 +105,34 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             //Check if the player has selected a valid kit entity and selects the specified class
                 //Damage kits
             if (kitName.equals("§4Striker"))  {       //Striker
-                changeKitName(MCPlayer, "KOTH_kit_Striker");
                 KOTHPlayer.setKit(new KitStriker(KOTHPlayer));
                 MCPlayer.sendTitle(ChatColor.DARK_RED + "Striker", "Deal damage, and take it too");
                 MCPlayer.setDisplayName(MCPlayer.getName() + ChatColor.translateAlternateColorCodes('&', " &7<&4&oStriker&7>"));
                 MCPlayer.setPlayerListFooter(ChatColor.translateAlternateColorCodes('&', "&7Selected Kit: <&4&oStriker&7>"));
             }
             if (kitName.equals("§4Orc")) {        //Orc
-                changeKitName(MCPlayer, "KOTH_kit_Striker");
+
                 MCPlayer.sendTitle(ChatColor.DARK_RED + "Orc", "Mean and green with a devastating axe");
             }
             if (kitName.equals("§4Pyro")) {        //Pyro
-                changeKitName(MCPlayer, "KOTH_kit_Pyro");
+
                 MCPlayer.sendTitle(ChatColor.DARK_RED + "Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4Sayain")) {        //Saiyan
-                changeKitName(MCPlayer, "KOTH_kit_Saiyan");
+
                 MCPlayer.sendTitle(ChatColor.DARK_RED + "Sorry", "This class is not available yet");
             }
                 //Tank kits
             if (kitName.equals("§1Knight")) {        //Kight
-                changeKitName(MCPlayer, "KOTH_kit_Tank");
+
                 MCPlayer.sendTitle(ChatColor.DARK_BLUE + "Knight", "Try pushing me off now");
             }
             if (kitName.equals("§1TMNT")) {        //TMNT
-                changeKitName(MCPlayer, "KOTH_kit_TMNT");
+
                 MCPlayer.sendTitle(ChatColor.DARK_BLUE + "Sorry", "This class is not available yet");
             }
             if (kitName.equals("§1Trapper")) {        //Trapper
-                changeKitName(MCPlayer, "KOTH_kit_Trapper ");
+
                 MCPlayer.sendTitle(ChatColor.DARK_BLUE + "Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4CockNBalls")) {        //Number 4
@@ -140,15 +140,15 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             }
                 //Ranged kits
             if (kitName.equals("§2Archer")) {        //Archer
-                changeKitName(MCPlayer, "KOTH_kit_Archer");
+
                 MCPlayer.sendTitle(ChatColor.DARK_GREEN + "Archer", "Yeah, I shoot stuff");
             }
             if (kitName.equals("§2Sniper")) {        //Sniper
-                changeKitName(MCPlayer, "KOTH_kit_Sniper");
+
                 MCPlayer.sendTitle(ChatColor.DARK_GREEN + "Sniper", "Lol, get OPed");
             }
             if (kitName.equals("§aIce Spirit")) {        //Ice Spirit
-                changeKitName(MCPlayer, "KOTH_kit_IceSpirit");
+
                 MCPlayer.sendTitle(ChatColor.DARK_GREEN + "Sorry", "This class is not available yet");
             }
             if (kitName.equals("§4CockNBalls")) {//Number 4
@@ -156,61 +156,37 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             }
                 //Magic kits
             if (kitName.equals("§dWarper")) {        //Warper
-               changeKitName(MCPlayer, "KOTH_kit_Warper");
+
                 MCPlayer.sendTitle(ChatColor.LIGHT_PURPLE + "Warper", "You're neither here nor there");
             }
             if (kitName.equals("§dClockmaster")) {        //Clock Master
-                changeKitName(MCPlayer, "KOTH_kit_ClockMaster");
+
                 MCPlayer.sendTitle(ChatColor.LIGHT_PURPLE + "Sorry", "This class is not available yet");
             }
             if (kitName.equals("§dwizard")) {        //Wizard
-                changeKitName(MCPlayer, "KOTH_kit_Wizard");
+
                 MCPlayer.sendTitle(ChatColor.LIGHT_PURPLE + "Sorry", "This class is not available yet");
             }
             if (kitName.equals("§dDruid")) {        //Druid
-                changeKitName(MCPlayer, "KOTH_kit_Druid");
+
                 MCPlayer.sendTitle(ChatColor.LIGHT_PURPLE + "Sorry", "This class is not available yet");
             }
                 //Misc. kits
             if (kitName.equals("§3Fisherman")) {        //Fisherman
-                changeKitName(MCPlayer, "KOTH_kit_Fisherman");
+
                 MCPlayer.sendTitle(ChatColor.AQUA + "Fisherman", "Yank and smack, but don't tell your mom");
             }
             if (kitName.equals("§bOcean Man")) {        //Ocean man
-                changeKitName(MCPlayer, "KOTH_kit_OceanMan");
+
                 MCPlayer.sendTitle(ChatColor.AQUA + "Sorry", "This class is not available yet");
             }
             if (kitName.equals("§bBird Person")) {        //Bird Person
-                changeKitName(MCPlayer, "KOTH_kit_BirdPerson");
+
                 MCPlayer.sendTitle(ChatColor.AQUA + "Sorry", "This class is not available yet");
             }
             if (kitName.equals("§bSpider")) {        //Spider Man
-                changeKitName(MCPlayer, "KOTH_kit_SpiderMan");
-                MCPlayer.sendTitle(ChatColor.AQUA + "Sorry", "This class is not available yet");
-            }
-        }
-    }
 
-    /**
-     * Method to change the player's current kit into the selected kit
-     * @param MCPlayer
-     * @param kit
-     */
-    public void changeKitName(Player MCPlayer, String kit) {
-        //Iterate through game players
-        for (GamePlayer gamePlayer : areaPlayers) {
-            //Check if the current player matches the list reference player
-            if (gamePlayer.isPlayer(MCPlayer)) {
-                //Type cast the list reference player into a KOTHPlayer
-                KOTHPlayer referenceKOTH = (KOTHPlayer) gamePlayer;
-                //Remove the currently held kit from the mcPlayer
-                MCPlayer.removeScoreboardTag(referenceKOTH.getKitName());
-                //Change the currently held kit from the KOTHPlayer to the new kit
-                referenceKOTH.changePlayerKitName(kit);
-                //Add the new kit tag to the mcPlayer
-                MCPlayer.addScoreboardTag(kit);
-                //Stop iterating
-                break;
+                MCPlayer.sendTitle(ChatColor.AQUA + "Sorry", "This class is not available yet");
             }
         }
     }
@@ -239,12 +215,14 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         gamePlayer.setCurrentArea(this);
         gamePlayer.setIsInGame(false);
         gamePlayer.setIsGameReady(false);
-        areaPlayers.add(new KOTHPlayer(gamePlayer));
+        areaPlayers.put(gamePlayer.getPlayer().getName(), new KOTHPlayer(gamePlayer));
     }
 
     /**
-     * If the given gamePlayer is not already in the KOTHLobby, they are
-     * removed from their previous area and placed in the list of KOTHLobby players.
+     * If the given gamePlayer is not already in the KOTHLobby, they are removed
+     * from their previous area and added to the KOTHLobby's collection of players.
+     * This method also initializes a new KOTHLobbyHandler when one doesn't already
+     * exist.
      * @param gamePlayer object to be set to KOTHLobby
      */
     public static void sendPlayer(GamePlayer gamePlayer) {
@@ -269,7 +247,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     /**
      * If there is at least one player ready in the KOTHLobby, a new KOTHGame
      * is started. All ready gamePlayers are removed from this lobby and put
-     * inside the KOTHGame's list of players.
+     * inside the new KOTHGame's collection of players.
      */
     public void startNewGame() {
         // If a game is not already starting...
@@ -279,7 +257,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 // Update boolean
                 isStartingGame = true;
                 // Alert all players in the lobby that a new game is starting
-                for (GamePlayer gamePlayer : this.areaPlayers) {
+                for (GamePlayer gamePlayer : this.areaPlayers.values()) {
                     gamePlayer.getPlayer().sendMessage(ChatColor.GREEN + "Starting a new KOTH game...");
                     gamePlayer.getPlayer().playSound(gamePlayer.getPlayer(), Sound.BLOCK_BEACON_ACTIVATE, 5, 1);
                 }
@@ -289,7 +267,8 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                     // Create new KOTHGame
                     activeGames[0] = new KOTHGameHandler((MC_Minigames_Plugin) plugin, getReadyPlayers(), selectedGamemode, selectedMap);        // Change to insert into correct map slot
                     // Remove ready players from this lobby
-                    this.areaPlayers.removeAll(getReadyPlayers());
+                    for (GamePlayer gamePlayer : getReadyPlayers())
+                        this.areaPlayers.remove(gamePlayer.getPlayer().getName());
                     // Reset boolean
                     isStartingGame = false;
                 }, 20*11);  // Start after 11 seconds
@@ -305,13 +284,13 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                         if (getReadyPlayers().size() < 1) {
                             cancelNewGame();
                             // Alert players
-                            for (GamePlayer gamePlayer : this.areaPlayers)
+                            for (GamePlayer gamePlayer : this.areaPlayers.values())
                                 gamePlayer.getPlayer().sendMessage(ChatColor.RED + "All players left the queue...");
                         }
                         // Otherwise...
                         else
                             // Display countdown to all ready players
-                            for (GamePlayer gamePlayer : this.areaPlayers) {
+                            for (GamePlayer gamePlayer : this.areaPlayers.values()) {
                                 gamePlayer.getPlayer().sendTitle(ChatColor.YELLOW + "" + time, "");
                                 gamePlayer.getPlayer().playSound(gamePlayer.getPlayer(), Sound.BLOCK_NOTE_BLOCK_BIT, 5, 1);
                             }
@@ -321,7 +300,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             // If no players are ready
             else
                 // Alert lobby players that someone must be ready to start a game
-                for (GamePlayer gamePlayer : this.areaPlayers)
+                for (GamePlayer gamePlayer : this.areaPlayers.values())
                     gamePlayer.getPlayer().sendMessage(ChatColor.RED + "Players must enter the queue to start a KOTH game!");
         }
         // If a game is already starting, cancel the currently starting game
@@ -340,7 +319,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         for (DelayedTask task : countdownTasks)
             Bukkit.getScheduler().cancelTask(task.getId());
         // Alert all players that the game was cancelled
-        for (GamePlayer gamePlayer : this.areaPlayers) {
+        for (GamePlayer gamePlayer : this.areaPlayers.values()) {
             gamePlayer.getPlayer().sendMessage(ChatColor.RED + "The starting KOTH game was cancelled");
             gamePlayer.getPlayer().clearTitle();    // Clear countdown title
             gamePlayer.getPlayer().playSound(gamePlayer.getPlayer(), Sound.BLOCK_BEACON_DEACTIVATE, 5, 1);
@@ -477,7 +456,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
      */
     public ArrayList<GamePlayer> getReadyPlayers() {
         ArrayList<GamePlayer> readyPlayers = new ArrayList<>();
-        for (GamePlayer gamePlayer : this.areaPlayers)
+        for (GamePlayer gamePlayer : this.areaPlayers.values())
             if (gamePlayer.isGameReady())
                 readyPlayers.add(gamePlayer);
         return readyPlayers;

@@ -14,8 +14,8 @@ import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Team;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.*;
 
@@ -33,7 +33,7 @@ public class MainHubHandler extends PlayerArea implements Listener {
 
     public MainHubHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
-        areaPlayers = new ArrayList<>();
+        areaPlayers = new HashMap<>();
         areaName = "mainHub";
     }
 
@@ -68,7 +68,7 @@ public class MainHubHandler extends PlayerArea implements Listener {
         Player MCPlayer = event.getPlayer();
 
         // Send player to hub (reset inv and tp)
-        areaPlayers.add(new HubPlayer(MCPlayer, this));
+        areaPlayers.put(MCPlayer.getName(), new HubPlayer(MCPlayer, this));
 
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
@@ -160,7 +160,7 @@ public class MainHubHandler extends PlayerArea implements Listener {
         gamePlayer.setCurrentArea(this);
         gamePlayer.setIsInGame(false);
         gamePlayer.setIsGameReady(false);
-        areaPlayers.add(new HubPlayer(gamePlayer));
+        areaPlayers.put(gamePlayer.getPlayer().getName(), new HubPlayer(gamePlayer));
     }
 
     /**

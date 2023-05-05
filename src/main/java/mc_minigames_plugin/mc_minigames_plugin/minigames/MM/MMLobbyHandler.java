@@ -11,7 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.NameTagVisibility;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.*;
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
@@ -33,7 +33,7 @@ public class MMLobbyHandler extends PlayerArea implements Listener {
     public MMLobbyHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         // Create new list of players for this area
-        areaPlayers = new ArrayList<>();
+        areaPlayers = new HashMap<>();
         areaName = "MMLobby";
         // Create MM teams
         Tools.newTeam(Bukkit.getScoreboardManager().getMainScoreboard(), "MMRed", " ⧫ ", "Red", null, ChatColor.RED, false, true, NameTagVisibility.ALWAYS);
@@ -53,7 +53,7 @@ public class MMLobbyHandler extends PlayerArea implements Listener {
         gamePlayer.setCurrentArea(this);
         gamePlayer.setIsInGame(false);
         gamePlayer.setIsGameReady(false);
-        areaPlayers.add(new MMPlayer(gamePlayer));
+        areaPlayers.put(gamePlayer.getPlayer().getName(), new MMPlayer(gamePlayer));
     }
 
     /**
