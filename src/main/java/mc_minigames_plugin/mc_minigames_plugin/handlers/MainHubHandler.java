@@ -31,6 +31,9 @@ import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandl
  */
 public class MainHubHandler extends PlayerArea implements Listener {
 
+    // The location of the main hub
+    private static final Location location = new Location(Bukkit.getWorld("world"), -15.5, -43, -17.5, -45, 15);
+
     public MainHubHandler(MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         areaPlayers = new HashMap<>();
@@ -177,4 +180,9 @@ public class MainHubHandler extends PlayerArea implements Listener {
             mainHub.addPlayer(gamePlayer);
         }
     }
+
+    /**
+     * Accessor method that returns the PlayerArea's location
+     */
+    public static Location getLocation() {return location;}
 }

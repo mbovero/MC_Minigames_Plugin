@@ -1,5 +1,6 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames;
 
+import org.bukkit.Location;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -13,9 +14,7 @@ import java.util.HashMap;
 abstract public class PlayerArea {
     // FIELDS
     protected Plugin plugin;                     // Reference to master plugin for initializing new objects
-//    protected ArrayList<GamePlayer> areaPlayers; // List of current players in the specified game or lobby area
     protected HashMap<String,GamePlayer> areaPlayers; // Collection of current players in the specified game or lobby area
-
     protected String areaName;                   // The name of this area  -- DO NOT MAKE THIS STATIC
 
 
@@ -47,7 +46,6 @@ abstract public class PlayerArea {
      * Accessor method that returns the list of GamePlayer objects from the current PlayerArea
      */
     public HashMap<String,GamePlayer> getAreaPlayers () {return areaPlayers;}
-
 
 
 }

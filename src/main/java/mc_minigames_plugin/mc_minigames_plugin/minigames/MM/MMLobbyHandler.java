@@ -6,6 +6,7 @@ import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -18,7 +19,10 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 
 public class MMLobbyHandler extends PlayerArea implements Listener {
 
-// ITEMS ---------------------------------------------------------------------------------------------------------------
+    // The location of the MM lobby
+    private final static Location location = new Location(Bukkit.getWorld("world"), 0, -53, -1800, -180, 0);
+
+    // ITEMS ---------------------------------------------------------------------------------------------------------------
     // MM lobby hot bar menu items
     static ItemStack MMQueue = createItem(new ItemStack(Material.GRAY_DYE), "&7Unready", "&fClick with this item to enter the MM queue!");
     static ItemStack MMDequeue = createItem(new ItemStack(Material.LIME_DYE), "&aReady", "&fClick with this item to leave the MM queue");
@@ -79,5 +83,10 @@ public class MMLobbyHandler extends PlayerArea implements Listener {
             }
         }
     }
+
+    /**
+     * Accessor method that returns the PlayerArea's location
+     */
+    public static Location getLocation() {return location;}
 
 }

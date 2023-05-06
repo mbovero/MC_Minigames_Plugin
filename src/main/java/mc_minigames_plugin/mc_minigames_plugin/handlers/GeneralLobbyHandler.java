@@ -7,7 +7,6 @@ import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.MM.MMLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
-import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -84,9 +83,9 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param gamePlayer gamePlayer to be sent
      */
-    public static DelayedTask sendMainHub(GamePlayer gamePlayer) {
+    public static void sendMainHub(GamePlayer gamePlayer) {
         // Delay operation by some time
-        return new DelayedTask(() -> {
+        new DelayedTask(() -> {
             // Store gamePlayer's MCPlayer reference
             Player MCPlayer = gamePlayer.getPlayer();
 
@@ -96,7 +95,7 @@ public class GeneralLobbyHandler implements Listener {
             // Only do if not troubleshooting
             if (!gamePlayer.isTroubleshooting()) {
                 // Tp player
-                MCPlayer.teleport(Locations.mainHub);
+                MCPlayer.teleport(MainHubHandler.getLocation());
                 // Play tp sound
                 MCPlayer.playSound(MCPlayer, Sound.ENTITY_ENDERMAN_TELEPORT, 5, 1);
 
@@ -123,9 +122,9 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param gamePlayer gamePlayer to be sent
      */
-    public static DelayedTask sendKOTHLobby(GamePlayer gamePlayer) {
+    public static void sendKOTHLobby(GamePlayer gamePlayer) {
         // Delay operation by some time
-        return new DelayedTask(() -> {
+        new DelayedTask(() -> {
             // Store gamePlayer's MCPlayer reference
             Player MCPlayer = gamePlayer.getPlayer();
 
@@ -133,7 +132,7 @@ public class GeneralLobbyHandler implements Listener {
             KOTHLobbyHandler.sendPlayer(gamePlayer);
 
             // Tp player
-            MCPlayer.teleport(Locations.KOTHLobby);
+            MCPlayer.teleport(KOTHLobbyHandler.getLocation());
 
             // Only do if not troubleshooting
             if (!gamePlayer.isTroubleshooting()) {
@@ -165,9 +164,9 @@ public class GeneralLobbyHandler implements Listener {
      *
      * @param gamePlayer gamePlayer to be sent
      */
-    public static DelayedTask sendMMLobby(GamePlayer gamePlayer) {
+    public static void sendMMLobby(GamePlayer gamePlayer) {
         // Delay operation by some time
-        return new DelayedTask(() -> {
+        new DelayedTask(() -> {
             // Store gamePlayer's MCPlayer reference
             Player MCPlayer = gamePlayer.getPlayer();
 
@@ -175,7 +174,7 @@ public class GeneralLobbyHandler implements Listener {
             MMLobbyHandler.sendPlayer(gamePlayer);
 
             // Tp player
-            MCPlayer.teleport(Locations.MMLobby);
+            MCPlayer.teleport(MMLobbyHandler.getLocation());
 
             // Only do if not troubleshooting
             if (!gamePlayer.isTroubleshooting()) {
@@ -306,7 +305,7 @@ public class GeneralLobbyHandler implements Listener {
                         GeneralLobbyHandler.sendMainHub(gamePlayer);
                         // Just tp if troubleshooting
                         if (gamePlayer.isTroubleshooting())
-                            MCPlayer.teleport(Locations.mainHub);
+                            MCPlayer.teleport(MainHubHandler.getLocation());
                         // Close player inventory
                         event.getWhoClicked().closeInventory();
                     }

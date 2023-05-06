@@ -8,14 +8,21 @@ C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugi
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\util\ConfigUtil.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\util\Locations.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\util\TroubleshootUtil.java
+C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\Kits\KitStriker.java
+C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\commands\GetData.java
+C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\Maps\MapCastleOfDreams.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\commands\SetSpawn.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\util\DelayedTask.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\util\SpawnUtil.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\commands\Reset.java
+C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\Kits\Kit.java
+C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\commands\GetItem.java
+C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\handlers\MainHubHandler.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\MM\MMLobbyHandler.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\PlayerArea.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHGameHandler.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\commands\Troubleshoot.java
+C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\Maps\Map.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\HubPlayer.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\MM\MMPlayer.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\GamePlayer.java
@@ -23,4 +30,3 @@ C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugi
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHLobbyHandler.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\commands\Fly.java
 C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\util\Tools.java
-C:\Users\miles\IdeaProjects\MC_Minigames_Plugin\src\main\java\mc_minigames_plugin\mc_minigames_plugin\handlers\HubHandler.java

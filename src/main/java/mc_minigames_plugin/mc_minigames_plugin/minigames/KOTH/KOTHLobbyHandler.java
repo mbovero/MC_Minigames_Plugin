@@ -2,6 +2,7 @@ package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 
 import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
+import mc_minigames_plugin.mc_minigames_plugin.handlers.MainHubHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KitStriker;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.Map;
@@ -55,6 +56,8 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
     private String selectedGamemode;                // The KOTH gamemode that is currently selected
     private Map selectedMap;                        // The KOTH map that is currently selected
+    // The location of the KOTH lobby
+    private static final Location location = new Location(Bukkit.getWorld("world"), 8, -60, -600, -180, 0);
 
     // A list of the currently running KOTH games, each index correlates to a map
     private static final KOTHGameHandler[] activeGames = new KOTHGameHandler[9];
@@ -69,8 +72,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     public KOTHLobbyHandler (MC_Minigames_Plugin plugin) {
         Bukkit.getPluginManager().registerEvents(this, plugin);
         this.plugin = plugin;
-        // Create new list of players for this area
-        areaPlayers = new HashMap<>();
+        areaPlayers = new HashMap<>();          // Create new collection of players for this area
         areaName = "KOTHLobby";
         selectedGamemode = "default";
         selectedMap = new MapCastleOfDreams();
@@ -491,9 +493,15 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 MCPlayer.getInventory().clear();
 
             // Transport player to main hub
-            MCPlayer.teleport(Locations.mainHub);       // Prevents duplicate sends
+            MCPlayer.teleport(MainHubHandler.getLocation());       // Prevents duplicate sends
             MCPlayer.clearTitle();                      // Clear countdown title
             GeneralLobbyHandler.sendMainHub(gamePlayer);
         }
     }
+
+    /**
+     * Accessor method that returns the PlayerArea's location
+     */
+    public static Location getLocation() {return location;}
+
 }
