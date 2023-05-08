@@ -67,7 +67,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
             // Set gamePlayer to be inGame
             gamePlayer.setIsInGame(true);
 
-            // Reset MCPlayer's tags, scores, flight, potion effects, health, hunger, and inventory
+            // Reset MCPlayer's tags, scores, flight, potion effects, health, hunger/saturation, and inventory
             Tools.resetAllKOTH(gamePlayer.getPlayer());
             // Give player kit gear
             ((KOTHPlayer)gamePlayer).getKit().giveBasicGear();

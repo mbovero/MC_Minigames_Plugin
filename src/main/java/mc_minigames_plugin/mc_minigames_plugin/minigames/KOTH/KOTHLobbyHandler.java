@@ -4,12 +4,11 @@ import mc_minigames_plugin.mc_minigames_plugin.MC_Minigames_Plugin;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.handlers.MainHubHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
-import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KitStriker;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KOTHKitStriker;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.Map;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Maps.MapCastleOfDreams;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.DelayedTask;
-import mc_minigames_plugin.mc_minigames_plugin.util.Locations;
 import mc_minigames_plugin.mc_minigames_plugin.util.Tools;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -107,7 +106,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
             //Check if the player has selected a valid kit entity and selects the specified class
                 //Damage kits
             if (kitName.equals("§4Striker"))  {       //Striker
-                KOTHPlayer.setKit(new KitStriker(KOTHPlayer));
+                KOTHPlayer.setKit(new KOTHKitStriker(KOTHPlayer));
                 MCPlayer.sendTitle(ChatColor.DARK_RED + "Striker", "Deal damage, and take it too");
                 MCPlayer.setDisplayName(MCPlayer.getName() + ChatColor.translateAlternateColorCodes('&', " &7<&4&oStriker&7>"));
                 MCPlayer.setPlayerListFooter(ChatColor.translateAlternateColorCodes('&', "&7Selected Kit: <&4&oStriker&7>"));
@@ -165,7 +164,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
 
                 MCPlayer.sendTitle(ChatColor.LIGHT_PURPLE + "Sorry", "This class is not available yet");
             }
-            if (kitName.equals("§dwizard")) {        //Wizard
+            if (kitName.equals("§dWizard")) {        //Wizard
 
                 MCPlayer.sendTitle(ChatColor.LIGHT_PURPLE + "Sorry", "This class is not available yet");
             }
@@ -243,6 +242,9 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
                 // And add the player to the new KOTHLobby
                 getKOTHLobby().addPlayer(gamePlayer);
             }
+            Player MCPlayer = gamePlayer.getPlayer();
+            MCPlayer.setDisplayName(MCPlayer.getName() + ChatColor.translateAlternateColorCodes('&', " &7<&4&oStriker&7>"));
+            MCPlayer.setPlayerListFooter(ChatColor.translateAlternateColorCodes('&', "&7Selected Kit: <&4&oStriker&7>"));
         }
     }
 

@@ -8,7 +8,7 @@ public class MapCastleOfDreams extends Map{
     public static Location mapLoc = new Location(Bukkit.getWorld("world"), -900, 12, 2, -180, 0);       // The location of the map used for game devs
 
     public MapCastleOfDreams() {
-        this.mapName = "Castle Of Dreams";
+        this.mapName = "KOTHGame: Castle Of Dreams";
         this.respawnLocs = new Location[] {
                 new Location(Bukkit.getWorld("world"), -899.5, 12, 8.5, 180, 0),
                 new Location (Bukkit.getWorld("world"), -903.5, 12, 4.5, 45, 0),

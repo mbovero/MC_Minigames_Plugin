@@ -5,7 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-public abstract class Kit implements Listener {
+public abstract class KOTHKit implements Listener {
 
     protected String kitName;
     protected GamePlayer gamePlayer;                   // Reference to the parent GamePlayer

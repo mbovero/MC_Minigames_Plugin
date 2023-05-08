@@ -260,4 +260,12 @@ public class Tools {
     public static void resetDisplayName(Player MCPlayer) {
         MCPlayer.setDisplayName(MCPlayer.getName());
     }
+
+    /**
+     * Resets the player's player list footer and header
+     */
+    public static void resetPlayerList(Player MCPlayer) {
+        MCPlayer.setPlayerListHeader(null);
+        MCPlayer.setPlayerListFooter(null);
+    }
 }

@@ -1,12 +1,12 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH;
 
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
-import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.Kit;
-import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KitStriker;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KOTHKit;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.Kits.KOTHKitStriker;
 
 public class KOTHPlayer extends GamePlayer {
     //FIELDS
-    Kit kit;            // Player kit object
+    KOTHKit KOTHKit;            // Player kit object
     int kills1;         // Player kill count 1
     int kills2;         // Player kill count 2
     int kills3;         // Player kill count 3
@@ -15,7 +15,7 @@ public class KOTHPlayer extends GamePlayer {
 
     public KOTHPlayer(GamePlayer gamePlayer) {
         super(gamePlayer);
-        this.kit = new KitStriker(this);    // Assign Striker kit by default
+        this.KOTHKit = new KOTHKitStriker(this);    // Assign Striker kit by default
     }
 
     //METHODS
@@ -26,23 +26,30 @@ public class KOTHPlayer extends GamePlayer {
      */
     public void updateKills() {
         this.kills1++;
-        this.kit.checkKillReward1();
         this.kills2++;
-        this.kit.checkKillReward2();
         this.kills3++;
-        this.kit.checkKillReward3();
         this.kills4++;
-        this.kit.checkKillReward4();
+        this.checkKills();
+    }
+
+    /**
+     * Used to check if this player has earned a kill reward.
+     */
+    public void checkKills() {
+        this.KOTHKit.checkKillReward1();
+        this.KOTHKit.checkKillReward2();
+        this.KOTHKit.checkKillReward3();
+        this.KOTHKit.checkKillReward4();
     }
 
     //Mutators
 
     /**
      * Changes this KOTHPlayer's kit object
-     * @param kit this player's new kit
+     * @param KOTHKit this player's new kit
      */
-    public void setKit(Kit kit) {
-        this.kit = kit;
+    public void setKit(KOTHKit KOTHKit) {
+        this.KOTHKit = KOTHKit;
     }
 
     /**
@@ -83,8 +90,8 @@ public class KOTHPlayer extends GamePlayer {
     /**
      * Accessor method that returns this KOTHPlayer's kit object
      */
-    public Kit getKit() {
-        return this.kit;
+    public KOTHKit getKit() {
+        return this.KOTHKit;
     }
 
     /**

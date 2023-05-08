@@ -79,7 +79,7 @@ public class GeneralLobbyHandler implements Listener {
 // PLAYER INTERACTION --------------------------------------------------------------------------------------------------
 
     /**
-     * Sends the provided player to the main hub and sets their tags accordingly.
+     * Sends the provided player to the main hub and resets/updates some of their data.
      *
      * @param gamePlayer gamePlayer to be sent
      */
@@ -88,9 +88,6 @@ public class GeneralLobbyHandler implements Listener {
         new DelayedTask(() -> {
             // Store gamePlayer's MCPlayer reference
             Player MCPlayer = gamePlayer.getPlayer();
-
-            // Send gamePlayer to mainHub
-            MainHubHandler.sendPlayer(gamePlayer);
 
             // Only do if not troubleshooting
             if (!gamePlayer.isTroubleshooting()) {
@@ -101,15 +98,22 @@ public class GeneralLobbyHandler implements Listener {
 
                 // Clear potion effects
                 Tools.resetPotionEffects(MCPlayer);
+                // Reset health
+                Tools.resetHealth(MCPlayer);
                 // Reset tags
                 Tools.resetTags(MCPlayer);
                 // Reset team
                 Tools.resetTeam(MCPlayer);
                 // Reset display name
                 Tools.resetDisplayName(MCPlayer);
+                // Reset player list footer
+                Tools.resetPlayerList(MCPlayer);
                 // Reset inventory
                 Tools.resetInventory(MCPlayer);
             }
+
+            // Send gamePlayer to mainHub
+            MainHubHandler.sendPlayer(gamePlayer);
 
             // Give lobby selector
             MCPlayer.getInventory().setItem(4, lobbySelector);
@@ -117,7 +121,7 @@ public class GeneralLobbyHandler implements Listener {
     }
 
     /**
-     * Sends the provided player to the King of The Hill lobby and sets their tags accordingly.
+     * Sends the provided player to the King of The Hill lobby and resets/updates some of their data.
      * If an instance of KOTHLobbyHandler does not already exist, a new one is made.
      *
      * @param gamePlayer gamePlayer to be sent
@@ -128,12 +132,6 @@ public class GeneralLobbyHandler implements Listener {
             // Store gamePlayer's MCPlayer reference
             Player MCPlayer = gamePlayer.getPlayer();
 
-            // Send gamePlayer to KOTHLobby
-            KOTHLobbyHandler.sendPlayer(gamePlayer);
-
-            // Tp player
-            MCPlayer.teleport(KOTHLobbyHandler.getLocation());
-
             // Only do if not troubleshooting
             if (!gamePlayer.isTroubleshooting()) {
                 // Play tp sound
@@ -141,15 +139,25 @@ public class GeneralLobbyHandler implements Listener {
 
                 // Clear potion effects
                 Tools.resetPotionEffects(MCPlayer);
+                // Reset health
+                Tools.resetHealth(MCPlayer);
                 // Reset tags
                 Tools.resetTags(MCPlayer);
                 // Reset team
                 Tools.resetTeam(MCPlayer);
                 // Reset display name
                 Tools.resetDisplayName(MCPlayer);
+                // Reset player list footer
+                MCPlayer.setPlayerListFooter(null);
                 // Reset inventory
                 Tools.resetInventory(MCPlayer);
             }
+
+            // Send gamePlayer to KOTHLobby
+            KOTHLobbyHandler.sendPlayer(gamePlayer);
+
+            // Tp player
+            MCPlayer.teleport(KOTHLobbyHandler.getLocation());
 
             // Give items for lobby hot bar menu
             Inventory inv = MCPlayer.getInventory();
@@ -160,7 +168,7 @@ public class GeneralLobbyHandler implements Listener {
     }
 
     /**
-     * Sends the provided player to the Murder Mystery lobby and sets their tags accordingly.
+     * Sends the provided player to the Murder Mystery lobby and resets/updates some of their data.
      *
      * @param gamePlayer gamePlayer to be sent
      */
@@ -170,12 +178,6 @@ public class GeneralLobbyHandler implements Listener {
             // Store gamePlayer's MCPlayer reference
             Player MCPlayer = gamePlayer.getPlayer();
 
-            // Send gamePlayer to MMLobby
-            MMLobbyHandler.sendPlayer(gamePlayer);
-
-            // Tp player
-            MCPlayer.teleport(MMLobbyHandler.getLocation());
-
             // Only do if not troubleshooting
             if (!gamePlayer.isTroubleshooting()) {
                 // Play tp sound
@@ -183,15 +185,26 @@ public class GeneralLobbyHandler implements Listener {
 
                 // Clear potion effects
                 Tools.resetPotionEffects(MCPlayer);
+                // Reset health
+                Tools.resetHealth(MCPlayer);
                 // Reset tags
                 Tools.resetTags(MCPlayer);
                 // Reset team
                 Tools.resetTeam(MCPlayer);
                 // Reset display name
                 Tools.resetDisplayName(MCPlayer);
+                // Reset player list footer
+                MCPlayer.setPlayerListFooter(null);
                 // Reset inventory
                 Tools.resetInventory(MCPlayer);
             }
+
+            // Send gamePlayer to MMLobby
+            MMLobbyHandler.sendPlayer(gamePlayer);
+
+            // Tp player
+            MCPlayer.teleport(MMLobbyHandler.getLocation());
+
 
             // Give items for lobby hot bar menu
             Inventory inv = MCPlayer.getInventory();
@@ -227,7 +240,7 @@ public class GeneralLobbyHandler implements Listener {
                     return result;
             }
 
-        // PROBLEMS ARE OCCURRING:
+        // PROBLEMS ARE OCCURRING IF THIS IS REACHED:
         MCPlayer.sendMessage("\nBAD BAD\n");
         return null;
     }
@@ -278,8 +291,6 @@ public class GeneralLobbyHandler implements Listener {
         Player MCPlayer = (Player) event.getWhoClicked();
         // Find the gamePlayer matching with the event's MCPlayer
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        // Store the gamePlayer's current area
-        PlayerArea playerArea = gamePlayer.getCurrentArea();
         // For players not in a game...
         if (!gamePlayer.isInGame()) {
             // Only handle inv clicks if player is in Lobby Selector inventory

@@ -23,18 +23,18 @@ abstract public class GamePlayer {
     public GamePlayer (Player MCPlayer, PlayerArea currentArea) {
         this.MCPlayer = MCPlayer;
         this.currentArea = currentArea;
-        this.isTroubleshooting = false;     // Set isTroubleShooting to false by default
+        isTroubleshooting = false;     // Set isTroubleShooting to false by default
         // Iterate through stored troubleshooters config if not null
         List<String> troubleshooters = TroubleshootUtil.getTroubleshooters();
         if (troubleshooters != null)
             for (String troubleshooter : troubleshooters) {
                 // If the player is found in the list, update their isTroubleshooting
                 if (troubleshooter.equals(MCPlayer.getName())) {
-                    this.isTroubleshooting = true;
+                    isTroubleshooting = true;
                     break;
                 }
             }
-        this.isInGame = false;
+        isInGame = false;
         isGameReady = false;
     }
 
@@ -67,7 +67,7 @@ abstract public class GamePlayer {
 
     /**
      * Accessor method for returning the current reference of a minecraft player
-     * @return
+     * @return minecraft player reference
      */
     public Player getPlayer () {return MCPlayer;}
 
@@ -103,6 +103,11 @@ abstract public class GamePlayer {
     public void setIsGameReady(boolean isGameReady) {
         this.isGameReady = isGameReady;
     }
+
+    /**
+     * Mutator method for changing the MCPlayer value of this GamePlayer
+     */
+    public void setPlayer (Player MCPlayer) {this.MCPlayer = MCPlayer;}
 
     /**
      * Mutator method for changing the isInGame value of this GamePlayer

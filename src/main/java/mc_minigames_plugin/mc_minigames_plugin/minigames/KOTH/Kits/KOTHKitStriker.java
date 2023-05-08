@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 
-public class KitStriker extends Kit {
+public class KOTHKitStriker extends KOTHKit {
 
     ItemStack helmetStriker = Tools.createItem(new ItemStack(Material.NETHERITE_HELMET), "&cStriker Helmet", true, "");
     ItemStack chestplateStriker = Tools.createItem(new ItemStack(Material.LEATHER_CHESTPLATE), "&cStriker Chestplate", true, "");
@@ -19,7 +19,7 @@ public class KitStriker extends Kit {
     ItemStack slownessPotion = Tools.createItem(new ItemStack(Material.SPLASH_POTION), "&7Slowness Splash Pot", "");
     ItemStack resistancePotion = Tools.createItem(new ItemStack(Material.POTION), "&8Super Resistance Pot", "");
 
-    public KitStriker(GamePlayer gamePlayer) {
+    public KOTHKitStriker(GamePlayer gamePlayer) {
         this.kitName = "Striker";
         this.gamePlayer = gamePlayer;
         // Sharp 4 on sword

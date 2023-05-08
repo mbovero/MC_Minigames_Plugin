@@ -25,7 +25,7 @@ public class GetData implements CommandExecutor {
         // If no type or player is specified
         if (args.length == 0) {
             // Send warning
-            commandSender.sendMessage(ChatColor.RED + "Specify an data type to receive. Type '/getdata list' to see a list of data types");
+            commandSender.sendMessage(ChatColor.RED + "Specify a data type to receive. Type '/getdata list' to see a list of data types");
             return true;
         }
 
@@ -55,7 +55,7 @@ public class GetData implements CommandExecutor {
         }
 
         // Store specified data type to retrieve
-        String item = args[0];
+        String data = args[0];
         // Locate gamePlayer
         GamePlayer gamePlayer = GeneralLobbyHandler.findPlayer(MCPlayer);
         // Message sender an error if gamePlayer could not be found
@@ -63,12 +63,12 @@ public class GetData implements CommandExecutor {
             commandSender.sendMessage(ChatColor.RED + "Could not find a gamePlayer with the same name as " + MCPlayer.getName());
             return true;
         }
-        switch (item) {
+        switch (data) {
             case "list":
                 commandSender.sendMessage(list);
                 break;
             case "isGameReady":
-                commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s gameReady value is " + ChatColor.GRAY + (gamePlayer.isGameReady()));
+                commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s isGameReady value is " + ChatColor.GRAY + (gamePlayer.isGameReady()));
                 break;
             case "isTroubleshooting":
                 commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s isTroubleshooting value is " + ChatColor.GRAY + (gamePlayer.isTroubleshooting()));
@@ -84,7 +84,7 @@ public class GetData implements CommandExecutor {
                 break;
             case "KOTHKit":
                 if(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby") || gamePlayer.getCurrentArea().getAreaName().equals("KOTHGame"))
-                    commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s kit name is " + ChatColor.GRAY + (((KOTHPlayer)gamePlayer).getKit().getKitName()));
+                    commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s KOTHKit is " + ChatColor.GRAY + (((KOTHPlayer)gamePlayer).getKit().getKitName()));
                 else
                     commandSender.sendMessage(ChatColor.RED + MCPlayer.getName() + " is not currently a KOTHPlayer");
                 break;

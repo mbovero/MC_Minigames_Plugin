@@ -2,6 +2,7 @@ package mc_minigames_plugin.mc_minigames_plugin.commands;
 
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.util.TroubleshootUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -35,9 +36,35 @@ public class Troubleshoot implements CommandExecutor {
         }
 
         // Setup
-        Player MCPlayer = (Player)sender;
+        Player MCPlayer = null;
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = null;
+
+        if (args.length == 0) {
+            // MCPlayer is the sender
+            MCPlayer = (Player) sender;
+            // Find the gamePlayer matching with the sender's MCPlayer
+            gamePlayer = findPlayer(MCPlayer);
+        }
+        else if (args.length == 1) {
+            // MCPlayer is specified player
+            MCPlayer = Bukkit.getPlayerExact(args[0]);
+            // If player exists...
+            if (MCPlayer != null)
+            // Find the gamePlayer matching with the event's MCPlayer
+                gamePlayer = findPlayer(MCPlayer);
+            // Otherwise, send warning
+            else {
+                sender.sendMessage(ChatColor.RED + "Player " + args[0] + " could not be found");
+                return true;
+            }
+        }
+        // Otherwise, invalid input
+        else {
+            sender.sendMessage(ChatColor.RED + "Provide a valid input:\n/troubleshoot [username]");
+            return true;
+        }
+
 
         // If not troubleshooting...
         if (!gamePlayer.isTroubleshooting()) {

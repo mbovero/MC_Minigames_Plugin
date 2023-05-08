@@ -27,7 +27,7 @@ commands:
     permission: spawn.teleport
   troubleshoot:
     description: Gives game dev troubleshooting abilities/tools
-    usage: /troubleshoot
+    usage: /troubleshoot [username]
     permission: troubleshoot
   reset:
     description: Resets an MCPlayer's data
@@ -39,3 +39,6 @@ commands:
   getdata:
     usage: /getdata <type> <username>
     permission: getdata
+  setdata:
+    usage: /setdata <type> [username] <value>
+    permission: setdata
