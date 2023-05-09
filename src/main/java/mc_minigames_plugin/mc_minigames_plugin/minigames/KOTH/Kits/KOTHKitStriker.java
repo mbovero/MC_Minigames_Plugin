@@ -13,6 +13,9 @@ import org.bukkit.potion.PotionEffectType;
 
 /**
  * Class for holding and managing the KOTH Striker kit
+ *
+ * @author Kirt Robinson, Miles Bovero
+ * @version May 9, 2023
  */
 public class KOTHKitStriker extends KOTHKit {
 
