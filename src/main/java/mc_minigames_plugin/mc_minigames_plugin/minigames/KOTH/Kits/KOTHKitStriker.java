@@ -48,7 +48,7 @@ public class KOTHKitStriker extends KOTHKit {
 
     @Override
     public void onPlayerInteract(PlayerInteractEvent event) {
-        // Dash ability?
+        // Dash ability? (possible update)
     }
 
     @Override
