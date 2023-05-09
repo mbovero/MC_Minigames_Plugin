@@ -1,6 +1,7 @@
 package mc_minigames_plugin.mc_minigames_plugin.minigames;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.HashMap;
@@ -33,6 +34,26 @@ abstract public class PlayerArea {
          */
     public void removePlayer (GamePlayer gamePlayer) {
         areaPlayers.remove(gamePlayer.MCPlayer.getName());
+    }
+
+    /**
+     * Attempts to locate the specified MCPlayer's associated GamePlayer object from this PlayerArea's
+     * areaPlayers collection. If found, returns the GamePlayer object. Otherwise, warn player and return null.
+     *
+     * @param MCPlayer the MCPlayer to find the gamePlayer of
+     * @return the gamePlayer associated with the specified MCPlayer or null if not found
+     */
+    public GamePlayer findPlayer (Player MCPlayer) {
+        // Try to retrieve gamePlayer reference from this areaPlayers
+        GamePlayer result = this.areaPlayers.get(MCPlayer.getName());
+        // If player not found...
+        if (result == null) {
+            // Warn player and return null
+            MCPlayer.sendMessage("\nBAD BAD\n");
+            return null;
+        }
+        // Otherwise, return the found gamePlayer
+        return result;
     }
 
     //Accessors --------------------------------------------------------------------------------------------------------

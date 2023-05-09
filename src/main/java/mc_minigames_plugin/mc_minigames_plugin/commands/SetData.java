@@ -14,8 +14,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static java.lang.Double.isNaN;
-
 public class SetData implements CommandExecutor {
 
     // List of data types
@@ -80,7 +78,7 @@ public class SetData implements CommandExecutor {
         // Store specified data/value types
         String data = args[0];
         // Locate gamePlayer
-        GamePlayer gamePlayer = GeneralLobbyHandler.findPlayer(MCPlayer);
+        GamePlayer gamePlayer = GeneralLobbyHandler.findPlayerGlobal(MCPlayer);
         // Message sender an error if gamePlayer could not be found
         if (gamePlayer == null) {
             sender.sendMessage(ChatColor.RED + "Could not find a gamePlayer associated with " + MCPlayer.getName());
@@ -176,6 +174,7 @@ public class SetData implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + MCPlayer.getName() + " is not currently a KOTHPlayer");
                 break;
 
+                
 
             default:
                 sender.sendMessage(ChatColor.RED + "Specify a valid data type to receive. Type '/getdata list' to see a list of data types");

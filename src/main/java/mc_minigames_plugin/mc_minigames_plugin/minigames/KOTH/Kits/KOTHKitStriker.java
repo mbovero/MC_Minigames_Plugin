@@ -11,6 +11,9 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.potion.PotionEffectType;
 
+/**
+ * Class for holding and managing the KOTH Striker kit
+ */
 public class KOTHKitStriker extends KOTHKit {
 
     ItemStack helmetStriker = Tools.createItem(new ItemStack(Material.NETHERITE_HELMET), "&cStriker Helmet", true, "");

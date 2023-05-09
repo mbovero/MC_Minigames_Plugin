@@ -9,7 +9,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayerGlobal;
 
 /**
  * Command that give the player troubleshooting abilities:
@@ -44,7 +44,7 @@ public class Troubleshoot implements CommandExecutor {
             // MCPlayer is the sender
             MCPlayer = (Player) sender;
             // Find the gamePlayer matching with the sender's MCPlayer
-            gamePlayer = findPlayer(MCPlayer);
+            gamePlayer = findPlayerGlobal(MCPlayer);
         }
         else if (args.length == 1) {
             // MCPlayer is specified player
@@ -52,7 +52,7 @@ public class Troubleshoot implements CommandExecutor {
             // If player exists...
             if (MCPlayer != null)
             // Find the gamePlayer matching with the event's MCPlayer
-                gamePlayer = findPlayer(MCPlayer);
+                gamePlayer = findPlayerGlobal(MCPlayer);
             // Otherwise, send warning
             else {
                 sender.sendMessage(ChatColor.RED + "Player " + args[0] + " could not be found");

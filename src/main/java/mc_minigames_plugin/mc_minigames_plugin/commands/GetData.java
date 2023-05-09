@@ -5,13 +5,10 @@ import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 
@@ -57,7 +54,7 @@ public class GetData implements CommandExecutor {
         // Store specified data type to retrieve
         String data = args[0];
         // Locate gamePlayer
-        GamePlayer gamePlayer = GeneralLobbyHandler.findPlayer(MCPlayer);
+        GamePlayer gamePlayer = GeneralLobbyHandler.findPlayerGlobal(MCPlayer);
         // Message sender an error if gamePlayer could not be found
         if (gamePlayer == null) {
             commandSender.sendMessage(ChatColor.RED + "Could not find a gamePlayer with the same name as " + MCPlayer.getName());

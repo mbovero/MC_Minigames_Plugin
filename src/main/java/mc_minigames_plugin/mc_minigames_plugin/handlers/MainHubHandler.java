@@ -54,7 +54,7 @@ public class MainHubHandler extends PlayerArea implements Listener {
             Bukkit.getScoreboardManager().getMainScoreboard().getPlayerTeam(MCPlayer).removePlayer(MCPlayer);
 
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Get the player's current area
         PlayerArea playerArea = gamePlayer.getCurrentArea();
         // Remove the player from that area
@@ -74,7 +74,7 @@ public class MainHubHandler extends PlayerArea implements Listener {
         areaPlayers.put(MCPlayer.getName(), new HubPlayer(MCPlayer, this));
 
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
 
         // Send to mainHub
         GeneralLobbyHandler.sendMainHub(gamePlayer);
@@ -119,7 +119,7 @@ public class MainHubHandler extends PlayerArea implements Listener {
         // Setup
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
 
         // For players that are not in a game or are troubleshooting and are in mainHub...
         if (!gamePlayer.isInGame() || gamePlayer.isTroubleshooting() && gamePlayer.getCurrentArea().getAreaName().equals("mainHub")) {

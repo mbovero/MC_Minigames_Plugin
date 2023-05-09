@@ -93,13 +93,13 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         Entity clicked = event.getRightClicked();
         // Hold the player entity
         Player MCPlayer = event.getPlayer();
-        // Find the gamePlayer matching with the event's MCPlayer
+        // Try to retrieve gamePlayer reference from this areaPlayers
         GamePlayer gamePlayer = findPlayer(MCPlayer);
-        // Find gamePlayer's area
-        String currentArea = gamePlayer.getCurrentArea().getAreaName();
+        // Double check that gamePlayer is in KOTH lobby
+        if (gamePlayer == null) return;
 
         //Check for valid click and for an armor stand interaction
-        if (clicked.getType() == EntityType.ARMOR_STAND && currentArea.equals("KOTHLobby")) {
+        if (clicked.getType() == EntityType.ARMOR_STAND) {
             KOTHPlayer KOTHPlayer = (KOTHPlayer)gamePlayer;
             //Hold the location of armor stand "kit" to be selected
             String kitName = clicked.getName();
@@ -338,7 +338,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
         // Setup
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Find gamePlayer's area
         String currentArea = gamePlayer.getCurrentArea().getAreaName();
         Inventory inv = MCPlayer.getInventory();
@@ -480,7 +480,7 @@ public class KOTHLobbyHandler extends PlayerArea implements Listener {
     public void returnPortal(PlayerMoveEvent event) {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Find gamePlayer's area
         String currentArea = gamePlayer.getCurrentArea().getAreaName();
         // Detect players in portal range and in KOTH lobby

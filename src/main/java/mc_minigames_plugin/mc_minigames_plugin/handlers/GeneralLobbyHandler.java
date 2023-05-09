@@ -220,7 +220,7 @@ public class GeneralLobbyHandler implements Listener {
      * @param MCPlayer player to find associated GamePlayer of
      * @return GamePlayer object associated with provided MCPlayer
      */
-    public static GamePlayer findPlayer(Player MCPlayer) {
+    public static GamePlayer findPlayerGlobal(Player MCPlayer) {
         // Search allPlayerAreas (lobbies)
         for (PlayerArea area : allPlayerAreas) {
             // Try to retrieve gamePlayer
@@ -258,7 +258,7 @@ public class GeneralLobbyHandler implements Listener {
         // Setup
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
 
         // When a player interacts while not in a game or while troubleshooting...
         if (!gamePlayer.isInGame() || !gamePlayer.isTroubleshooting()) {
@@ -290,7 +290,7 @@ public class GeneralLobbyHandler implements Listener {
     public void onMenuClick(InventoryClickEvent event) {
         Player MCPlayer = (Player) event.getWhoClicked();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // For players not in a game...
         if (!gamePlayer.isInGame()) {
             // Only handle inv clicks if player is in Lobby Selector inventory
@@ -350,7 +350,7 @@ public class GeneralLobbyHandler implements Listener {
     public void preventHarvestBlock(PlayerHarvestBlockEvent event) {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting()) {
             event.setCancelled(true);
         }
@@ -363,7 +363,7 @@ public class GeneralLobbyHandler implements Listener {
     public void preventArmorStandManipulate(PlayerArmorStandManipulateEvent event) {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting()) {
             event.setCancelled(true);
         }
@@ -376,7 +376,7 @@ public class GeneralLobbyHandler implements Listener {
     public void preventItemConsume(PlayerItemConsumeEvent event) {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting()) {
             event.setCancelled(true);
         }
@@ -389,7 +389,7 @@ public class GeneralLobbyHandler implements Listener {
     public void preventBlockPlace(BlockPlaceEvent event) {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting()) {
             event.setCancelled(true);
         }
@@ -402,7 +402,7 @@ public class GeneralLobbyHandler implements Listener {
     public void preventBlockBreak(BlockBreakEvent event) {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting()) {
             event.setCancelled(true);
         }
@@ -415,7 +415,7 @@ public class GeneralLobbyHandler implements Listener {
     public void preventEntityDamage(EntityDamageByEntityEvent event) {
         Player MCPlayer = (Player) event.getDamager();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting()) {
             event.setCancelled(true);
         }
@@ -432,7 +432,7 @@ public class GeneralLobbyHandler implements Listener {
         // Get killer as a player
         Player MCPlayer = event.getEntity().getKiller();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting()) {
             event.setCancelled(true);
         }
@@ -445,7 +445,7 @@ public class GeneralLobbyHandler implements Listener {
     public void preventItemDrop(PlayerDropItemEvent event) {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting())
             event.setCancelled(true);
     }
@@ -458,7 +458,7 @@ public class GeneralLobbyHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player MCPlayer = (Player) event.getEntity();
             // Find the gamePlayer matching with the event's MCPlayer
-            GamePlayer gamePlayer = findPlayer(MCPlayer);
+            GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
             if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting())
                 event.setCancelled(true);
         }
@@ -473,7 +473,7 @@ public class GeneralLobbyHandler implements Listener {
         if (event.getEntity() instanceof Player) {
             Player MCPlayer = (Player) event.getEntity();
             // Find the gamePlayer matching with the event's MCPlayer
-            GamePlayer gamePlayer = findPlayer(MCPlayer);
+            GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
             if (!gamePlayer.isInGame() && !gamePlayer.isTroubleshooting())
                 event.setCancelled(true);
         }
@@ -500,7 +500,7 @@ public class GeneralLobbyHandler implements Listener {
     public void voidLevitation(PlayerMoveEvent event) {
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Find gamePlayer's area
         String currentArea = gamePlayer.getCurrentArea().getAreaName();
         // For all players not in a game and not troubleshooting...

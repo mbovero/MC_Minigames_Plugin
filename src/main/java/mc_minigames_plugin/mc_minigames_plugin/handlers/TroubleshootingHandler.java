@@ -11,7 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
-import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayerGlobal;
 
 /**
  * Class that allows for troubleshooting of server functions.
@@ -32,7 +32,7 @@ public class TroubleshootingHandler implements Listener {
         //Setup
         Player MCPlayer = event.getPlayer();
         // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         Location entityLoc = event.getRightClicked().getLocation();
 
         if (gamePlayer.isTroubleshooting()) {

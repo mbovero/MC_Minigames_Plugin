@@ -13,7 +13,6 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Directional;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -29,7 +28,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayer;
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayerGlobal;
 
 public class KOTHGameHandler extends PlayerArea implements Listener {
 
@@ -97,7 +96,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         // Store player that moved
         Player MCPlayer = event.getPlayer();
         // Store player's gamePlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Check that player is in this game
         if (!gamePlayer.getCurrentArea().getAreaName().equals(this.areaName))
             return;
@@ -139,7 +138,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         // Store player that took damage
         Player MCPlayer = (Player) event.getEntity();
         // Store player's gamePlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Check that player is in this game
         if (!gamePlayer.getCurrentArea().getAreaName().equals(this.areaName))
             return;
@@ -162,7 +161,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         // Store player that died
         Player MCPlayer = event.getPlayer();
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Check that player died in this game
         if (!gamePlayer.getCurrentArea().getAreaName().equals(this.areaName))
             return;
@@ -172,7 +171,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         if(MCKiller == null)
             return;
         // Locate killer's gamePlayer
-        GamePlayer gameKiller = findPlayer(MCKiller);
+        GamePlayer gameKiller = findPlayerGlobal(MCKiller);
         // Check that the killer exists in this KOTHGame
         if(gameKiller.getCurrentArea().getAreaName().equals(this.areaName)) {
             // Update KOTHPlayer kills
@@ -188,7 +187,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         // Store player that is respawning
         Player MCPlayer = event.getPlayer();
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Check that player is respawning in this game
         if (gamePlayer.getCurrentArea().getAreaName().equals(this.areaName)) {
             // Set respawn location
@@ -209,7 +208,7 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         if(event.getEntity() instanceof Player) {
             Player MCPlayer = (Player) event.getEntity();
         // Store gamePlayer
-        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
         // Check that gamePlayer is currently in this game
         if (gamePlayer.getCurrentArea().getAreaName().equals(this.areaName) && !gamePlayer.isTroubleshooting())
                 event.setCancelled(true);
