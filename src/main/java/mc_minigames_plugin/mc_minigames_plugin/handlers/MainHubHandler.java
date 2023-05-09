@@ -118,11 +118,13 @@ public class MainHubHandler extends PlayerArea implements Listener {
     public void onPlayerInteract(PlayerInteractEvent event) {
         // Setup
         Player MCPlayer = event.getPlayer();
-        // Find the gamePlayer matching with the event's MCPlayer
-        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
+        // Try to retrieve gamePlayer reference from this areaPlayers
+        GamePlayer gamePlayer = this.findPlayer(MCPlayer);
+        // Double check that gamePlayer is in Main Hub
+        if (gamePlayer == null) return;
 
         // For players that are not in a game or are troubleshooting and are in mainHub...
-        if (!gamePlayer.isInGame() || gamePlayer.isTroubleshooting() && gamePlayer.getCurrentArea().getAreaName().equals("mainHub")) {
+        if (!gamePlayer.isInGame() || gamePlayer.isTroubleshooting()) {
 
             // LOBBY BUTTON CLICK DETECTIONS:
 

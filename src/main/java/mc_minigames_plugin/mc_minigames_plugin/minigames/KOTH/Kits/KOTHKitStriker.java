@@ -33,7 +33,6 @@ public class KOTHKitStriker extends KOTHKit {
         // Resistance potion
         Tools.addPotionItemEffect(resistancePotion, PotionEffectType.DAMAGE_RESISTANCE, 200, 2, true);
         Tools.setPotionItemColor(resistancePotion, Color.fromRGB(179, 177, 177));
-
     }
 
     @Override

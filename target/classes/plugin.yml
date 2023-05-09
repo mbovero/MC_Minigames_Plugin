@@ -42,3 +42,6 @@ commands:
   setdata:
     usage: /setdata <type> [username] <value>
     permission: setdata
+  listplayerareas:
+    usage: /listplayerareas
+    permission: listplayerareas

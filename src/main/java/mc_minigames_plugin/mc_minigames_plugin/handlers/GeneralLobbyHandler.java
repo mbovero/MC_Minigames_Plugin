@@ -43,7 +43,7 @@ import static mc_minigames_plugin.mc_minigames_plugin.util.Tools.createItem;
 public class GeneralLobbyHandler implements Listener {
 
     // Player tracking resources
-    protected static ArrayList<PlayerArea> allPlayerAreas;     // A list of every area players may be in
+    public static ArrayList<PlayerArea> allPlayerAreas;     // A list of every area players may be in
     protected static MC_Minigames_Plugin plugin;            // Overarching plugin
 
     protected static PlayerArea mainHub;

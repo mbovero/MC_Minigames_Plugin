@@ -56,6 +56,7 @@ public final class MC_Minigames_Plugin extends JavaPlugin {
         getCommand("getitem").setExecutor(new GetItem());
         getCommand("getdata").setExecutor(new GetData());
         getCommand("troubleshoot").setExecutor(new Troubleshoot(new TroubleshootUtil(this)));
+        getCommand("listplayerareas").setExecutor(new ListPlayerAreas());
 
 
 

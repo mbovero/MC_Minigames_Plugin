@@ -1,6 +1,10 @@
 package mc_minigames_plugin.mc_minigames_plugin.commands;
 
+import mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler;
 import mc_minigames_plugin.mc_minigames_plugin.minigames.GamePlayer;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHGameHandler;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.KOTH.KOTHLobbyHandler;
+import mc_minigames_plugin.mc_minigames_plugin.minigames.PlayerArea;
 import mc_minigames_plugin.mc_minigames_plugin.util.TroubleshootUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +13,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.allPlayerAreas;
 import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayerGlobal;
 
 /**

@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-import static mc_minigames_plugin.mc_minigames_plugin.handlers.GeneralLobbyHandler.findPlayerGlobal;
-
 public class KOTHGameHandler extends PlayerArea implements Listener {
 
     // KOTH game settings
@@ -95,11 +93,10 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         // Store player that moved
         Player MCPlayer = event.getPlayer();
-        // Store player's gamePlayer
-        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
-        // Check that player is in this game
-        if (!gamePlayer.getCurrentArea().getAreaName().equals(this.areaName))
-            return;
+        // Try to retrieve gamePlayer reference from this areaPlayers
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Double check that gamePlayer is in this KOTH Game
+        if (gamePlayer == null) return;
 
 
         // Store block that player is on
@@ -137,11 +134,10 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
             return;
         // Store player that took damage
         Player MCPlayer = (Player) event.getEntity();
-        // Store player's gamePlayer
-        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
-        // Check that player is in this game
-        if (!gamePlayer.getCurrentArea().getAreaName().equals(this.areaName))
-            return;
+        // Try to retrieve gamePlayer reference from this areaPlayers
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Double check that gamePlayer is in this KOTH game
+        if (gamePlayer == null) return;
         // Check that player fell
         if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
             // Check that player is in preventFallDamage
@@ -161,22 +157,21 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         // Store player that died
         Player MCPlayer = event.getPlayer();
-        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
-        // Check that player died in this game
-        if (!gamePlayer.getCurrentArea().getAreaName().equals(this.areaName))
-            return;
+        // Try to retrieve gamePlayer reference from this areaPlayers
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Double check that gamePlayer is in this KOTH game
+        if (gamePlayer == null) return;
         // Store MC killer
         Player MCKiller = event.getPlayer().getKiller();
         // Check that killer is not null
         if(MCKiller == null)
             return;
-        // Locate killer's gamePlayer
-        GamePlayer gameKiller = findPlayerGlobal(MCKiller);
-        // Check that the killer exists in this KOTHGame
-        if(gameKiller.getCurrentArea().getAreaName().equals(this.areaName)) {
-            // Update KOTHPlayer kills
-            ((KOTHPlayer)gameKiller).updateKills();
-        }
+        // Try to retrieve killer's gamePlayer reference from this areaPlayers
+        GamePlayer gameKiller = findPlayer(MCPlayer);
+        // Double check that killer's gamePlayer is in this KOTH game
+        if (gameKiller == null) return;
+        // If conditions met, update KOTHPlayer kills
+        ((KOTHPlayer)gameKiller).updateKills();
     }
 
     /**
@@ -187,16 +182,17 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
     public void onPlayerRespawn(PlayerRespawnEvent event) {
         // Store player that is respawning
         Player MCPlayer = event.getPlayer();
-        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
-        // Check that player is respawning in this game
-        if (gamePlayer.getCurrentArea().getAreaName().equals(this.areaName)) {
-            // Set respawn location
-            event.setRespawnLocation(this.map.randomRespawnLoc());
-            // Reset MCPlayer's tags, scores, flight, potion effects, health, hunger, and inventory
-            Tools.resetAllKOTH(gamePlayer.getPlayer());
-            // Give player kit gear
-            ((KOTHPlayer)gamePlayer).getKit().giveBasicGear();
-        }
+        // Try to retrieve gamePlayer reference from this areaPlayers
+        GamePlayer gamePlayer = findPlayer(MCPlayer);
+        // Double check that gamePlayer is in this KOTH game
+        if (gamePlayer == null) return;
+        // If respawning in this KOTH game...
+        // Set respawn location
+        event.setRespawnLocation(this.map.randomRespawnLoc());
+        // Reset MCPlayer's tags, scores, flight, potion effects, health, hunger, and inventory
+        Tools.resetAllKOTH(gamePlayer.getPlayer());
+        // Give player kit gear
+        ((KOTHPlayer)gamePlayer).getKit().giveBasicGear();
     }
 
     /**
@@ -207,11 +203,12 @@ public class KOTHGameHandler extends PlayerArea implements Listener {
         // Check that entity is a player
         if(event.getEntity() instanceof Player) {
             Player MCPlayer = (Player) event.getEntity();
-        // Store gamePlayer
-        GamePlayer gamePlayer = findPlayerGlobal(MCPlayer);
-        // Check that gamePlayer is currently in this game
-        if (gamePlayer.getCurrentArea().getAreaName().equals(this.areaName) && !gamePlayer.isTroubleshooting())
-                event.setCancelled(true);
+            // Try to retrieve gamePlayer reference from this areaPlayers
+            GamePlayer gamePlayer = findPlayer(MCPlayer);
+            // Double check that gamePlayer is in this KOTH game
+            if (gamePlayer == null) return;
+            // If conditions met, cancel hunger
+            event.setCancelled(true);
         }
     }
 

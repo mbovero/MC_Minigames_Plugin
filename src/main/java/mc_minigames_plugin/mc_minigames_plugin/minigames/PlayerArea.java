@@ -48,8 +48,9 @@ abstract public class PlayerArea {
         GamePlayer result = this.areaPlayers.get(MCPlayer.getName());
         // If player not found...
         if (result == null) {
-            // Warn player and return null
-            MCPlayer.sendMessage("\nBAD BAD\n");
+//            // Warn player and return null - only enable for troubleshooting
+//            MCPlayer.sendMessage("\nBAD BAD from findPlayer\n");
+//            MCPlayer.sendMessage("\n" + MCPlayer.getName() + " not found in " + this.areaName + "\n");
             return null;
         }
         // Otherwise, return the found gamePlayer

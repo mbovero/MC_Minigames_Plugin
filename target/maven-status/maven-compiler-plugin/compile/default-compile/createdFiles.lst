@@ -24,6 +24,8 @@ mc_minigames_plugin\mc_minigames_plugin\commands\SetData.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\KOTHPlayer.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Menu.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\HubPlayer.class
+mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\Kits\KOTHKitWarper.class
+mc_minigames_plugin\mc_minigames_plugin\commands\ListPlayerAreas.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\GamePlayer.class
 mc_minigames_plugin\mc_minigames_plugin\commands\Hub.class
 mc_minigames_plugin\mc_minigames_plugin\minigames\KOTH\Kits\KOTHKitStriker.class

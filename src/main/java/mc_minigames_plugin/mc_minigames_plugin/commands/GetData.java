@@ -52,7 +52,7 @@ public class GetData implements CommandExecutor {
         }
 
         // Store specified data type to retrieve
-        String data = args[0];
+        String data = args[0].toLowerCase();
         // Locate gamePlayer
         GamePlayer gamePlayer = GeneralLobbyHandler.findPlayerGlobal(MCPlayer);
         // Message sender an error if gamePlayer could not be found
@@ -64,22 +64,22 @@ public class GetData implements CommandExecutor {
             case "list":
                 commandSender.sendMessage(list);
                 break;
-            case "isGameReady":
+            case "isgameready":
                 commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s isGameReady value is " + ChatColor.GRAY + (gamePlayer.isGameReady()));
                 break;
-            case "isTroubleshooting":
+            case "istroubleshooting":
                 commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s isTroubleshooting value is " + ChatColor.GRAY + (gamePlayer.isTroubleshooting()));
                 break;
-            case "isInGame":
+            case "isingame":
                 commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s isInGame value is " + ChatColor.GRAY + (gamePlayer.isInGame()));
                 break;
-            case "MCPlayer":
+            case "mcplayer":
                 commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s MCPlayer's name is " + ChatColor.GRAY + (gamePlayer.getPlayer().getName()));
                 break;
-            case "currentArea":
+            case "currentarea":
                 commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s currentArea name is " + ChatColor.GRAY + (gamePlayer.getCurrentArea().getAreaName()));
                 break;
-            case "KOTHKit":
+            case "kothkit":
                 if(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby") || gamePlayer.getCurrentArea().getAreaName().equals("KOTHGame"))
                     commandSender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s KOTHKit is " + ChatColor.GRAY + (((KOTHPlayer)gamePlayer).getKit().getKitName()));
                 else

@@ -14,6 +14,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+/**
+ * Class providing functionality for the /setdata command. Allows in-game players to change data values of Java
+ * GamePlayer objects.
+ */
 public class SetData implements CommandExecutor {
 
     // List of data types
@@ -76,7 +80,7 @@ public class SetData implements CommandExecutor {
         }
 
         // Store specified data/value types
-        String data = args[0];
+        String data = args[0].toLowerCase();
         // Locate gamePlayer
         GamePlayer gamePlayer = GeneralLobbyHandler.findPlayerGlobal(MCPlayer);
         // Message sender an error if gamePlayer could not be found
@@ -89,7 +93,7 @@ public class SetData implements CommandExecutor {
             case "list":
                 sender.sendMessage(list);
                 break;
-            case "isGameReady":
+            case "isgameready":
                 if (value.equals("true") || value.equals("t") || value.equals("1")) {
                     gamePlayer.setIsGameReady(true);
                     sender.sendMessage(ChatColor.GREEN + "Set " + MCPlayer.getName() + "'s isGameReady value to " + ChatColor.GRAY + "true");
@@ -102,7 +106,7 @@ public class SetData implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Specify a valid value: true, false, t, f, 1, 0");
                 break;
 
-            case "isInGame":
+            case "isingame":
                 if (value.equals("true") || value.equals("t") || value.equals("1")) {
                     gamePlayer.setIsInGame(true);
                     sender.sendMessage(ChatColor.GREEN + "Set " + MCPlayer.getName() + "'s isInGame value to " + ChatColor.GRAY + "true");
@@ -126,7 +130,7 @@ public class SetData implements CommandExecutor {
 //                sender.sendMessage(ChatColor.GREEN + MCPlayer.getName() + "'s MCPlayer's name is " + ChatColor.GRAY + (gamePlayer.getPlayer().getName()));
 //                break;
 
-            case "currentArea":
+            case "currentarea":
                 if (value.equals("mainhub")){
                     MainHubHandler.sendPlayer(gamePlayer);
                     sender.sendMessage(ChatColor.GREEN + "Sent " + MCPlayer.getName() + "'s GamePlayer object to " + ChatColor.GRAY + "MainHub");
@@ -143,7 +147,7 @@ public class SetData implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + "Specify a valid value: MainHub, KOTHLobby, MMLobby");
                 break;
 
-            case "KOTHKit":
+            case "kothkit":
                 if(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby") || gamePlayer.getCurrentArea().getAreaName().contains("KOTHGame")) {
                     KOTHPlayer KOTHPlayer = (KOTHPlayer) gamePlayer;
                     if (value.equals("striker")) {
@@ -157,7 +161,7 @@ public class SetData implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + MCPlayer.getName() + " is not currently a KOTHPlayer");
                 break;
 
-            case "KOTHKills1":
+            case "kothkills1":
                 if(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby") || gamePlayer.getCurrentArea().getAreaName().contains("KOTHGame")) {
                     KOTHPlayer KOTHPlayer = (KOTHPlayer) gamePlayer;
                     try {
@@ -174,7 +178,56 @@ public class SetData implements CommandExecutor {
                     sender.sendMessage(ChatColor.RED + MCPlayer.getName() + " is not currently a KOTHPlayer");
                 break;
 
-                
+            case "kothkills2":
+                if(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby") || gamePlayer.getCurrentArea().getAreaName().contains("KOTHGame")) {
+                    KOTHPlayer KOTHPlayer = (KOTHPlayer) gamePlayer;
+                    try {
+                        int kills = Integer.parseInt(value);
+                        KOTHPlayer.setKills2(kills);
+                        KOTHPlayer.checkKills();
+                        sender.sendMessage(ChatColor.GREEN + "Set " + MCPlayer.getName() + "'s KOTHKills2 to " + ChatColor.GRAY + value);
+                    } catch (Exception e) {
+                        sender.sendMessage(ChatColor.RED + "Specify a valid value: <int>");
+                        break;
+                    }
+                }
+                else
+                    sender.sendMessage(ChatColor.RED + MCPlayer.getName() + " is not currently a KOTHPlayer");
+                break;
+
+            case "kothkills3":
+                if(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby") || gamePlayer.getCurrentArea().getAreaName().contains("KOTHGame")) {
+                    KOTHPlayer KOTHPlayer = (KOTHPlayer) gamePlayer;
+                    try {
+                        int kills = Integer.parseInt(value);
+                        KOTHPlayer.setKills3(kills);
+                        KOTHPlayer.checkKills();
+                        sender.sendMessage(ChatColor.GREEN + "Set " + MCPlayer.getName() + "'s KOTHKills3 to " + ChatColor.GRAY + value);
+                    } catch (Exception e) {
+                        sender.sendMessage(ChatColor.RED + "Specify a valid value: <int>");
+                        break;
+                    }
+                }
+                else
+                    sender.sendMessage(ChatColor.RED + MCPlayer.getName() + " is not currently a KOTHPlayer");
+                break;
+
+            case "kothkills4":
+                if(gamePlayer.getCurrentArea().getAreaName().equals("KOTHLobby") || gamePlayer.getCurrentArea().getAreaName().contains("KOTHGame")) {
+                    KOTHPlayer KOTHPlayer = (KOTHPlayer) gamePlayer;
+                    try {
+                        int kills = Integer.parseInt(value);
+                        KOTHPlayer.setKills4(kills);
+                        KOTHPlayer.checkKills();
+                        sender.sendMessage(ChatColor.GREEN + "Set " + MCPlayer.getName() + "'s KOTHKills4 to " + ChatColor.GRAY + value);
+                    } catch (Exception e) {
+                        sender.sendMessage(ChatColor.RED + "Specify a valid value: <int>");
+                        break;
+                    }
+                }
+                else
+                    sender.sendMessage(ChatColor.RED + MCPlayer.getName() + " is not currently a KOTHPlayer");
+                break;
 
             default:
                 sender.sendMessage(ChatColor.RED + "Specify a valid data type to receive. Type '/getdata list' to see a list of data types");
